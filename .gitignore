@@ -1,3 +1,10 @@
+*/.externalToolBuilders
+*/.settings
+
+*.DS_Store
+
+*.classpath
+
 *.class
 
 # Package Files #
