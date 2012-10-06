@@ -37,9 +37,9 @@ public class RestaurantsResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public List<Restaurant> getAll() {
+	public List<Restaurant> get() {
 		RestaurantDao dao = new RestaurantDao();
-		return dao.findAll();
+		return dao.findByStatus(1);
 	}
 
 	@Path("{id}")
@@ -106,5 +106,37 @@ public class RestaurantsResource {
 		dao.saveOrUpdate(r);
 
 		return Response.created(URI.create(String.valueOf(r.getId()))).build();
+	}
+
+	@GET
+	@Path("/all")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Restaurant> getAll() {
+		RestaurantDao dao = new RestaurantDao();
+		return dao.findNotDeleted();
+	}
+
+	@GET
+	@Path("/toverify")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Restaurant> getToVerify() {
+		RestaurantDao dao = new RestaurantDao();
+		return dao.findByStatus(0);
+	}
+	
+	@GET
+	@Path("/verified")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Restaurant> getVerified() {
+		RestaurantDao dao = new RestaurantDao();
+		return dao.findByStatus(1);
+	}
+	
+	@GET
+	@Path("/notverified")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Restaurant> getNotVerified() {
+		RestaurantDao dao = new RestaurantDao();
+		return dao.findByStatus(2);
 	}
 }

@@ -15,6 +15,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
@@ -43,13 +44,12 @@ public class RestaurantResource {
 	// 获取单个菜单的描述信息
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Restaurant getRecipeInfo() {
+	public Restaurant get() {
 		RestaurantDao dao = new RestaurantDao();
 		Restaurant r = dao.findById(id);
 		if (r == null) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
-		
 		return r;
 	}
 	
@@ -57,7 +57,7 @@ public class RestaurantResource {
 	
 	@POST
 	@Consumes("multipart/form-data")
-	public Response updateRecipe(@FormDataParam("name") String name,
+	public Response update(@FormDataParam("name") String name,
 			@FormDataParam("telephone") String telephone,
 			@FormDataParam("address") String address,
 			@DefaultValue("-1000") @FormDataParam("address") double x,
@@ -117,13 +117,40 @@ public class RestaurantResource {
 	}
 
 	@DELETE
-	public void deleteRecipe() {
-		//TODO 不要直接删除，做删除标记
+	public void delete() {
 		RestaurantDao dao = new RestaurantDao();
 		Restaurant c = dao.findById(id);
 		if (c == null) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
-		dao.delete(c);
+		
+		c.setStatus(-1);
+		dao.saveOrUpdate(c);
+	}
+	
+	@PUT
+	@Path("/verify")
+	public void verify() {
+		RestaurantDao dao = new RestaurantDao();
+		Restaurant c = dao.findById(id);
+		if (c == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		
+		c.setStatus(1);
+		dao.saveOrUpdate(c);
+	}
+	
+	@PUT
+	@Path("/noverify")
+	public void notverify() {
+		RestaurantDao dao = new RestaurantDao();
+		Restaurant c = dao.findById(id);
+		if (c == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		
+		c.setStatus(2);
+		dao.saveOrUpdate(c);
 	}
 }
