@@ -44,7 +44,7 @@ public class RestaurantsResource {
 
 	@POST
 	@Consumes("multipart/form-data")
-	public Response createRecipe2(@FormDataParam("name") String name,
+	public Response create(@FormDataParam("name") String name,
 			@FormDataParam("telephone") String telephone,
 			@FormDataParam("address") String address,
 			@DefaultValue("-1000") @FormDataParam("x") double x,

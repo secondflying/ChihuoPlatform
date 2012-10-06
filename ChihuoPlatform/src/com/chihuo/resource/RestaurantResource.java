@@ -42,19 +42,15 @@ public class RestaurantResource {
 		this.id = id;
 	}
 
-	// 获取单个菜单的描述信息
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Restaurant get() {
 		RestaurantDao dao = new RestaurantDao();
 		Restaurant r = dao.findById(id);
-		if (r == null) {
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-		}
+		checkNull(r);
 		return r;
 	}
-	
-	
 	
 	@POST
 	@Consumes("multipart/form-data")
@@ -67,9 +63,7 @@ public class RestaurantResource {
 		
 		RestaurantDao dao = new RestaurantDao();
 		Restaurant r = dao.findById(id);
-		if (r == null) {
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-		}
+		checkNull(r);
 		
 		r.setName(name);
 		r.setAddress(address);
@@ -125,9 +119,7 @@ public class RestaurantResource {
 	public void delete() {
 		RestaurantDao dao = new RestaurantDao();
 		Restaurant c = dao.findById(id);
-		if (c == null) {
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-		}
+		checkNull(c);
 		
 		c.setStatus(-1);
 		dao.saveOrUpdate(c);
@@ -138,9 +130,7 @@ public class RestaurantResource {
 	public void verify() {
 		RestaurantDao dao = new RestaurantDao();
 		Restaurant c = dao.findById(id);
-		if (c == null) {
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-		}
+		checkNull(c);
 		
 		c.setStatus(1);
 		dao.saveOrUpdate(c);
@@ -151,17 +141,25 @@ public class RestaurantResource {
 	public void notverify() {
 		RestaurantDao dao = new RestaurantDao();
 		Restaurant c = dao.findById(id);
-		if (c == null) {
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-		}
+		checkNull(c);
 		
 		c.setStatus(2);
 		dao.saveOrUpdate(c);
 	}
 	
-	
 	@Path("/categories")
 	public CategoriesResource getRecipe() {
-		return new CategoriesResource(uriInfo, request, id);
+		RestaurantDao dao = new RestaurantDao();
+		Restaurant c = dao.findById(id);
+		checkNull(c);
+		
+		return new CategoriesResource(uriInfo, request, c);
+	}
+	
+	
+	private void checkNull(Restaurant c){
+		if (c == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
 	}
 }

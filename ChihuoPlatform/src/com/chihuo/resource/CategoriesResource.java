@@ -1,6 +1,8 @@
 package com.chihuo.resource;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +12,7 @@ import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -26,99 +29,85 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.chihuo.bussiness.Category;
+import com.chihuo.bussiness.Restaurant;
 import com.chihuo.dao.CategoryDao;
+import com.chihuo.dao.RestaurantDao;
 import com.sun.jersey.multipart.BodyPartEntity;
+import com.sun.jersey.multipart.FormDataParam;
 import com.sun.jersey.multipart.MultiPart;
 
 public class CategoriesResource {
-	@Context
 	UriInfo uriInfo;
-	@Context
 	Request request;
-	
-	int rid;
-	
-	public CategoriesResource(UriInfo uriInfo, Request request, int rid) {
+	Restaurant restaurant;
+
+	public CategoriesResource(UriInfo uriInfo, Request request,
+			Restaurant restaurant) {
 		this.uriInfo = uriInfo;
 		this.request = request;
-		this.rid = rid;
+		this.restaurant = restaurant;
 	}
 
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	public List<Category> getCategories() {
 		CategoryDao dao = new CategoryDao();
-		List<Category> list = dao.findAll();
-		return list;
+		return dao.findByRestaurant(restaurant);
 	}
-	
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createCategory(JAXBElement<Category> c) {
-		Category newCatagory = c.getValue();
-		CategoryDao dao = new CategoryDao();
-		Category createdCategory = dao.saveOrUpdate(newCatagory);
-		return Response.created(URI.create(createdCategory.getId() + "")).build();
-	}
-	
+
 	@POST
 	@Consumes("multipart/form-data")
-	public Response createCategory2(MultiPart multipart) {
-		Category categor = new Category();
-		
-		try {
-			String string = multipart.getBodyParts().get(0)
-					.getEntityAs(String.class);
-			JSONObject jsonObject = new JSONObject(string);
-			categor.setName(jsonObject.getString("name"));
-			categor.setDescription(jsonObject.has("description") ? jsonObject
-					.getString("description") : null);
-		} catch (JSONException e1) {
-			return Response.status(Response.Status.BAD_REQUEST)
-					.entity("创建种类失败").type(MediaType.TEXT_PLAIN).build();
-		}
+	public Response create(@FormDataParam("name") String name,
+			@FormDataParam("description") String description,
+			@FormDataParam("image") InputStream upImg) {
 
-		BodyPartEntity bpe = (BodyPartEntity) multipart.getBodyParts().get(1)
-				.getEntity();
-		String id = UUID.randomUUID().toString();
-		String image = id + ".png";
-		categor.setImage(image);
+		Category category = new Category();
+		category.setName(name);
+		category.setDescription(description);
+		category.setRestaurant(restaurant);
+		if (upImg != null) {
+			try {
+				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+				int nRead;
+				byte[] data = new byte[16384];
+				while ((nRead = upImg.read(data, 0, data.length)) != -1) {
+					buffer.write(data, 0, nRead);
+				}
+				buffer.flush();
+				byte[] bs = buffer.toByteArray();
 
-		try {
-			InputStream source = bpe.getInputStream();
-			BufferedImage bi = ImageIO.read(source);
+				if (bs.length > 0) {
+					String id = UUID.randomUUID().toString();
+					String image = id + ".png";
 
-			File file = new File(MyConstants.MenuImagePath + image);
-			if (file.isDirectory()) {
-				ImageIO.write(bi, "png", file);
-			} else {
-				file.mkdirs();
-				ImageIO.write(bi, "png", file);
+					BufferedImage bi = ImageIO
+							.read(new ByteArrayInputStream(bs));
+
+					File file = new File(MyConstants.MenuImagePath + image);
+					if (file.isDirectory()) {
+						ImageIO.write(bi, "png", file);
+					} else {
+						file.mkdirs();
+						ImageIO.write(bi, "png", file);
+					}
+					category.setImage(image);
+				}
+
+			} catch (IOException e) {
+				return Response.status(Response.Status.BAD_REQUEST)
+						.entity("创建菜单失败").type(MediaType.TEXT_PLAIN).build();
 			}
-			
-			CategoryDao dao = new CategoryDao();
-			dao.saveOrUpdate(categor);
-
-			return Response.created(URI.create(String.valueOf(categor.getId())))
-					.build();
-
-		} catch (IOException e) {
-			return Response.status(Response.Status.BAD_REQUEST)
-					.entity("创建种类失败").type(MediaType.TEXT_PLAIN).build();
 		}
-	}
-	
-	@GET
-	@Path("count")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getCount() {
+
 		CategoryDao dao = new CategoryDao();
-		return String.valueOf(dao.findAll().size());
+		dao.saveOrUpdate(category);
+
+		return Response.created(URI.create(String.valueOf(category.getId())))
+				.build();
 	}
-	
-	
-//	@Path("{id}")
-//	public CategoryResource getCategoryResource(@PathParam("id") int id) {
-//		return new CategoryResource(uriInfo, request, id);
-//	}
+
+	@Path("{id}")
+	public CategoryResource getCategoryResource(@PathParam("id") int id) {
+		return new CategoryResource(uriInfo, request, restaurant, id);
+	}
 }
