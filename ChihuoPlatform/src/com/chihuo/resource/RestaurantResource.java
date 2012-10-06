@@ -61,8 +61,8 @@ public class RestaurantResource {
 	public Response update(@FormDataParam("name") String name,
 			@FormDataParam("telephone") String telephone,
 			@FormDataParam("address") String address,
-			@DefaultValue("-1000") @FormDataParam("address") double x,
-			@DefaultValue("-1000") @FormDataParam("address") double y,
+			@DefaultValue("-1000") @FormDataParam("x") double x,
+			@DefaultValue("-1000") @FormDataParam("y") double y,
 			@FormDataParam("image") InputStream upImg){
 		
 		RestaurantDao dao = new RestaurantDao();

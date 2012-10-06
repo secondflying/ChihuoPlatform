@@ -42,11 +42,6 @@ public class RestaurantsResource {
 		return dao.findByStatus(1);
 	}
 
-	@Path("{id}")
-	public RestaurantResource getRestaurant(@PathParam("id") int id) {
-		return new RestaurantResource(uriInfo, request, id);
-	}
-
 	@POST
 	@Consumes("multipart/form-data")
 	public Response createRecipe2(@FormDataParam("name") String name,
@@ -106,6 +101,11 @@ public class RestaurantsResource {
 		dao.saveOrUpdate(r);
 
 		return Response.created(URI.create(String.valueOf(r.getId()))).build();
+	}
+	
+	@Path("{id}")
+	public RestaurantResource getRestaurant(@PathParam("id") int id) {
+		return new RestaurantResource(uriInfo, request, id);
 	}
 
 	@GET
