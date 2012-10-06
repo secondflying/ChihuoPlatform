@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>餐厅信息</title>
+<link href="../jquery/css/flexgrid/flexigrid.css" rel="stylesheet" />
+<link href="../jquery/css/ui-lightness/jquery-ui-1.8.22.custom.css"
+	rel="stylesheet" />
+<style class="demo-style">
+#dialog-form {
+	font-size: 62.5%;
+}
+
+#dialog-form label,#dialog-form input {
+	display: block;
+}
+
+#dialog-form input.text {
+	margin-bottom: 12px;
+	width: 95%;
+	padding: .4em;
+}
+
+#dialog-form fieldset {
+	padding: 0;
+	border: 0;
+	margin-top: 25px;
+}
+#imgdiv {
+	width:100%
+}
+.contentdiv {
+	width:100%;
+	height:40px;
+}
+.left {     
+    float:left;     
+    display:inline;     
+    width:10%;  
+}          
+.right{     
+    float:right;     
+    display:inline;     
+    width:90%;  
+}
+
+</style>
+</head>
+<body>
+	<div id="top"></div>
+	<div id="imgdiv">
+		<img id="rimg" style="width:400px; height:400px">
+	</div>
+	<div class="contentdiv">
+		<div class="left"><label>名称</label></div>
+		<div class="right"><label id="rname"></label></div>
+	</div>
+	<div class="contentdiv">
+		<div class="left"><label>电话</label></div>
+		<div class="right"><label id=rphone></label><input type="hidden" name="rid" id="rid" /></div>
+	</div>
+	<div class="contentdiv">
+		<div class="left"><label>地址</label></div>
+		<div class="right"><label id="raddress"></label></div>
+	</div>
+	<div class="contentdiv">
+		<div class="left"><label>横坐标</label></div>
+		<div class="right"><label id="rx"></label></div>
+	</div>
+	<div class="contentdiv">
+		<div class="left"><label>纵坐标</label></div>
+		<div class="right"><label id="ry"></label></div>
+	</div>
+	<div class="contentdiv">
+		<div class="left"><input id="editBtn" type="button" value="编辑"/></div>
+	</div>
+	<div id="dialog-form" title="餐厅信息编辑">
+		<form id="myForm" enctype="multipart/form-data" method="post"
+			action="../rest/restaurants">
+			<fieldset>
+				<label for="name">名称</label> <input type="text" name="name"
+				    id="name" class="text"/>
+				<label for="telephone">电话</label> <input type="text" name="telephone"
+				    id="telephone" class="text"/>
+				<label for="address">地址</label> <input type="text" name="address"
+				    id="address" class="text"/>
+				<label for="x">横坐标</label> <input type="text" name="x" id="x" class="text"/>
+				<label for="y">纵坐标</label> <input type="text" name="y" id="y" class="text"/>
+			    <label for="image">图片</label> <input type="file" name="image" id="image" />
+			</fieldset>
+		</form>
+	</div>
+	
+	<script src="../jquery/js/jquery-1.7.2.min.js"></script>
+	<script src="../jquery/js/jquery-ui-1.8.22.custom.min.js"></script>
+	<script src="../jquery/js/jquery.cookie.js"></script>
+	<script src="../jquery/js/jquery.confirm-1.3.js"></script>
+	<script src="../jquery/js/jquery.form.js"></script>
+	<script src="../jquery/js/flexigrid.js"></script>
+	<script src="../jquery/js/rest.js"></script>
+	<script>
+	
+	   var options = { 
+			url:      "../rest/restaurants",
+	        resetForm: true,
+	        success: function (responseText, statusText, xhr, $form) {
+	        	initElement();
+			    $("#dialog-form").dialog("close"); 
+			},
+	        error: function (xhr, textStatus, errorThrown) {
+			    alert(xhr.responseText);
+			}
+	    }; 
+	   
+	   $(document).ready(function() {
+		   initElement();
+		});
+	   
+	   function initElement()
+	   {
+		   document.getElementById("rid").value = urlParams["id"];
+		   $.getJSON("../rest/restaurants/" + urlParams["id"], function(data) {
+				document.getElementById("rid").innerHTML = data.id?data.id:"";
+				document.getElementById("rname").innerHTML = data.name?data.name:"";
+				document.getElementById("rphone").innerHTML = data.telephone?data.telephone:"";
+				document.getElementById("raddress").innerHTML=data.address?data.address:"";
+				document.getElementById("rx").innerHTML=data.x?data.x:"";
+				document.getElementById("ry").innerHTML=data.y?data.y:"";
+				document.getElementById("rimg").src="http://localhost:8080/MenuImages/"+data.image;
+				
+				
+				$("#editBtn").click(function(){
+					
+					document.getElementById("name").value=data.name?data.name:"";
+					document.getElementById("telephone").value=data.telephone?data.telephone:"";
+					document.getElementById("address").value=data.address?data.address:"";
+					document.getElementById("x").value=data.x?data.x:"";
+					document.getElementById("y").value=data.y?data.y:"";
+					document.getElementById("image").value=data.image?data.image:"";
+					   
+					options.url = "../rest/restaurants/" + data.id;
+					$('#myForm').unbind('submit');
+					$('#myForm').submit(function() {
+						$(this).ajaxSubmit(options);
+						return false;
+					});
+					
+					$("#dialog-form").dialog("open");
+				});
+			});
+	   }
+
+	   
+		function addRestaurant() {
+			options.url = "../rest/restaurants";
+			$('#myForm').unbind('submit');
+			$('#myForm').submit(function() {
+				$(this).ajaxSubmit(options);
+				return false;
+			});
+
+			$("#dialog-form").dialog("open");
+		}
+
+		$("#dialog-form").dialog({
+			autoOpen : false,
+			height : 500,
+			width : 450,
+			modal : true,
+			buttons : {
+				"确定" : function() {
+					$('#myForm').submit();
+				},
+				"取消" : function() {
+					$(this).dialog("close");
+				}
+			},
+			close : function() {
+			}
+		});
+	</script>
+</body>
+</html>
