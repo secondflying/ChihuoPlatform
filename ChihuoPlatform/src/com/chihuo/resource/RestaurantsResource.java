@@ -52,8 +52,8 @@ public class RestaurantsResource {
 	public Response createRecipe2(@FormDataParam("name") String name,
 			@FormDataParam("telephone") String telephone,
 			@FormDataParam("address") String address,
-			@DefaultValue("-1000") @FormDataParam("address") double x,
-			@DefaultValue("-1000") @FormDataParam("address") double y,
+			@DefaultValue("-1000") @FormDataParam("x") double x,
+			@DefaultValue("-1000") @FormDataParam("y") double y,
 			@FormDataParam("image") InputStream upImg) {
 
 		Restaurant r = new Restaurant();

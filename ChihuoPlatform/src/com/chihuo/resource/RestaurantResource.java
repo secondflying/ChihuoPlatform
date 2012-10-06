@@ -116,10 +116,6 @@ public class RestaurantResource {
 		return Response.status(Response.Status.NO_CONTENT).build();
 	}
 
-	@PUT
-	@Consumes({MediaType.APPLICATION_JSON })
-	
-
 	@DELETE
 	public void deleteRecipe() {
 		//TODO 不要直接删除，做删除标记
