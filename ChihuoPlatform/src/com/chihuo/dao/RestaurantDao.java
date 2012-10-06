@@ -10,7 +10,7 @@ import com.chihuo.bussiness.Restaurant;
 
 public class RestaurantDao extends GenericHibernateDAO﻿<Restaurant, Integer> {
 	public List<Restaurant> findByStatus(int status){
-		Criteria crit = getSession().createCriteria(Restaurant.class).add(Restrictions.eq("status", 1));
+		Criteria crit = getSession().createCriteria(Restaurant.class).add(Restrictions.eq("status", status));
 		return (List<Restaurant>)crit.list();
 	}
 	

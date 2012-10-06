@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>餐厅</title>
+<link href="../jquery/css/flexgrid/flexigrid.css" rel="stylesheet" />
+<link href="../jquery/css/ui-lightness/jquery-ui-1.8.22.custom.css"
+	rel="stylesheet" />
+</head>
+<body>
+	<div id="top"></div>
+	<table id="flex1" style="display: none"></table>
+	
+	<script src="../jquery/js/jquery-1.7.2.min.js"></script>
+	<script src="../jquery/js/jquery-ui-1.8.22.custom.min.js"></script>
+	<script src="../jquery/js/jquery.cookie.js"></script>
+	<script src="../jquery/js/jquery.confirm-1.3.js"></script>
+	<script src="../jquery/js/jquery.form.js"></script>
+	<script src="../jquery/js/flexigrid.js"></script>
+	<script src="../jquery/js/rest.js"></script>
+	<script>
+	
+	   var options = { 
+			url:      "../rest/restaurants",
+	        resetForm: true,
+	        success: function (responseText, statusText, xhr, $form) {
+			    $('#flex1').flexOptions({newp: 1}).flexReload();
+			},
+	        error: function (xhr, textStatus, errorThrown) {
+			    alert(xhr.responseText);
+			}
+	    }; 
+	   
+	   $(document).ready(function() {
+			
+			$("#flex1").flexigrid({
+				url : "../rest/restaurants",
+				method : 'GET',
+				dataType : 'json',
+				colModel : [ 
+							{display : 'ID',name : 'id',width : 40,sortable : false,align : 'center'},
+							{display: '缩略图', name : 'thumnail', width : 120, sortable : false, align: 'center'},
+							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'}, 
+							{display : '地址',name : 'address',width : 120,sortable : false,align : 'center'}, 
+							{display : '电话',name : 'telephone',width : 100,sortable : false,align : 'center'},
+							{display : '横坐标',name : 'x',width : 100,sortable : false,align : 'center'},
+							{display : '纵坐标',name : 'y',width : 100,sortable : false,align : 'center'}
+						   ],
+				buttons : [ 
+				            {name : '刷新',bclass : 'add',onpress : refreshRestaurant}, 
+				            {separator : true} 
+				          ],
+				preProcess : preProcess,
+				onSuccess : success,
+				title : '餐厅',
+				usepager : true,
+				showTableToggleBtn : false,
+				width : 900,
+				height : 500
+			});
+		});
+
+	   function preProcess(json) {
+			json.page = 1;
+			json.total = 1;
+			$.each(json, function(index, value) {
+				if (!isNaN(index)) {
+					json.total++;
+					var obj = {};
+					obj.id = value.id;
+					obj.cell = value;
+					obj.cell.thumnail = "<img style='width:100px; height:80px;' src='http://localhost:8080/MenuImages/" + value.image + "'>";
+					obj.cell.name="<a href='restaurant.html?id="+value.id+"'>"+value.name+"</a>";
+					json.rows.push(obj);
+				}
+			});
+			return json;
+		}
+		
+		function success(obj) {
+		
+			
+		}
+	   
+		function refreshRestaurant() {
+			$('#flex1').flexOptions({newp: 1}).flexReload();
+		}
+	</script>
+</body>
+</html>

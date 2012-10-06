@@ -72,7 +72,13 @@
 		<div class="right"><label id="ry"></label></div>
 	</div>
 	<div class="contentdiv">
-		<div class="left"><input id="editBtn" type="button" value="编辑"/></div>
+		<div class="left">
+			<input id="editBtn" type="button" value="编辑" style="display:inline"/>
+			<input id="delBtn" type="button" value="删除" style="display:inline"/>
+		</div>
+		<div class="right">
+			<input id="managerBtn" type="button" value="管理" style="display:inline"/>
+		</div>
 	</div>
 	<div id="dialog-form" title="餐厅信息编辑">
 		<form id="myForm" enctype="multipart/form-data" method="post"
@@ -146,21 +152,46 @@
 					});
 					
 					$("#dialog-form").dialog("open");
+					return false;
+				});
+				
+				
+				$("#delBtn").click(function(){
+					deleteRestaurant(data.id);
+					return false;
+				});
+				
+				$("#delBtn").confirm({
+					msg : '确定删除?',
+					stopAfter:'ok',
+					//eventType:'mouseover',
+					//timeout:1000,
+					buttons : {
+						ok : '确定',
+						cancel : '取消',
+						separator : '/'
+					}
+				});
+				$("#managerBtn").click(function(){
+					window.open("manager.html?id="+data.id);
 				});
 			});
 	   }
-
-	   
-		function addRestaurant() {
-			options.url = "../rest/restaurants";
-			$('#myForm').unbind('submit');
-			$('#myForm').submit(function() {
-				$(this).ajaxSubmit(options);
-				return false;
-			});
-
-			$("#dialog-form").dialog("open");
+		
+	   function deleteRestaurant(id) {
+			 $.ajax({
+				type : "DELETE",
+				url : "../rest/restaurants/" + id,
+				cache : false,
+				success : function(data, textStatus, jqXHR) {
+					alert("ok");
+				},
+				error : function(xhr, textStatus, errorThrown) {
+					alert(xhr.responseText);
+				}
+			}); 
 		}
+	   
 
 		$("#dialog-form").dialog({
 			autoOpen : false,

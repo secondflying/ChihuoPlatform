@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>餐厅信息</title>
+<link href="../jquery/css/flexgrid/flexigrid.css" rel="stylesheet" />
+<link href="../jquery/css/ui-lightness/jquery-ui-1.8.22.custom.css"
+	rel="stylesheet" />
+<style class="demo-style">
+.divborder{
+	width:100%;
+	height:60px;
+}
+
+.contentdiv {
+	width:100%;
+	height:40px;
+}
+.left {     
+    float:left;     
+    width:10%;  
+}          
+.right{     
+    float:right;     
+    width:90%;  
+}
+
+</style>
+</head>
+<body>
+	<div id="top"></div>
+	<div id="logodiv" class="divborder">
+		<div id="imgdiv" class="left">
+			<img id="rimg" style="width:60px; height:60px">
+		</div>
+		<div id="descdiv" class="right">
+			<label id="rname"></label><br>
+			<label id="raddress"></label><input type="hidden" name="rid" id="rid" /><br>
+			<label id="rx"></label>
+		</div>
+	</div>
+	<br>
+	<div>
+		<table id="flex1" style="display: none"></table>
+	</div>	
+	<script src="../jquery/js/jquery-1.7.2.min.js"></script>
+	<script src="../jquery/js/jquery-ui-1.8.22.custom.min.js"></script>
+	<script src="../jquery/js/jquery.cookie.js"></script>
+	<script src="../jquery/js/jquery.confirm-1.3.js"></script>
+	<script src="../jquery/js/jquery.form.js"></script>
+	<script src="../jquery/js/flexigrid.js"></script>
+	<script src="../jquery/js/rest.js"></script>
+	<script>
+	   
+	   $(document).ready(function() {
+		   initElement();
+		   
+		   $("#flex1").flexigrid({
+				url : "../rest/restaurants/"+urlParams["id"]+"/categories",
+				method : 'GET',
+				dataType : 'json',
+				colModel : [ 
+							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'}
+						   ],
+				preProcess : preProcess,
+				onSuccess : success,
+				title : '种类',
+				usepager : true,
+				showTableToggleBtn : false,
+				width : 140,
+				height : 500
+			});
+		});
+	   
+	   function initElement()
+	   {
+		   document.getElementById("rid").value = urlParams["id"];
+		   $.getJSON("../rest/restaurants/" + urlParams["id"], function(data) {
+				document.getElementById("rid").innerHTML = data.id?data.id:"";
+				document.getElementById("rname").innerHTML = data.name?data.name:"";
+				var address=data.address?data.address:"";
+				var phone=data.telephone?data.telephone:"";
+				document.getElementById("raddress").innerHTML=address+"  "+phone;
+				var vx=data.x?data.x:"";
+				var vy=data.y?data.y:"";
+				document.getElementById("rx").innerHTML=vx+"   "+vy;
+				document.getElementById("rimg").src="http://localhost:8080/MenuImages/"+data.image;
+				
+			});
+	   }
+	   
+	   function preProcess(json) {
+			json.page = 1;
+			json.total = 1;
+			$.each(json, function(index, value) {
+				if (!isNaN(index)) {
+					json.total++;
+					var obj = {};
+					obj.id = value.id;
+					obj.cell = value;
+					obj.cell.name="<div><img style='width:100px; height:80px;' src='http://localhost:8080/MenuImages/" + value.image + "'><br/><a>"+value.name+"</a></div>";
+					json.rows.push(obj);
+				}
+			});
+			return json;
+		}
+	   
+	   function success(obj) {
+		}
+	</script>
+</body>
+</html>
