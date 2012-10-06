@@ -43,7 +43,7 @@ public class RestaurantsResource {
 	}
 
 	@Path("{id}")
-	public RestaurantResource getRecipe(@PathParam("id") int id) {
+	public RestaurantResource getRestaurant(@PathParam("id") int id) {
 		return new RestaurantResource(uriInfo, request, id);
 	}
 

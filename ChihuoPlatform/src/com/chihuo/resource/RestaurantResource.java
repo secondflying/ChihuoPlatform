@@ -16,6 +16,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
@@ -64,7 +65,12 @@ public class RestaurantResource {
 			@DefaultValue("-1000") @FormDataParam("address") double y,
 			@FormDataParam("image") InputStream upImg){
 		
-		Restaurant r = new Restaurant();
+		RestaurantDao dao = new RestaurantDao();
+		Restaurant r = dao.findById(id);
+		if (r == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		
 		r.setName(name);
 		r.setAddress(address);
 		r.setTelephone(telephone);
@@ -110,10 +116,9 @@ public class RestaurantResource {
 			}
 		}
 
-		RestaurantDao dao = new RestaurantDao();
 		dao.saveOrUpdate(r);
 
-		return Response.status(Response.Status.NO_CONTENT).build();
+		return Response.status(Response.Status.OK).build();
 	}
 
 	@DELETE
@@ -152,5 +157,11 @@ public class RestaurantResource {
 		
 		c.setStatus(2);
 		dao.saveOrUpdate(c);
+	}
+	
+	
+	@Path("/categories")
+	public CategoriesResource getRecipe() {
+		return new CategoriesResource(uriInfo, request, id);
 	}
 }
