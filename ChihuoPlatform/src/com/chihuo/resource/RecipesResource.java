@@ -72,12 +72,14 @@ public class RecipesResource {
 	@POST
 	@Consumes("multipart/form-data")
 	public Response create(@FormDataParam("name") String name,
+			@FormDataParam("price") Double price,
 			@FormDataParam("description") String description,
 			@DefaultValue("-1") @FormDataParam("cid") int cid,
 			@FormDataParam("image") InputStream upImg) {
 
 		Recipe recipe = new Recipe();
 		recipe.setName(name);
+		recipe.setPrice(price);
 		recipe.setDescription(description);
 		recipe.setRestaurant(restaurant);
 		recipe.setStatus(0);

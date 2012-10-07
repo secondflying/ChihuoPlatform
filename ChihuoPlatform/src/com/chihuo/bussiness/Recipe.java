@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 // Generated 2012-10-7 10:39:14 by Hibernate Tools 3.4.0.CR1
 
@@ -13,12 +14,15 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
+@XmlType(propOrder={"id","name","price","description","image","cid"})
+
 public class Recipe implements java.io.Serializable {
 	
 	private Integer id;
 	private String name;
 	private String description;
 	private String image;
+	private Double price;
 	
 	private Integer status;
 	private Restaurant restaurant;
@@ -104,6 +108,15 @@ public class Recipe implements java.io.Serializable {
 			return this.category.getId();
 		}
 		return null;
+	}
+
+	@XmlElement
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
 }

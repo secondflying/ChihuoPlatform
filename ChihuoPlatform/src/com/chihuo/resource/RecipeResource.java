@@ -55,6 +55,7 @@ public class RecipeResource {
 	@POST
 	@Consumes("multipart/form-data")
 	public Response update(@FormDataParam("name") String name,
+			@FormDataParam("price") Double price,
 			@FormDataParam("description") String description,
 			@DefaultValue("-1") @FormDataParam("cid") int cid,
 			@FormDataParam("image") InputStream upImg){
@@ -62,6 +63,10 @@ public class RecipeResource {
 		RecipeDao dao = new RecipeDao();
 		Recipe recipe = dao.findById(id);
 		checkNull(recipe);
+		
+		recipe.setName(name);
+		recipe.setPrice(price);
+		recipe.setDescription(description);
 		
 		if (cid != -1) {
 			CategoryDao cdao = new CategoryDao();
