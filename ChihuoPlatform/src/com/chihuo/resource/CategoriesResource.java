@@ -56,6 +56,7 @@ public class CategoriesResource {
 		category.setName(name);
 		category.setDescription(description);
 		category.setRestaurant(restaurant);
+		category.setStatus(0);
 		if (upImg != null) {
 			try {
 				ByteArrayOutputStream buffer = new ByteArrayOutputStream();

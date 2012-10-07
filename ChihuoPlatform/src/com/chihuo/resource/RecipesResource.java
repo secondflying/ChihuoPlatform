@@ -80,6 +80,7 @@ public class RecipesResource {
 		recipe.setName(name);
 		recipe.setDescription(description);
 		recipe.setRestaurant(restaurant);
+		recipe.setStatus(0);
 		
 		if (cid != -1) {
 			CategoryDao cdao = new CategoryDao();
