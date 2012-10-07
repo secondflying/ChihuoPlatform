@@ -28,7 +28,7 @@ public class Recipe implements java.io.Serializable {
 	
 	@XmlTransient
 	private Restaurant restaurant;
-	@XmlTransient
+	@XmlElement
 	private Category category;
 
 	public Recipe() {
