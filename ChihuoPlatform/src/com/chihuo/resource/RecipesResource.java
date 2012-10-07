@@ -12,27 +12,32 @@ import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.Category;
+import com.chihuo.bussiness.Recipe;
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.dao.CategoryDao;
+import com.chihuo.dao.RecipeDao;
 import com.sun.jersey.multipart.FormDataParam;
 
-public class CategoriesResource {
+public class RecipesResource {
 	UriInfo uriInfo;
 	Request request;
 	Restaurant restaurant;
 
-	public CategoriesResource(UriInfo uriInfo, Request request,
+	public RecipesResource(UriInfo uriInfo, Request request,
 			Restaurant restaurant) {
 		this.uriInfo = uriInfo;
 		this.request = request;
@@ -41,21 +46,51 @@ public class CategoriesResource {
 
 	@GET
 	@Produces("application/json; charset=UTF-8")
-	public List<Category> getCategories() {
-		CategoryDao dao = new CategoryDao();
-		return dao.findByRestaurant(restaurant);
+	public Response getRecipes(@DefaultValue("-1") @QueryParam("cid") int cid) {
+		if (cid != -1) {
+			CategoryDao cdao = new CategoryDao();
+			Category category = cdao.findById(cid);
+			if (category == null || category.getStatus() == -1) {
+				return Response.status(Response.Status.BAD_REQUEST)
+						.entity("种类ID不存在").type(MediaType.TEXT_PLAIN).build();
+			}
+			
+			RecipeDao dao = new RecipeDao();
+			List<Recipe> list = dao.findByCategory(category);
+			GenericEntity<List<Recipe>> entity = new GenericEntity<List<Recipe>>(list) {};
+			return Response.status(Response.Status.OK)
+					.entity(entity).build();
+		}else {
+			RecipeDao dao = new RecipeDao();
+			List<Recipe> list = dao.findByRestaurant(restaurant);
+			GenericEntity<List<Recipe>> entity = new GenericEntity<List<Recipe>>(list) {};
+			return Response.status(Response.Status.OK)
+					.entity(entity).build();
+		}
 	}
 
 	@POST
 	@Consumes("multipart/form-data")
 	public Response create(@FormDataParam("name") String name,
 			@FormDataParam("description") String description,
+			@DefaultValue("-1") @FormDataParam("cid") int cid,
 			@FormDataParam("image") InputStream upImg) {
 
-		Category category = new Category();
-		category.setName(name);
-		category.setDescription(description);
-		category.setRestaurant(restaurant);
+		Recipe recipe = new Recipe();
+		recipe.setName(name);
+		recipe.setDescription(description);
+		recipe.setRestaurant(restaurant);
+		
+		if (cid != -1) {
+			CategoryDao cdao = new CategoryDao();
+			Category category = cdao.findById(cid);
+			if (category == null || category.getStatus() == -1) {
+				return Response.status(Response.Status.BAD_REQUEST)
+						.entity("种类ID不存在").type(MediaType.TEXT_PLAIN).build();
+			}
+			recipe.setCategory(category);
+		}
+		
 		if (upImg != null) {
 			try {
 				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -81,24 +116,24 @@ public class CategoriesResource {
 						file.mkdirs();
 						ImageIO.write(bi, "png", file);
 					}
-					category.setImage(image);
+					recipe.setImage(image);
 				}
 
 			} catch (IOException e) {
 				return Response.status(Response.Status.BAD_REQUEST)
-						.entity("创建种类失败").type(MediaType.TEXT_PLAIN).build();
+						.entity("创建菜单失败").type(MediaType.TEXT_PLAIN).build();
 			}
 		}
 
-		CategoryDao dao = new CategoryDao();
-		dao.saveOrUpdate(category);
+		RecipeDao dao = new RecipeDao();
+		dao.saveOrUpdate(recipe);
 
-		return Response.created(URI.create(String.valueOf(category.getId())))
+		return Response.created(URI.create(String.valueOf(recipe.getId())))
 				.build();
 	}
 
 	@Path("{id}")
-	public CategoryResource getSingleResource(@PathParam("id") int id) {
-		return new CategoryResource(uriInfo, request, restaurant, id);
+	public RecipeResource getSingleResource(@PathParam("id") int id) {
+		return new RecipeResource(uriInfo, request, restaurant, id);
 	}
 }

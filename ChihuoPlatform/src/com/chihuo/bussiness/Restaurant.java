@@ -34,17 +34,11 @@ public class Restaurant implements java.io.Serializable {
 	@XmlElement
 	private Integer status;
 	
-	@XmlTransient
-	private Set<Category> categories = new HashSet<Category>(0);
-	@XmlTransient
-	private Set<DeskType> deskTypes = new HashSet<DeskType>(0);
-
 	public Restaurant() {
 	}
 
 	public Restaurant(String name, String address, String telephone,
-			String image, Double x, Double y, Integer status,
-			Set<Category> categories, Set<DeskType> deskTypes) {
+			String image, Double x, Double y, Integer status) {
 		this.name = name;
 		this.address = address;
 		this.telephone = telephone;
@@ -52,8 +46,6 @@ public class Restaurant implements java.io.Serializable {
 		this.x = x;
 		this.y = y;
 		this.status = status;
-		this.categories = categories;
-		this.deskTypes = deskTypes;
 	}
 
 	public Integer getId() {
@@ -118,22 +110,6 @@ public class Restaurant implements java.io.Serializable {
 
 	public void setStatus(Integer status) {
 		this.status = status;
-	}
-
-	public Set<Category> getCategories() {
-		return this.categories;
-	}
-
-	public void setCategories(Set<Category> categories) {
-		this.categories = categories;
-	}
-
-	public Set<DeskType> getDeskTypes() {
-		return this.deskTypes;
-	}
-
-	public void setDeskTypes(Set<DeskType> deskTypes) {
-		this.deskTypes = deskTypes;
 	}
 
 }

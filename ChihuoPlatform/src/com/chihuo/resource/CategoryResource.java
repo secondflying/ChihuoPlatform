@@ -92,7 +92,7 @@ public class CategoryResource {
 
 			} catch (IOException e) {
 				return Response.status(Response.Status.BAD_REQUEST)
-						.entity("创建菜单失败").type(MediaType.TEXT_PLAIN).build();
+						.entity("更新种类失败").type(MediaType.TEXT_PLAIN).build();
 			}
 		}
 
@@ -107,11 +107,15 @@ public class CategoryResource {
 		CategoryDao dao = new CategoryDao();
 		Category c = dao.findById(id);
 		checkNull(c);
-		dao.delete(c);
+		c.setStatus(-1);
+		dao.saveOrUpdate(c);
 	}
 	
 	private void checkNull(Category c){
 		if (c == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		if(c.getStatus() == -1){
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
 	}

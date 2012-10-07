@@ -19,6 +19,7 @@
         <property name="hibernate.show_sql">true</property>
         <mapping resource="com/chihuo/bussiness/Restaurant.hbm.xml" />
         <mapping resource="com/chihuo/bussiness/Category.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/Recipe.hbm.xml" />
         <mapping resource="com/chihuo/bussiness/DeskType.hbm.xml" />
         <mapping resource="com/chihuo/bussiness/Desk.hbm.xml" />
     </session-factory>
