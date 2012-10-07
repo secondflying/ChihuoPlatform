@@ -2,14 +2,48 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>餐厅</title>
+<title>餐厅管理</title>
 <link href="../jquery/css/flexgrid/flexigrid.css" rel="stylesheet" />
 <link href="../jquery/css/ui-lightness/jquery-ui-1.8.22.custom.css"
 	rel="stylesheet" />
+<style class="demo-style">
+#dialog-form {
+	font-size: 62.5%;
+}
+
+#dialog-form label,#dialog-form input {
+	display: block;
+}
+
+#dialog-form input.text {
+	margin-bottom: 12px;
+	width: 95%;
+	padding: .4em;
+}
+
+#dialog-form fieldset {
+	padding: 0;
+	border: 0;
+	margin-top: 25px;
+}
+
+</style>
 </head>
 <body>
 	<div id="top"></div>
 	<table id="flex1" style="display: none"></table>
+	<div id="dialog-form" title="种类编辑">
+		<form id="myForm" enctype="multipart/form-data" method="post"
+			action="../rest/restaurants">
+			<fieldset>
+				<label for="name">名称</label> <input type="text" name="name"
+				    id="name" class="text"/>
+				<label for="description">描述</label> <input type="text" name="description"
+				    id="description" class="text"/>
+			    <label for="image">图片</label> <input type="file" name="image" id="image" />
+			</fieldset>
+		</form>
+	</div>
 	
 	<script src="../jquery/js/jquery-1.7.2.min.js"></script>
 	<script src="../jquery/js/jquery-ui-1.8.22.custom.min.js"></script>
@@ -25,6 +59,7 @@
 	        resetForm: true,
 	        success: function (responseText, statusText, xhr, $form) {
 			    $('#flex1').flexOptions({newp: 1}).flexReload();
+			    $("#dialog-form").dialog("close"); 
 			},
 	        error: function (xhr, textStatus, errorThrown) {
 			    alert(xhr.responseText);
@@ -34,35 +69,23 @@
 	   $(document).ready(function() {
 			
 			$("#flex1").flexigrid({
-				url : "../rest/restaurants/all",
+				url : "../rest/restaurants/"+urlParams["id"]+"/categories",
 				method : 'GET',
 				dataType : 'json',
 				colModel : [ 
-							{display : 'ID',name : 'id',width : 40,sortable : false,align : 'center'},
-							{display: '缩略图', name : 'thumnail', width : 120, sortable : false, align: 'center'},
-							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'}, 
-							{display : '地址',name : 'address',width : 120,sortable : false,align : 'center'}, 
-							{display : '电话',name : 'telephone',width : 100,sortable : false,align : 'center'},
-							{display : '横坐标',name : 'x',width : 100,sortable : false,align : 'center'},
-							{display : '纵坐标',name : 'y',width : 100,sortable : false,align : 'center'},
-							{display : '操作',name : 'tool',width : 100,sortable : false,align : 'center'}
+							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'},
+							{display : '操作',name : 'tool',width : 150,sortable : false,align : 'center'}
 						   ],
 				buttons : [ 
-				            {name : '刷新所有',bclass : 'add',onpress : refreshRestaurant}, 
-				            {separator : true},
-				            {name : '待审核',bclass : 'add',onpress : toverify}, 
-				            {separator : true},
-				            {name : '已通过',bclass : 'add',onpress : verified}, 
-				            {separator : true},
-				            {name : '未通过',bclass : 'add',onpress : notverified}, 
+				            {name : '新增',bclass : 'add',onpress : addCategory}, 
 				            {separator : true}
 				          ],
 				preProcess : preProcess,
 				onSuccess : success,
-				title : '餐厅',
+				title : '种类',
 				usepager : true,
 				showTableToggleBtn : false,
-				width : 900,
+				width : 300,
 				height : 500
 			});
 		});
@@ -76,8 +99,7 @@
 					var obj = {};
 					obj.id = value.id;
 					obj.cell = value;
-					obj.cell.name="<a href='restaurant.html?id="+value.id+"'>"+value.name+"</a>";
-					obj.cell.thumnail = "<img style='width:100px; height:80px;' src='http://localhost:8080/MenuImages/" + value.image + "'>";
+					obj.cell.name="<div><img style='width:100px; height:80px;' src='http://localhost:8080/MenuImages/" + value.image + "'><br/><a>"+value.name+"</a></div>";
 					obj.cell.tool = "<button class='edit' value='" + value.id + "'>编辑</button>&nbsp;<button class='delete' value='" + value.id + "'>删除</button>";
 					json.rows.push(obj);
 				}
@@ -86,15 +108,15 @@
 		}
 		
 		function success(obj) {
-			/* //编辑
+			//编辑
 			$('button.edit').click(function() {
-				editRecipe($(this).attr("value"));
+				editCategory($(this).attr("value"));
 				return false;
 			});
 
 			//删除
 			$('button.delete').click(function() {
-				deleteRecipe($(this).attr("value"));
+				deleteCategory($(this).attr("value"));
 				return false;
 			});
 
@@ -110,10 +132,10 @@
 				}
 			});
 
-			function deleteRecipe(id) {
+			function deleteCategory(id) {
 				 $.ajax({
 					type : "DELETE",
-					url : "../rest/recipes/" + id,
+					url : "../rest/restaurants/"+urlParams["id"]+"/categories/" + id,
 					cache : false,
 					success : function(data, textStatus, jqXHR) {
 						$('#flex1').flexOptions({
@@ -126,13 +148,13 @@
 				}); 
 			}
 
-			function editRecipe(id) {
-			$.getJSON("../rest/recipes/" + id, function(data) {
-					document.getElementById("cid").value = data.cid;
-					document.getElementById("name").value = data.name;
-					document.getElementById("price").value = data.price;
+			function editCategory(id) {
+			$.getJSON("../rest/restaurants/"+urlParams["id"]+"/categories/" + id, function(data) {
+					document.getElementById("description").value = data.description?data.description:"";
+					document.getElementById("name").value = data.name?data.name:"";
+					document.getElementById("image").value = data.image?data.image:"";
 					
-					options.url = "../rest/recipes/" + id;
+					options.url = "../rest/restaurants/"+urlParams["id"]+"/categories/" + id;
 					$('#myForm').unbind('submit');
 					$('#myForm').submit(function() {
 						$(this).ajaxSubmit(options);
@@ -141,24 +163,37 @@
 					
 					$("#dialog-form").dialog("open");
 				});
-			}  */
+			}  
 		}
 	   
-		function refreshRestaurant() {
-			$('#flex1').flexOptions({url : "../rest/restaurants/all",title : '餐厅'}).flexReload();
-		}
-		function toverify()
+		function addCategory()
 		{
-			$('#flex1').flexOptions({url : "../rest/restaurants/toverify",title : '待审核的餐厅'}).flexReload();
+			options.url = "../rest/restaurants/"+urlParams["id"]+"/categories";
+			$('#myForm').unbind('submit');
+			$('#myForm').submit(function() {
+				$(this).ajaxSubmit(options);
+				return false;
+			});
+
+			$("#dialog-form").dialog("open");
 		}
-		function verified()
-		{
-			$('#flex1').flexOptions({url : "../rest/restaurants/verified",title : '已通过的餐厅'}).flexReload();
-		}
-		function notverified()
-		{
-			$('#flex1').flexOptions({url : "../rest/restaurants/notverified",title : '未通过的餐厅'}).flexReload();
-		}
+		
+		$("#dialog-form").dialog({
+			autoOpen : false,
+			height : 500,
+			width : 450,
+			modal : true,
+			buttons : {
+				"确定" : function() {
+					$('#myForm').submit();
+				},
+				"取消" : function() {
+					$(this).dialog("close");
+				}
+			},
+			close : function() {
+			}
+		});
 	</script>
 </body>
 </html>
