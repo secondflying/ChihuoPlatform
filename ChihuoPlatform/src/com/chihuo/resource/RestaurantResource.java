@@ -164,6 +164,24 @@ public class RestaurantResource {
 		return new RecipesResource(uriInfo, request, c);
 	}
 	
+	@Path("/desktypes")
+	public DeskTypesResource getDeskTypeResource() {
+		RestaurantDao dao = new RestaurantDao();
+		Restaurant c = dao.findById(id);
+		checkNull(c);
+		
+		return new DeskTypesResource(uriInfo, request, c);
+	}
+	
+	@Path("/desks")
+	public DesksResource getDeskResource() {
+		RestaurantDao dao = new RestaurantDao();
+		Restaurant c = dao.findById(id);
+		checkNull(c);
+		
+		return new DesksResource(uriInfo, request, c);
+	}
+	
 	private void checkNull(Restaurant c){
 		if (c == null) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);

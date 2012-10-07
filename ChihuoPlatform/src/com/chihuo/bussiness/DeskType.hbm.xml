@@ -8,17 +8,14 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="restaurant" class="com.chihuo.bussiness.Restaurant" fetch="select">
-            <column name="rid" />
-        </many-to-one>
         <property name="name" type="string">
             <column name="name" length="45" />
         </property>
-        <set name="desks" table="desk" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="typeid" />
-            </key>
-            <one-to-many class="com.chihuo.bussiness.Desk" />
-        </set>
+        <many-to-one name="restaurant" class="com.chihuo.bussiness.Restaurant" fetch="select">
+            <column name="rid" />
+        </many-to-one>
+        <property name="status" type="java.lang.Integer">
+            <column name="status" />
+        </property>
     </class>
 </hibernate-mapping>
