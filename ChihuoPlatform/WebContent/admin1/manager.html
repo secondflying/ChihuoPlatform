@@ -10,12 +10,22 @@
 #dialog-form {
 	font-size: 62.5%;
 }
-
+#dialog-form1 {
+	font-size: 62.5%;
+}
 #dialog-form label,#dialog-form input {
+	display: block;
+}
+#dialog-form1 label,#dialog-form1 input {
 	display: block;
 }
 
 #dialog-form input.text {
+	margin-bottom: 12px;
+	width: 95%;
+	padding: .4em;
+}
+#dialog-form1 input.text {
 	margin-bottom: 12px;
 	width: 95%;
 	padding: .4em;
@@ -26,12 +36,43 @@
 	border: 0;
 	margin-top: 25px;
 }
+#dialog-form1 fieldset {
+	padding: 0;
+	border: 0;
+	margin-top: 25px;
+}
+#centerdiv{
+	width:100%;
+}
+.left {     
+    float:left;     
+    display:inline;     
+    width:25%;  
+}          
+.right{     
+    float:right;     
+    display:inline;     
+    width:75%;  
+}
+.recipesedit{
+}
+.recipesdel{
+}
+
 
 </style>
 </head>
 <body>
 	<div id="top"></div>
-	<table id="flex1" style="display: none"></table>
+	<div id="centerdiv">
+		<div class="left">
+			<table id="flex1" style="display: none"></table>
+		</div>
+		<div class="right">
+			<table id="flex2" style="display:none"></table>
+		</div>
+	</div>
+	
 	<div id="dialog-form" title="种类编辑">
 		<form id="myForm" enctype="multipart/form-data" method="post"
 			action="../rest/restaurants">
@@ -41,6 +82,24 @@
 				<label for="description">描述</label> <input type="text" name="description"
 				    id="description" class="text"/>
 			    <label for="image">图片</label> <input type="file" name="image" id="image" />
+			</fieldset>
+		</form>
+	</div>
+	
+	<div id="dialog-form1" title="菜品编辑">
+		<form id="myForm1" enctype="multipart/form-data" method="post"
+			action="../rest/restaurants">
+			<fieldset>
+				<label for="name">名称</label><input type="text" name="name"
+				    id="rname" class="text"/>
+				<label for="cid">种类</label>
+				<select name="cid" id="cid">
+				</select>
+				<label for="price">价格</label> <input type="text" name="price"
+				    id="price" class="text"/>
+				<label for="description">描述</label> <input type="text" name="description"
+				    id="rdescription" class="text"/>
+			    <label for="image">图片</label> <input type="file" name="image" id="rimage" />
 			</fieldset>
 		</form>
 	</div>
@@ -64,11 +123,30 @@
 	        error: function (xhr, textStatus, errorThrown) {
 			    alert(xhr.responseText);
 			}
-	    }; 
+	    };
+	   
+	   var options1 = { 
+				url:      "../rest/restaurants/all",
+		        resetForm: true,
+		        success: function (responseText, statusText, xhr, $form) {
+				    $('#flex2').flexOptions({newp: 1}).flexReload();
+				    $("#dialog-form1").dialog("close"); 
+				},
+		        error: function (xhr, textStatus, errorThrown) {
+				    alert(xhr.responseText);
+				}
+	    };
 	   
 	   $(document).ready(function() {
-			
-			$("#flex1").flexigrid({
+		   CreateCategoryGrid();
+		   CreateRecipeGrid();
+		});
+	   ////////////////
+	   //种类的相关方法
+	   ////////////////
+	   function CreateCategoryGrid()
+	   {
+		   $("#flex1").flexigrid({
 				url : "../rest/restaurants/"+urlParams["id"]+"/categories",
 				method : 'GET',
 				dataType : 'json',
@@ -88,20 +166,25 @@
 				width : 300,
 				height : 500
 			});
-		});
+	   }
 
 	   function preProcess(json) {
 			json.page = 1;
 			json.total = 1;
+			
+			$("#cid option").empty();
+			
 			$.each(json, function(index, value) {
 				if (!isNaN(index)) {
 					json.total++;
 					var obj = {};
 					obj.id = value.id;
 					obj.cell = value;
-					obj.cell.name="<div><img style='width:100px; height:80px;' src='http://localhost:8080/MenuImages/" + value.image + "'><br/><a>"+value.name+"</a></div>";
+					obj.cell.name="<div><img style='width:100px; height:80px;' src='http://localhost:8080/MenuImages/" + value.image + "' onclick='categoryClick("+value.id+")'><br/><a>"+value.name+"</a></div>";
 					obj.cell.tool = "<button class='edit' value='" + value.id + "'>编辑</button>&nbsp;<button class='delete' value='" + value.id + "'>删除</button>";
 					json.rows.push(obj);
+					
+					 $("#cid").append("<option value='"+value.id+"'>"+value.name+"</option>"); 
 				}
 			});
 			return json;
@@ -186,6 +269,154 @@
 			buttons : {
 				"确定" : function() {
 					$('#myForm').submit();
+				},
+				"取消" : function() {
+					$(this).dialog("close");
+				}
+			},
+			close : function() {
+			}
+		});
+		
+		function categoryClick(id)
+		{
+			$('#flex2').flexOptions({url : "../rest/restaurants/"+urlParams["id"]+"/recipes?cid="+id}).flexReload();
+		}
+	   ////////////////
+	   //菜品的相关方法
+	   ////////////////
+	   function CreateRecipeGrid()
+	   {
+		   $("#flex2").flexigrid({
+				url : "../rest/restaurants/"+urlParams["id"]+"/recipes",
+				method : 'GET',
+				dataType : 'json',
+				colModel : [ 
+							{display : '图片',name : 'image',width : 120,sortable : false,align : 'center'},
+							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'},
+							{display : '价格',name : 'price',width : 120,sortable : false,align : 'center'},
+							{display : '描述',name : 'description',width : 120,sortable : false,align : 'center'},
+							{display : '操作',name : 'tool',width : 150,sortable : false,align : 'center'}
+						   ],
+				buttons : [ 
+				            {name : '刷新',bclass : 'add',onpress : refreshRGrid}, 
+				            {separator : true},
+				            {name : '新增',bclass : 'add',onpress : addRecipe},
+				            {separator : true}
+				          ],
+				preProcess : preProcessR,
+				onSuccess : successR,
+				title : '菜品',
+				usepager : true,
+				showTableToggleBtn : false,
+				width : 800,
+				height : 500
+			});
+	   }
+	   
+	   function preProcessR(json) {
+			json.page = 1;
+			json.total = 1;
+			$.each(json, function(index, value) {
+				if (!isNaN(index)) {
+					json.total++;
+					var obj = {};
+					obj.id = value.id;
+					obj.cell = value;
+					obj.cell.image="<img style='width:100px; height:80px;' src='http://localhost:8080/MenuImages/" + value.image + "'>";
+					obj.cell.tool = "<button class='edit recipesedit' value='" + value.id + "'>编辑</button>&nbsp;<button class='delete recipesdel' value='" + value.id + "'>删除</button>";
+					json.rows.push(obj);
+				}
+			});
+			return json;
+		}
+	   
+	   function successR(obj) {
+			//编辑
+			$('button.recipesedit').click(function() {
+				editRecipe($(this).attr("value"));
+				return false;
+			});
+
+			//删除
+			$('button.recipesdel').click(function() {
+				deleteRecipe($(this).attr("value"));
+				return false;
+			});
+
+			$('button.recipesdel').confirm({
+				msg : '确定删除?',
+				//stopAfter:'ok',
+				//eventType:'mouseover',
+				//timeout:1000,
+				buttons : {
+					ok : '确定',
+					cancel : '取消',
+					separator : '/'
+				}
+			});
+
+			function deleteRecipe(id) {
+				 $.ajax({
+					type : "DELETE",
+					url : "../rest/restaurants/"+urlParams["id"]+"/recipes/" + id,
+					cache : false,
+					success : function(data, textStatus, jqXHR) {
+						$('#flex2').flexOptions({
+							newp : 1
+						}).flexReload();
+					},
+					error : function(xhr, textStatus, errorThrown) {
+						alert(xhr.responseText);
+					}
+				}); 
+			}
+
+			function editRecipe(id) {
+			$.getJSON("../rest/restaurants/"+urlParams["id"]+"/recipes/" + id, function(data) {
+					//alert(data.cid);
+					document.getElementById("rdescription").value = data.description?data.description:"";
+					document.getElementById("rname").value = data.name?data.name:"";
+					document.getElementById("rimage").value = data.image?data.image:"";
+					document.getElementById("price").value=data.price?data.price:"";
+					$("#cid").val(data.cid);
+					
+					options1.url = "../rest/restaurants/"+urlParams["id"]+"/recipes/" + id;
+					$('#myForm1').unbind('submit');
+					$('#myForm1').submit(function() {
+						$(this).ajaxSubmit(options1);
+						return false;
+					});
+					
+					$("#dialog-form1").dialog("open");
+				});
+			}   
+		}
+	   
+	   function refreshRGrid(){
+		   $('#flex2').flexOptions({url : "../rest/restaurants/"+urlParams["id"]+"/recipes"}).flexReload();
+	   }
+	   
+	   function addRecipe()
+		{
+			options1.url = "../rest/restaurants/"+urlParams["id"]+"/recipes";
+			$('#myForm1').unbind('submit');
+			$('#myForm1').submit(function() {
+				$(this).ajaxSubmit(options1);
+				return false;
+			});
+
+			$("#dialog-form1").dialog("open");
+		}
+	   
+	   $("#dialog-form1").dialog({
+			autoOpen : false,
+			height : 500,
+			width : 450,
+			modal : true,
+			buttons : {
+				"确定" : function() {
+					$('#myForm1').submit();
 				},
 				"取消" : function() {
 					$(this).dialog("close");
