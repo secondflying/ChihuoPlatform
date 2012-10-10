@@ -47,7 +47,7 @@ public class DeskResource {
 	@Consumes("multipart/form-data")
 	public Response update(@FormDataParam("name") String name,
 			@FormDataParam("capacity") int capacity,
-			@DefaultValue("-1") @FormDataParam("cid") int tid){
+			@DefaultValue("-1") @FormDataParam("tid") int tid){
 		
 		DeskDao dao = new DeskDao();
 		Desk desk = dao.findById(id);
