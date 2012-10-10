@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>餐桌管理</title>
+<link href="../jquery/css/flexgrid/flexigrid.css" rel="stylesheet" />
+<link href="../jquery/css/ui-lightness/jquery-ui-1.8.22.custom.css"
+	rel="stylesheet" />
+<style class="demo-style">
+#dialog-form {
+	font-size: 62.5%;
+}
+#dialog-form1 {
+	font-size: 62.5%;
+}
+#dialog-form label,#dialog-form input {
+	display: block;
+}
+#dialog-form1 label,#dialog-form1 input {
+	display: block;
+}
+
+#dialog-form input.text {
+	margin-bottom: 12px;
+	width: 95%;
+	padding: .4em;
+}
+#dialog-form1 input.text {
+	margin-bottom: 12px;
+	width: 95%;
+	padding: .4em;
+}
+
+#dialog-form fieldset {
+	padding: 0;
+	border: 0;
+	margin-top: 25px;
+}
+#dialog-form1 fieldset {
+	padding: 0;
+	border: 0;
+	margin-top: 25px;
+}
+#centerdiv{
+	width:100%;
+}
+.left {     
+    float:left;     
+    display:inline;     
+    width:25%;  
+}          
+.right{     
+    float:right;     
+    display:inline;     
+    width:75%;  
+}
+.recipesedit{
+}
+.recipesdel{
+}
+
+
+</style>
+</head>
+<body>
+	<div id="top"></div>
+	<div id="centerdiv">
+		<div class="left">
+			<table id="flex1" style="display: none"></table>
+		</div>
+		<div class="right">
+			<table id="flex2" style="display:none"></table>
+		</div>
+	</div>
+	
+	<div id="dialog-form" title="种类编辑">
+		<form id="myForm" enctype="multipart/form-data" method="post"
+			action="../rest/restaurants">
+			<fieldset>
+				<label for="name">名称</label> <input type="text" name="name" id="name" class="text"/>
+			</fieldset>
+		</form>
+	</div>
+	
+	<div id="dialog-form1" title="餐桌编辑">
+		<form id="myForm1" enctype="multipart/form-data" method="post"
+			action="../rest/restaurants">
+			<fieldset>
+				<label for="name">名称</label><input type="text" name="name"
+				    id="rname" class="text"/>
+				<label for="tid">种类</label>
+				<select name="tid" id="tid">
+				</select>
+				<label for="capacity">容量</label> <input type="text" name="capacity"
+				    id="capacity" class="text"/>
+			</fieldset>
+		</form>
+	</div>
+	
+	<script src="../jquery/js/jquery-1.7.2.min.js"></script>
+	<script src="../jquery/js/jquery-ui-1.8.22.custom.min.js"></script>
+	<script src="../jquery/js/jquery.cookie.js"></script>
+	<script src="../jquery/js/jquery.confirm-1.3.js"></script>
+	<script src="../jquery/js/jquery.form.js"></script>
+	<script src="../jquery/js/flexigrid.js"></script>
+	<script src="../jquery/js/rest.js"></script>
+	<script>
+	
+	   var options = { 
+			url:      "../rest/restaurants/all",
+	        resetForm: true,
+	        success: function (responseText, statusText, xhr, $form) {
+			    $('#flex1').flexOptions({newp: 1}).flexReload();
+			    $("#dialog-form").dialog("close"); 
+			},
+	        error: function (xhr, textStatus, errorThrown) {
+			    alert(xhr.responseText);
+			}
+	    };
+	   
+	   var options1 = { 
+				url:      "../rest/restaurants/all",
+		        resetForm: true,
+		        success: function (responseText, statusText, xhr, $form) {
+				    $('#flex2').flexOptions({newp: 1}).flexReload();
+				    $("#dialog-form1").dialog("close"); 
+				},
+		        error: function (xhr, textStatus, errorThrown) {
+				    alert(xhr.responseText);
+				}
+	    };
+	   
+	   $(document).ready(function() {
+		   CreateCategoryGrid();
+		   CreateDeskGrid();
+		});
+	   ////////////////
+	   //种类的相关方法
+	   ////////////////
+	   function CreateCategoryGrid()
+	   {
+		   $("#flex1").flexigrid({
+				url : "../rest/restaurants/"+urlParams["id"]+"/desktypes",
+				method : 'GET',
+				dataType : 'json',
+				colModel : [ 
+							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'},
+							{display : '操作',name : 'tool',width : 150,sortable : false,align : 'center'}
+						   ],
+				buttons : [ 
+				            {name : '新增',bclass : 'add',onpress : addCategory}, 
+				            {separator : true}
+				          ],
+				preProcess : preProcess,
+				onSuccess : success,
+				title : '种类',
+				usepager : true,
+				showTableToggleBtn : false,
+				width : 300,
+				height : 500
+			});
+	   }
+
+	   function preProcess(json) {
+			json.page = 1;
+			json.total = 1;
+			
+			$("#tid option").empty();
+			
+			$.each(json, function(index, value) {
+				if (!isNaN(index)) {
+					json.total++;
+					var obj = {};
+					obj.id = value.id;
+					obj.cell = value;
+					obj.cell.name="<a>"+value.name+"</a>";
+					obj.cell.tool = "<button class='edit' value='" + value.id + "'>编辑</button>&nbsp;<button class='delete' value='" + value.id + "'>删除</button>";
+					json.rows.push(obj);
+					
+					 $("#tid").append("<option value='"+value.id+"'>"+value.name+"</option>"); 
+				}
+			});
+			return json;
+		}
+		
+		function success(obj) {
+			//编辑
+			$('button.edit').click(function() {
+				editCategory($(this).attr("value"));
+				return false;
+			});
+
+			//删除
+			$('button.delete').click(function() {
+				deleteCategory($(this).attr("value"));
+				return false;
+			});
+
+			$('button.delete').confirm({
+				msg : '确定删除?',
+				//stopAfter:'ok',
+				//eventType:'mouseover',
+				//timeout:1000,
+				buttons : {
+					ok : '确定',
+					cancel : '取消',
+					separator : '/'
+				}
+			});
+
+			function deleteCategory(id) {
+				 $.ajax({
+					type : "DELETE",
+					url : "../rest/restaurants/"+urlParams["id"]+"/desktypes/" + id,
+					cache : false,
+					success : function(data, textStatus, jqXHR) {
+						$('#flex1').flexOptions({
+							newp : 1
+						}).flexReload();
+					},
+					error : function(xhr, textStatus, errorThrown) {
+						alert(xhr.responseText);
+					}
+				}); 
+			}
+
+			function editCategory(id) {
+			$.getJSON("../rest/restaurants/"+urlParams["id"]+"/desktypes/" + id, function(data) {
+					document.getElementById("name").value = data.name?data.name:"";
+					
+					options.url = "../rest/restaurants/"+urlParams["id"]+"/desktypes/" + id;
+					$('#myForm').unbind('submit');
+					$('#myForm').submit(function() {
+						$(this).ajaxSubmit(options);
+						return false;
+					});
+					
+					$("#dialog-form").dialog("open");
+				});
+			}  
+		}
+	   
+		function addCategory()
+		{
+			options.url = "../rest/restaurants/"+urlParams["id"]+"/desktypes";
+			$('#myForm').unbind('submit');
+			$('#myForm').submit(function() {
+				$(this).ajaxSubmit(options);
+				return false;
+			});
+
+			$("#dialog-form").dialog("open");
+		}
+		
+		$("#dialog-form").dialog({
+			autoOpen : false,
+			height : 500,
+			width : 450,
+			modal : true,
+			buttons : {
+				"确定" : function() {
+					$('#myForm').submit();
+				},
+				"取消" : function() {
+					$(this).dialog("close");
+				}
+			},
+			close : function() {
+			}
+		});
+		
+		function categoryClick(id)
+		{
+			//$('#flex2').flexOptions({url : "../rest/restaurants/"+urlParams["id"]+"/recipes?cid="+id}).flexReload();
+		}
+	   ////////////////
+	   //菜品的相关方法
+	   ////////////////
+	   function CreateDeskGrid()
+	   {
+		   $("#flex2").flexigrid({
+				url : "../rest/restaurants/"+urlParams["id"]+"/desks",
+				method : 'GET',
+				dataType : 'json',
+				colModel : [ 
+							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'},
+							{display : '容量',name : 'capacity',width : 120,sortable : false,align : 'center'},
+							{display : '操作',name : 'tool',width : 150,sortable : false,align : 'center'}
+						   ],
+				buttons : [ 
+				            {name : '刷新',bclass : 'add',onpress : refreshRGrid}, 
+				            {separator : true},
+				            {name : '新增',bclass : 'add',onpress : addDesk},
+				            {separator : true}
+				          ],
+				preProcess : preProcessR,
+				onSuccess : successR,
+				title : '餐桌',
+				usepager : true,
+				showTableToggleBtn : false,
+				width : 800,
+				height : 500
+			});
+	   }
+	   
+	   function preProcessR(json) {
+			json.page = 1;
+			json.total = 1;
+			$.each(json, function(index, value) {
+				if (!isNaN(index)) {
+					json.total++;
+					var obj = {};
+					obj.id = value.id;
+					obj.cell = value;
+					obj.cell.tool = "<button class='edit recipesedit' value='" + value.id + "'>编辑</button>&nbsp;<button class='delete recipesdel' value='" + value.id + "'>删除</button>";
+					json.rows.push(obj);
+				}
+			});
+			return json;
+		}
+	   
+	   function successR(obj) {
+			//编辑
+			$('button.recipesedit').click(function() {
+				editDesk($(this).attr("value"));
+				return false;
+			});
+
+			//删除
+			$('button.recipesdel').click(function() {
+				deleteDesk($(this).attr("value"));
+				return false;
+			});
+
+			$('button.recipesdel').confirm({
+				msg : '确定删除?',
+				//stopAfter:'ok',
+				//eventType:'mouseover',
+				//timeout:1000,
+				buttons : {
+					ok : '确定',
+					cancel : '取消',
+					separator : '/'
+				}
+			});
+
+			function deleteDesk(id) {
+				 $.ajax({
+					type : "DELETE",
+					url : "../rest/restaurants/"+urlParams["id"]+"/desks/" + id,
+					cache : false,
+					success : function(data, textStatus, jqXHR) {
+						$('#flex2').flexOptions({
+							newp : 1
+						}).flexReload();
+					},
+					error : function(xhr, textStatus, errorThrown) {
+						alert(xhr.responseText);
+					}
+				}); 
+			}
+
+			function editDesk(id) {
+			$.getJSON("../rest/restaurants/"+urlParams["id"]+"/desks/" + id, function(data) {
+					//alert(data.cid);
+					document.getElementById("rname").value = data.name?data.name:"";
+					document.getElementById("capacity").value=data.capacity?data.capacity:"";
+					$("#tid").val(data.tid);
+					
+					options1.url = "../rest/restaurants/"+urlParams["id"]+"/desks/" + id;
+					$('#myForm1').unbind('submit');
+					$('#myForm1').submit(function() {
+						$(this).ajaxSubmit(options1);
+						return false;
+					});
+					
+					$("#dialog-form1").dialog("open");
+				});
+			}   
+		}
+	   
+	   function refreshRGrid(){
+		   $('#flex2').flexOptions({url : "../rest/restaurants/"+urlParams["id"]+"/desks"}).flexReload();
+	   }
+	   
+	   function addDesk()
+		{
+			options1.url = "../rest/restaurants/"+urlParams["id"]+"/desks";
+			$('#myForm1').unbind('submit');
+			$('#myForm1').submit(function() {
+				$(this).ajaxSubmit(options1);
+				return false;
+			});
+
+			$("#dialog-form1").dialog("open");
+		}
+	   
+	   $("#dialog-form1").dialog({
+			autoOpen : false,
+			height : 500,
+			width : 450,
+			modal : true,
+			buttons : {
+				"确定" : function() {
+					$('#myForm1').submit();
+				},
+				"取消" : function() {
+					$(this).dialog("close");
+				}
+			},
+			close : function() {
+			}
+		});
+	</script>
+</body>
+</html>

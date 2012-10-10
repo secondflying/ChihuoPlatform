@@ -53,6 +53,9 @@ public class DeskResource {
 		Desk desk = dao.findById(id);
 		checkNull(desk);
 		
+		desk.setName(name);
+		desk.setCapacity(capacity);
+		
 		if (tid != -1) {
 			DeskTypeDao cdao = new DeskTypeDao();
 			DeskType category = cdao.findById(tid);
