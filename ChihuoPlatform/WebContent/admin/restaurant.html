@@ -57,6 +57,9 @@
 			<input id="toverifyBtn" type="button" value="同意" style="display:inline"/>
 			<input id="notBtn" type="button" value="拒绝" style="display:inline"/>
 		</div>
+		<div class="right">
+			<input id="managerBtn" type="button" value="进入" style="display:inline"/>
+		</div>
 	</div>
 	
 	<script src="../jquery/js/jquery-1.7.2.min.js"></script>
@@ -101,6 +104,16 @@
 				}
 				else
 				{
+					if(data.status==1){
+						document.getElementById("managerBtn").style.display="inline";
+						$("#managerBtn").click(function(){
+							window.location.href="categories.html?id="+data.id;
+							return false;
+						});
+					}
+					else{
+						document.getElementById("managerBtn").style.display="none";
+					}
 					document.getElementById("toverifyBtn").style.display="none";
 					document.getElementById("notBtn").style.display="none";
 				}
