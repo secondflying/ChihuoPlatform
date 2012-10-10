@@ -38,6 +38,17 @@ public class DeskTypesResource {
 		DeskTypeDao dao = new DeskTypeDao();
 		return dao.findByRestaurant(restaurant);
 	}
+	
+	@Path("{id}")
+	@GET
+	@Produces("application/json; charset=UTF-8")
+	public DeskType getSingle(@PathParam("id") int id) {
+		DeskTypeDao dao = new DeskTypeDao();
+		DeskType c = dao.findById(id);
+		checkNull(c);
+		
+		return c;
+	}
 
 	@POST
 	@Consumes("multipart/form-data")
@@ -54,7 +65,8 @@ public class DeskTypesResource {
 		return Response.created(URI.create(String.valueOf(d.getId())))
 				.build();
 	}
-
+	
+	
 	@Path("{id}")
 	@POST
 	@Consumes("multipart/form-data")
