@@ -15,7 +15,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(propOrder={"id","name","price","description","image","cid"})
-
 public class Recipe implements java.io.Serializable {
 	
 	private Integer id;
