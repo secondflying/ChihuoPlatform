@@ -149,6 +149,7 @@
 		   $("#flex1").flexigrid({
 				url : "../rest/restaurants/"+urlParams["id"]+"/categories",
 				method : 'GET',
+				striped:  true,
 				dataType : 'json',
 				colModel : [ 
 							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'},

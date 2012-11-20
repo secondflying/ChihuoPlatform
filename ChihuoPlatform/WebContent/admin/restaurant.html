@@ -58,7 +58,8 @@
 			<input id="notBtn" type="button" value="拒绝" style="display:inline"/>
 		</div>
 		<div class="right">
-			<input id="managerBtn" type="button" value="进入" style="display:inline"/>
+			<input id="managerBtn" type="button" value="菜品" style="display:inline"/>
+			<input id="deskBtn" type="button" value="餐桌" style="display:inline"/>
 		</div>
 	</div>
 	
@@ -110,9 +111,14 @@
 							window.location.href="categories.html?id="+data.id;
 							return false;
 						});
+						$("#deskBtn").click(function(){
+							window.location.href="desks.html?id="+data.id;
+							return false;
+						});
 					}
 					else{
 						document.getElementById("managerBtn").style.display="none";
+						document.getElementById("deskBtn").style.display="none";
 					}
 					document.getElementById("toverifyBtn").style.display="none";
 					document.getElementById("notBtn").style.display="none";
