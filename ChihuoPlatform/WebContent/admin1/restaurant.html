@@ -77,7 +77,8 @@
 			<input id="delBtn" type="button" value="删除" style="display:inline"/>
 		</div>
 		<div class="right">
-			<input id="managerBtn" type="button" value="管理" style="display:inline"/>
+			<input id="managerBtn" type="button" value="菜品管理" style="display:inline"/>
+			<input id="deskBtn" type="button" value="餐桌管理" style="display:inline"/>
 		</div>
 	</div>
 	<div id="dialog-form" title="餐厅信息编辑">
@@ -174,6 +175,9 @@
 				});
 				$("#managerBtn").click(function(){
 					window.open("manager.html?id="+data.id);
+				});
+				$("#deskBtn").click(function(){
+					window.open("deskmanager.html?id="+data.id);
 				});
 			});
 	   }

@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>餐厅管理</title>
+<title>餐桌管理</title>
 <link href="../jquery/css/flexgrid/flexigrid.css" rel="stylesheet" />
 <link href="../jquery/css/ui-lightness/jquery-ui-1.8.22.custom.css"
 	rel="stylesheet" />
@@ -77,29 +77,22 @@
 		<form id="myForm" enctype="multipart/form-data" method="post"
 			action="../rest/restaurants">
 			<fieldset>
-				<label for="name">名称</label> <input type="text" name="name"
-				    id="name" class="text"/>
-				<label for="description">描述</label> <input type="text" name="description"
-				    id="description" class="text"/>
-			    <label for="image">图片</label> <input type="file" name="image" id="image" />
+				<label for="name">名称</label> <input type="text" name="name" id="name" class="text"/>
 			</fieldset>
 		</form>
 	</div>
 	
-	<div id="dialog-form1" title="菜品编辑">
+	<div id="dialog-form1" title="餐桌编辑">
 		<form id="myForm1" enctype="multipart/form-data" method="post"
 			action="../rest/restaurants">
 			<fieldset>
 				<label for="name">名称</label><input type="text" name="name"
 				    id="rname" class="text"/>
-				<label for="cid">种类</label>
-				<select name="cid" id="cid">
+				<label for="tid">种类</label>
+				<select name="tid" id="tid">
 				</select>
-				<label for="price">价格</label> <input type="text" name="price"
-				    id="price" class="text"/>
-				<label for="description">描述</label> <input type="text" name="description"
-				    id="rdescription" class="text"/>
-			    <label for="image">图片</label> <input type="file" name="image" id="rimage" />
+				<label for="capacity">容量</label> <input type="text" name="capacity"
+				    id="capacity" class="text"/>
 			</fieldset>
 		</form>
 	</div>
@@ -139,7 +132,7 @@
 	   
 	   $(document).ready(function() {
 		   CreateCategoryGrid();
-		   CreateRecipeGrid();
+		   CreateDeskGrid();
 		});
 	   ////////////////
 	   //种类的相关方法
@@ -147,9 +140,8 @@
 	   function CreateCategoryGrid()
 	   {
 		   $("#flex1").flexigrid({
-				url : "../rest/restaurants/"+urlParams["id"]+"/categories",
+				url : "../rest/restaurants/"+urlParams["id"]+"/desktypes",
 				method : 'GET',
-				striped:  true,
 				dataType : 'json',
 				colModel : [ 
 							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'},
@@ -173,7 +165,7 @@
 			json.page = 1;
 			json.total = 1;
 			
-			$("#cid option").empty();
+			$("#tid option").empty();
 			
 			$.each(json, function(index, value) {
 				if (!isNaN(index)) {
@@ -181,11 +173,11 @@
 					var obj = {};
 					obj.id = value.id;
 					obj.cell = value;
-					obj.cell.name="<div><img style='width:100px; height:80px;' src='http://localhost:8080/MenuImages/" + value.image + "' onclick='categoryClick("+value.id+")'><br/><a>"+value.name+"</a></div>";
+					obj.cell.name="<a onclick='categoryClick("+value.id+")'>"+value.name+"</a>";
 					obj.cell.tool = "<button class='edit' value='" + value.id + "'>编辑</button>&nbsp;<button class='delete' value='" + value.id + "'>删除</button>";
 					json.rows.push(obj);
 					
-					 $("#cid").append("<option value='"+value.id+"'>"+value.name+"</option>"); 
+					 $("#tid").append("<option value='"+value.id+"'>"+value.name+"</option>"); 
 				}
 			});
 			return json;
@@ -219,7 +211,7 @@
 			function deleteCategory(id) {
 				 $.ajax({
 					type : "DELETE",
-					url : "../rest/restaurants/"+urlParams["id"]+"/categories/" + id,
+					url : "../rest/restaurants/"+urlParams["id"]+"/desktypes/" + id,
 					cache : false,
 					success : function(data, textStatus, jqXHR) {
 						$('#flex1').flexOptions({
@@ -233,12 +225,10 @@
 			}
 
 			function editCategory(id) {
-			$.getJSON("../rest/restaurants/"+urlParams["id"]+"/categories/" + id, function(data) {
-					document.getElementById("description").value = data.description?data.description:"";
+			$.getJSON("../rest/restaurants/"+urlParams["id"]+"/desktypes/" + id, function(data) {
 					document.getElementById("name").value = data.name?data.name:"";
-					document.getElementById("image").value = data.image?data.image:"";
 					
-					options.url = "../rest/restaurants/"+urlParams["id"]+"/categories/" + id;
+					options.url = "../rest/restaurants/"+urlParams["id"]+"/desktypes/" + id;
 					$('#myForm').unbind('submit');
 					$('#myForm').submit(function() {
 						$(this).ajaxSubmit(options);
@@ -252,7 +242,7 @@
 	   
 		function addCategory()
 		{
-			options.url = "../rest/restaurants/"+urlParams["id"]+"/categories";
+			options.url = "../rest/restaurants/"+urlParams["id"]+"/desktypes";
 			$('#myForm').unbind('submit');
 			$('#myForm').submit(function() {
 				$(this).ajaxSubmit(options);
@@ -281,33 +271,31 @@
 		
 		function categoryClick(id)
 		{
-			$('#flex2').flexOptions({url : "../rest/restaurants/"+urlParams["id"]+"/recipes?cid="+id}).flexReload();
+			$('#flex2').flexOptions({url : "../rest/restaurants/"+urlParams["id"]+"/desks?tid="+id}).flexReload();
 		}
 	   ////////////////
 	   //菜品的相关方法
 	   ////////////////
-	   function CreateRecipeGrid()
+	   function CreateDeskGrid()
 	   {
 		   $("#flex2").flexigrid({
-				url : "../rest/restaurants/"+urlParams["id"]+"/recipes",
+				url : "../rest/restaurants/"+urlParams["id"]+"/desks",
 				method : 'GET',
 				dataType : 'json',
 				colModel : [ 
-							{display : '图片',name : 'image',width : 120,sortable : false,align : 'center'},
 							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'},
-							{display : '价格',name : 'price',width : 120,sortable : false,align : 'center'},
-							{display : '描述',name : 'description',width : 120,sortable : false,align : 'center'},
+							{display : '容量',name : 'capacity',width : 120,sortable : false,align : 'center'},
 							{display : '操作',name : 'tool',width : 150,sortable : false,align : 'center'}
 						   ],
 				buttons : [ 
 				            {name : '刷新',bclass : 'add',onpress : refreshRGrid}, 
 				            {separator : true},
-				            {name : '新增',bclass : 'add',onpress : addRecipe},
+				            {name : '新增',bclass : 'add',onpress : addDesk},
 				            {separator : true}
 				          ],
 				preProcess : preProcessR,
 				onSuccess : successR,
-				title : '菜品',
+				title : '餐桌',
 				usepager : true,
 				showTableToggleBtn : false,
 				width : 800,
@@ -324,7 +312,6 @@
 					var obj = {};
 					obj.id = value.id;
 					obj.cell = value;
-					obj.cell.image="<img style='width:100px; height:80px;' src='http://localhost:8080/MenuImages/" + value.image + "'>";
 					obj.cell.tool = "<button class='edit recipesedit' value='" + value.id + "'>编辑</button>&nbsp;<button class='delete recipesdel' value='" + value.id + "'>删除</button>";
 					json.rows.push(obj);
 				}
@@ -335,13 +322,13 @@
 	   function successR(obj) {
 			//编辑
 			$('button.recipesedit').click(function() {
-				editRecipe($(this).attr("value"));
+				editDesk($(this).attr("value"));
 				return false;
 			});
 
 			//删除
 			$('button.recipesdel').click(function() {
-				deleteRecipe($(this).attr("value"));
+				deleteDesk($(this).attr("value"));
 				return false;
 			});
 
@@ -357,10 +344,10 @@
 				}
 			});
 
-			function deleteRecipe(id) {
+			function deleteDesk(id) {
 				 $.ajax({
 					type : "DELETE",
-					url : "../rest/restaurants/"+urlParams["id"]+"/recipes/" + id,
+					url : "../rest/restaurants/"+urlParams["id"]+"/desks/" + id,
 					cache : false,
 					success : function(data, textStatus, jqXHR) {
 						$('#flex2').flexOptions({
@@ -373,16 +360,14 @@
 				}); 
 			}
 
-			function editRecipe(id) {
-			$.getJSON("../rest/restaurants/"+urlParams["id"]+"/recipes/" + id, function(data) {
+			function editDesk(id) {
+			$.getJSON("../rest/restaurants/"+urlParams["id"]+"/desks/" + id, function(data) {
 					//alert(data.cid);
-					document.getElementById("rdescription").value = data.description?data.description:"";
 					document.getElementById("rname").value = data.name?data.name:"";
-					document.getElementById("rimage").value = data.image?data.image:"";
-					document.getElementById("price").value=data.price?data.price:"";
-					$("#cid").val(data.cid);
+					document.getElementById("capacity").value=data.capacity?data.capacity:"";
+					$("#tid").val(data.tid);
 					
-					options1.url = "../rest/restaurants/"+urlParams["id"]+"/recipes/" + id;
+					options1.url = "../rest/restaurants/"+urlParams["id"]+"/desks/" + id;
 					$('#myForm1').unbind('submit');
 					$('#myForm1').submit(function() {
 						$(this).ajaxSubmit(options1);
@@ -395,12 +380,12 @@
 		}
 	   
 	   function refreshRGrid(){
-		   $('#flex2').flexOptions({url : "../rest/restaurants/"+urlParams["id"]+"/recipes"}).flexReload();
+		   $('#flex2').flexOptions({url : "../rest/restaurants/"+urlParams["id"]+"/desks"}).flexReload();
 	   }
 	   
-	   function addRecipe()
+	   function addDesk()
 		{
-			options1.url = "../rest/restaurants/"+urlParams["id"]+"/recipes";
+			options1.url = "../rest/restaurants/"+urlParams["id"]+"/desks";
 			$('#myForm1').unbind('submit');
 			$('#myForm1').submit(function() {
 				$(this).ajaxSubmit(options1);
