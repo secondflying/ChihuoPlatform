@@ -61,6 +61,32 @@ public class DesksResource {
 					.entity(entity).build();
 		}
 	}
+	
+	
+	@GET
+	@Produces("application/json; charset=UTF-8")
+	public Response getStatus(@DefaultValue("-1") @QueryParam("tid") int tid) {
+		if (tid != -1) {
+			DeskTypeDao cdao = new DeskTypeDao();
+			DeskType dtype = cdao.findById(tid);
+			if (dtype == null || dtype.getStatus() == -1) {
+				return Response.status(Response.Status.BAD_REQUEST)
+						.entity("桌子类型不存在").type(MediaType.TEXT_PLAIN).build();
+			}
+			
+			DeskDao dao = new DeskDao();
+			List<Desk> list = dao.findByType(dtype);
+			GenericEntity<List<Desk>> entity = new GenericEntity<List<Desk>>(list) {};
+			return Response.status(Response.Status.OK)
+					.entity(entity).build();
+		}else {
+			DeskDao dao = new DeskDao();
+			List<Desk> list = dao.findByRestaurant(restaurant);
+			GenericEntity<List<Desk>> entity = new GenericEntity<List<Desk>>(list) {};
+			return Response.status(Response.Status.OK)
+					.entity(entity).build();
+		}
+	}
 
 	@POST
 	@Consumes("multipart/form-data")

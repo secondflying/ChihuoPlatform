@@ -1,14 +1,29 @@
-//package com.chihuo.dao;
-//
-//import java.util.List;
-//
-//import org.hibernate.Criteria;
-//import org.hibernate.criterion.Restrictions;
-//
-//import com.chihuo.bussiness.Order;
-//
-//public class OrderDao extends GenericHibernateDAO﻿<Order, Integer> {
-//	
+package com.chihuo.dao;
+
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+
+import com.chihuo.bussiness.Order;
+import com.chihuo.bussiness.Restaurant;
+
+public class OrderDao extends GenericHibernateDAO﻿<Order, Integer> {
+	
+	public List<Order> findByRestaurant(Restaurant r) {
+		Criteria crit = getSession().createCriteria(Order.class).add(Restrictions.not(Restrictions.eq("status", -1)));
+		crit = crit.createCriteria("restaurant").add(Restrictions.eq("id", r.getId()));
+		return (List<Order>)crit.list();
+	}
+	
+	//判断该桌是否有status 为1的order，有的话，说明该桌已开台
+	public boolean isDeskCanOrder(int did) {
+		Criteria crit = getSession().createCriteria(Order.class).add(Restrictions.not(Restrictions.eq("status", 1)));
+		crit = crit.createCriteria("desk").add(Restrictions.eq("id", did));
+		return crit.list().isEmpty();
+	}
+	
+	
 //	public List<Order> findNotPay() {
 //		Criteria crit = getSession().createCriteria(Order.class).add(Restrictions.or(Restrictions.eq("status", 1), Restrictions.eq("status", 3)));
 //
@@ -37,4 +52,4 @@
 //				.add(Restrictions.eq("id", tid));
 //		return (Order) crit.uniqueResult();
 //	}
-//}
+}

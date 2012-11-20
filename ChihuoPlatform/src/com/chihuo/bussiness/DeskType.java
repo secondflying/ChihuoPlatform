@@ -27,7 +27,7 @@ public class DeskType implements java.io.Serializable {
 	
 	@XmlTransient
 	private Restaurant restaurant;
-
+	
 	public DeskType() {
 	}
 

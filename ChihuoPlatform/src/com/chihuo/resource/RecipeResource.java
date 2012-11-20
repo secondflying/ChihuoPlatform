@@ -117,7 +117,6 @@ public class RecipeResource {
 		return Response.status(Response.Status.OK).build();
 	}
 	
-
 	@DELETE
 	public void delete() {
 		RecipeDao dao = new RecipeDao();

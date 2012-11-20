@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,11 +20,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.chihuo.bussiness.Desk;
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.dao.RestaurantDao;
 import com.sun.jersey.multipart.FormDataParam;
@@ -41,6 +44,19 @@ public class RestaurantsResource {
 		RestaurantDao dao = new RestaurantDao();
 		return dao.findByStatus(1);
 	}
+	
+//	@GET
+//	@Produces({ MediaType.APPLICATION_JSON })
+//	public Response get() {
+//		HashMap map = new HashMap();
+//	    map.put( new Integer( 2 ), "two" );
+//	    map.put( new Integer( 4 ), "four" );
+//	    
+//	    GenericEntity<HashMap> entity = new GenericEntity<HashMap>(map) {};
+//		return Response.status(Response.Status.OK)
+//				.entity(entity).build();
+//	}
+//	
 
 	@POST
 	@Consumes("multipart/form-data")

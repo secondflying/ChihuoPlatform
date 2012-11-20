@@ -182,6 +182,15 @@ public class RestaurantResource {
 		return new DesksResource(uriInfo, request, c);
 	}
 	
+	@Path("/orders")
+	public OrdersResource getOrderResource() {
+		RestaurantDao dao = new RestaurantDao();
+		Restaurant c = dao.findById(id);
+		checkNull(c);
+		
+		return new OrdersResource(uriInfo, request, c);
+	}
+	
 	private void checkNull(Restaurant c){
 		if (c == null) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);

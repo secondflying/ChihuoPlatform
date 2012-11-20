@@ -16,23 +16,23 @@ import com.chihuo.bussiness.Restaurant;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.api.json.JSONJAXBContext;
 
-@Provider
-public class JAXBContextResolver implements ContextResolver<JAXBContext> {
-
-	private final JAXBContext context;
-
-	private final Set<Class> types;
-
-	private Class[] ctypes = { Restaurant.class, Category.class, Recipe.class, Desk.class, DeskType.class, };
-
-	public JAXBContextResolver() throws Exception {
-		this.types = new HashSet(Arrays.asList(ctypes));
-		this.context = new JSONJAXBContext(JSONConfiguration.natural().build(),
-				ctypes);
+	@Provider
+	public class JAXBContextResolver implements ContextResolver<JAXBContext> {
+	
+		private final JAXBContext context;
+	
+		private final Set<Class> types;
+	
+		private Class[] ctypes = { Restaurant.class, Category.class, Recipe.class, Desk.class, DeskType.class};
+	
+		public JAXBContextResolver() throws Exception {
+			this.types = new HashSet(Arrays.asList(ctypes));
+			this.context = new JSONJAXBContext(JSONConfiguration.natural().build(),
+					ctypes);
+		}
+	
+		@Override
+		public JAXBContext getContext(Class<?> objectType) {
+			return (types.contains(objectType)) ? context : null;
+		}
 	}
-
-	@Override
-	public JAXBContext getContext(Class<?> objectType) {
-		return (types.contains(objectType)) ? context : null;
-	}
-}
