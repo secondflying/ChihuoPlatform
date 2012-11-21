@@ -11,6 +11,8 @@ import javax.xml.bind.JAXBContext;
 import com.chihuo.bussiness.Category;
 import com.chihuo.bussiness.Desk;
 import com.chihuo.bussiness.DeskType;
+import com.chihuo.bussiness.Order;
+import com.chihuo.bussiness.OrderItem;
 import com.chihuo.bussiness.Recipe;
 import com.chihuo.bussiness.Restaurant;
 import com.sun.jersey.api.json.JSONConfiguration;
@@ -23,7 +25,7 @@ import com.sun.jersey.api.json.JSONJAXBContext;
 	
 		private final Set<Class> types;
 	
-		private Class[] ctypes = { Restaurant.class, Category.class, Recipe.class, Desk.class, DeskType.class};
+		private Class[] ctypes = { Restaurant.class, Category.class, Recipe.class, Desk.class, DeskType.class, Order.class, OrderItem.class};
 	
 		public JAXBContextResolver() throws Exception {
 			this.types = new HashSet(Arrays.asList(ctypes));

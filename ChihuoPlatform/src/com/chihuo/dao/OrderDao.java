@@ -23,6 +23,13 @@ public class OrderDao extends GenericHibernateDAO﻿<Order, Integer> {
 		return crit.list().isEmpty();
 	}
 	
+	//获取状态为1的桌子列表
+	public List<Order> findByStatus(Restaurant r) {
+		Criteria crit = getSession().createCriteria(Order.class).add(Restrictions.eq("status", 1));
+		crit = crit.createCriteria("restaurant").add(Restrictions.eq("id", r.getId()));
+		return (List<Order>)crit.list();
+	}
+	
 	
 //	public List<Order> findNotPay() {
 //		Criteria crit = getSession().createCriteria(Order.class).add(Restrictions.or(Restrictions.eq("status", 1), Restrictions.eq("status", 3)));
