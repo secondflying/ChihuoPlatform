@@ -8,11 +8,8 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="restaurant" class="com.chihuo.bussiness.Restaurant" fetch="select">
-            <column name="rid" />
-        </many-to-one>
         <many-to-one name="recipe" class="com.chihuo.bussiness.Recipe" fetch="select">
-            <column name="recipeid" />
+            <column name="rid" />
         </many-to-one>
         <many-to-one name="order" class="com.chihuo.bussiness.Order" fetch="select">
             <column name="oid" />

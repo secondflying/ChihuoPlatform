@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
@@ -70,11 +72,15 @@ public class OrdersResource {
 		// TODO 在生成的code里面包含桌号，避免同时有相同code的order
 		order.setCode(Math.round(Math.random() * 9000 + 1000) + "");
 
-		
 		odao.saveOrUpdate(order);
 
 		return Response.created(URI.create(String.valueOf(order.getId()))).entity(order)
 				.type(MediaType.APPLICATION_JSON).build();
+	}
+	
+	@Path("{id}")
+	public OrderResource getSingleResource(@PathParam("id") int id) {
+		return new OrderResource(uriInfo, request, restaurant, id);
 	}
 
 }

@@ -20,9 +20,11 @@ import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.Desk;
 import com.chihuo.bussiness.DeskType;
+import com.chihuo.bussiness.Order;
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.dao.DeskDao;
 import com.chihuo.dao.DeskTypeDao;
+import com.chihuo.dao.OrderDao;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class DesksResource {
@@ -65,27 +67,12 @@ public class DesksResource {
 	@Path("/status")
 	@GET
 	@Produces("application/json; charset=UTF-8")
-	public Response getStatus(@DefaultValue("-1") @QueryParam("tid") int tid) {
-		if (tid != -1) {
-			DeskTypeDao cdao = new DeskTypeDao();
-			DeskType dtype = cdao.findById(tid);
-			if (dtype == null || dtype.getStatus() == -1) {
-				return Response.status(Response.Status.BAD_REQUEST)
-						.entity("桌子类型不存在").type(MediaType.TEXT_PLAIN).build();
-			}
-			
-			DeskDao dao = new DeskDao();
-			List<Desk> list = dao.findByType(dtype);
-			GenericEntity<List<Desk>> entity = new GenericEntity<List<Desk>>(list) {};
-			return Response.status(Response.Status.OK)
-					.entity(entity).build();
-		}else {
-			DeskDao dao = new DeskDao();
-			List<Desk> list = dao.findByRestaurant(restaurant);
-			GenericEntity<List<Desk>> entity = new GenericEntity<List<Desk>>(list) {};
-			return Response.status(Response.Status.OK)
-					.entity(entity).build();
-		}
+	public Response getStatus() {
+		OrderDao odao = new OrderDao();
+		List<Order> list = odao.findByStatus(restaurant);
+		GenericEntity<List<Order>> entity = new GenericEntity<List<Order>>(list) {};
+		return Response.status(Response.Status.OK)
+				.entity(entity).build();
 	}
 
 	@POST

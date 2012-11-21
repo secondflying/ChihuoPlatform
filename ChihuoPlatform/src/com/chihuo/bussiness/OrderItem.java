@@ -17,20 +17,18 @@ public class OrderItem implements java.io.Serializable {
 
 	@XmlElement
 	private Integer id;
-	private Recipe recipe;
 	private Integer count;
 	
 	@XmlTransient
 	private Order order;
-	private Restaurant restaurant;
+	private Recipe recipe;
 	private Integer status;
 
 	public OrderItem() {
 	}
 
-	public OrderItem(Restaurant restaurant, Recipe recipe, Order order,
+	public OrderItem(Recipe recipe, Order order,
 			Integer count, Integer status) {
-		this.restaurant = restaurant;
 		this.recipe = recipe;
 		this.order = order;
 		this.count = count;
@@ -43,14 +41,6 @@ public class OrderItem implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public Restaurant getRestaurant() {
-		return this.restaurant;
-	}
-
-	public void setRestaurant(Restaurant restaurant) {
-		this.restaurant = restaurant;
 	}
 
 	public Recipe getRecipe() {
