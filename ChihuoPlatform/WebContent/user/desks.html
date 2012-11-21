@@ -7,7 +7,25 @@
 <link href="../jquery/css/ui-lightness/jquery-ui-1.8.22.custom.css"
 	rel="stylesheet" />
 <style class="demo-style">
+#dialog-form {
+	font-size: 62.5%;
+}
 
+#dialog-form label,#dialog-form input {
+	display: block;
+}
+
+#dialog-form input.text {
+	margin-bottom: 12px;
+	width: 95%;
+	padding: .4em;
+}
+
+#dialog-form fieldset {
+	padding: 0;
+	border: 0;
+	margin-top: 25px;
+}
 #centerdiv{
 	width:100%;
 }
@@ -38,6 +56,17 @@
 		<div class="right">
 			<table id="flex2" style="display:none"></table>
 		</div>
+	</div>
+	
+	<div id="dialog-form" title="开台">
+		<form id="myForm" enctype="multipart/form-data" method="post"
+			action="../rest/restaurants">
+			<fieldset>
+				<input type="text" name="did" id="did" style="visibility:hidden"/>
+				<label for="description">人数：</label> <input type="text" name="number"
+				    id="description" class="text"/>
+			</fieldset>
+		</form>
 	</div>
 	
 	<script src="../jquery/js/jquery-1.7.2.min.js"></script>
@@ -111,7 +140,7 @@
 			$('#flex2').flexOptions({url : "../rest/restaurants/"+urlParams["id"]+"/desks?tid="+id}).flexReload();
 		}
 	   ////////////////
-	   //菜品的相关方法
+	   //餐桌的相关方法
 	   ////////////////
 	   function CreateDeskGrid()
 	   {
@@ -121,7 +150,8 @@
 				dataType : 'json',
 				colModel : [ 
 							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'},
-							{display : '容量',name : 'capacity',width : 120,sortable : false,align : 'center'}
+							{display : '容量',name : 'capacity',width : 120,sortable : false,align : 'center'},
+							{display : '状态',name : 'status',width : 120,sortable : false,align : 'center'}
 						   ],
 				buttons : [ 
 				            {name : '刷新',bclass : 'add',onpress : refreshRGrid}, 
@@ -146,6 +176,8 @@
 					var obj = {};
 					obj.id = value.id;
 					obj.cell = value;
+					obj.cell.name="<a onclick='deskClick("+value.id+")'>"+value.name+"</a>";
+					obj.cell.status=value.status==0?"":"忙";
 					json.rows.push(obj);
 				}
 			});
@@ -159,6 +191,48 @@
 		   $('#flex2').flexOptions({url : "../rest/restaurants/"+urlParams["id"]+"/desks"}).flexReload();
 	   }
 	   
+	   function deskClick(id)
+		{
+			document.getElementById("did").value = id+"";
+			
+			options.url = "../rest/restaurants/"+urlParams["id"]+"/orders";
+			$('#myForm').unbind('submit');
+			$('#myForm').submit(function() {
+				$(this).ajaxSubmit(options);
+				return false;
+			});
+			
+			$("#dialog-form").dialog("open");
+		} 
+	   
+	   var options = { 
+				url:      "../rest/restaurants",
+		        resetForm: true,
+		        success: function (responseText, statusText, xhr, $form) {
+				    $("#dialog-form").dialog("close"); 
+				    $('#flex2').flexOptions({newp:1}).flexReload();
+				},
+		        error: function (xhr, textStatus, errorThrown) {
+				    alert(xhr.responseText);
+				}
+		    };
+	   
+	   $("#dialog-form").dialog({
+			autoOpen : false,
+			height : 500,
+			width : 450,
+			modal : true,
+			buttons : {
+				"确定" : function() {
+					$('#myForm').submit();
+				},
+				"取消" : function() {
+					$(this).dialog("close");
+				}
+			},
+			close : function() {
+			}
+		});
 	</script>
 </body>
 </html>
