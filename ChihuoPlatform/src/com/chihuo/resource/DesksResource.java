@@ -62,7 +62,7 @@ public class DesksResource {
 		}
 	}
 	
-	
+	@Path("/status")
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	public Response getStatus(@DefaultValue("-1") @QueryParam("tid") int tid) {
