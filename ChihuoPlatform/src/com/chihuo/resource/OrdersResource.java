@@ -85,7 +85,6 @@ public class OrdersResource {
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	public Response getByCode(@QueryParam("code") String code) {
-		
 		OrderDao odao = new OrderDao();
 		Order order = odao.findByCode(restaurant, code);
 		if (order == null) {
