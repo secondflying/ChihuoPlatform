@@ -106,8 +106,11 @@ public class OrderResource {
 		}
 
 		// redirect
-		return Response.status(Response.Status.OK).entity(order)
-				.type(MediaType.APPLICATION_JSON).build();
+//		return Response.status(Response.Status.OK).entity(order)
+//				.type(MediaType.APPLICATION_JSON).build();
+		
+		URI uri = uriInfo.getRequestUri();
+		return Response.seeOther(uri).build();
 	}
 
 	// 请求结账
