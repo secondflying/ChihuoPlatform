@@ -6,6 +6,7 @@ import java.net.URI;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -55,9 +56,10 @@ public class OrderResource {
 
 	// 加减菜
 	@POST
-	@Consumes("multipart/form-data")
-	public Response update(@FormDataParam("rid") int rid,
-			@FormDataParam("count") int count) {
+	@Consumes("application/x-www-form-urlencoded")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@FormParam("rid") int rid,
+			@FormParam("count") int count) {
 
 		OrderDao dao = new OrderDao();
 		Order order = dao.findById(id);
@@ -104,8 +106,8 @@ public class OrderResource {
 		}
 
 		// redirect
-		URI uri = uriInfo.getRequestUri();
-		return Response.seeOther(uri).build();
+		return Response.status(Response.Status.OK).entity(order)
+				.type(MediaType.APPLICATION_JSON).build();
 	}
 
 	// 请求结账

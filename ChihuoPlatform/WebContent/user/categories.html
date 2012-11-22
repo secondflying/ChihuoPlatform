@@ -154,9 +154,9 @@
 	   {
 		   $.ajax({
 				type : "post",
-				url : "../rest/restaurants/"+urlParams["id"]+"/orders/1",
+				url : "../rest/restaurants/"+urlParams["id"]+"/orders/7",
 				data:{'rid':id,'count':1},
-				beforesend: function(xhr){xhr.setrequestheader("content-type","application/json; charset=utf-8");},
+				//beforesend: function(xhr){xhr.setrequestheader("content-type","multipart/form-data");},
 				cache : false,
 				success : function(data, textStatus, jqXHR) {
 					alert(data);
