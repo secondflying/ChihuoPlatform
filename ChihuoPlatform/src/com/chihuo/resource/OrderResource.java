@@ -102,6 +102,7 @@ public class OrderResource {
 			item.setOrder(order);
 			item.setRecipe(recipe);
 			item.setCount(totalCount);
+			item.setStatus(0);
 			idao.saveOrUpdate(item);
 		}
 
@@ -182,7 +183,6 @@ public class OrderResource {
 		// 修改状态为已上
 		oi.setStatus(1);
 		oDao.saveOrUpdate(oi);
-		order = dao.findById(id);
 
 		return Response.status(Response.Status.OK).entity(oi)
 				.type(MediaType.APPLICATION_JSON).build();
