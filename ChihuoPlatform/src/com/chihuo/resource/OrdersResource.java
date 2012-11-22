@@ -4,9 +4,12 @@ import java.net.URI;
 import java.util.Date;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
@@ -75,6 +78,22 @@ public class OrdersResource {
 		odao.saveOrUpdate(order);
 
 		return Response.created(URI.create(String.valueOf(order.getId()))).entity(order)
+				.type(MediaType.APPLICATION_JSON).build();
+	}
+	
+	
+	@GET
+	@Produces("application/json; charset=UTF-8")
+	public Response getByCode(@QueryParam("code") String code) {
+		
+		OrderDao odao = new OrderDao();
+		Order order = odao.findByCode(restaurant, code);
+		if (order == null) {
+			return Response.status(Response.Status.NOT_FOUND).entity("编码错误")
+					.type(MediaType.TEXT_PLAIN).build();
+		}
+
+		return Response.status(Response.Status.OK).entity(order)
 				.type(MediaType.APPLICATION_JSON).build();
 	}
 	

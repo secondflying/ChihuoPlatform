@@ -31,6 +31,16 @@ public class OrderDao extends GenericHibernateDAO﻿<Order, Integer> {
 	}
 	
 	
+	public Order findByCode(Restaurant r,String code) {
+		Criteria crit = getSession().createCriteria(Order.class)
+				.add(Restrictions.eq("code", code))
+				.add(Restrictions.eq("status", 1));
+		crit = crit.createCriteria("restaurant").add(Restrictions.eq("id", r.getId()));
+
+		return (Order) crit.uniqueResult();
+	}
+	
+	
 //	public List<Order> findNotPay() {
 //		Criteria crit = getSession().createCriteria(Order.class).add(Restrictions.or(Restrictions.eq("status", 1), Restrictions.eq("status", 3)));
 //
