@@ -83,7 +83,8 @@
 							{display : '图片',name : 'image',width : 120,sortable : false,align : 'center'},
 							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'},
 							{display : '价格',name : 'price',width : 120,sortable : false,align : 'center'},
-							{display : '描述',name : 'description',width : 120,sortable : false,align : 'center'}
+							{display : '描述',name : 'description',width : 120,sortable : false,align : 'center'},
+							{display : '操作',name : 'tool',width : 120,sortable : false,align : 'center'}
 						   ],
 				buttons : [ 
 				            {name : '刷新',bclass : 'add',onpress : refreshRGrid}, 
@@ -94,7 +95,7 @@
 				title : '菜品',
 				usepager : true,
 				showTableToggleBtn : false,
-				width : 550,
+				width : 670,
 				height : 500
 			});
 		});
@@ -110,6 +111,7 @@
 					obj.id = value.id;
 					obj.cell = value;
 					obj.cell.name="<div><img style='width:100px; height:80px;' src='http://localhost:8080/MenuImages/" + value.image + "' onclick='categoryClick("+value.id+")'><br/><a>"+value.name+"</a></div>";
+					
 					json.rows.push(obj);
 				}
 			});
@@ -129,6 +131,7 @@
 					obj.id = value.id;
 					obj.cell = value;
 					obj.cell.image="<img style='width:100px; height:80px;' src='http://localhost:8080/MenuImages/" + value.image + "'>";
+					obj.cell.tool="<button class='edit recipesedit' value='" + value.id + "' onclick='jiaclick("+value.id+","+value.cid+")'>加菜</button>&nbsp;<button class='delete recipesdel' value='" + value.id + "'>减菜</button>";;
 					json.rows.push(obj);
 				}
 			});
@@ -147,6 +150,22 @@
 		{
 			$('#flex2').flexOptions({url : "../rest/restaurants/"+urlParams["id"]+"/recipes?cid="+id}).flexReload();
 		}
+	   function jiaclick(id,cid)
+	   {
+		   $.ajax({
+				type : "post",
+				url : "../rest/restaurants/"+urlParams["id"]+"/orders/1",
+				data:{'rid':id,'count':1},
+				beforesend: function(xhr){xhr.setrequestheader("content-type","application/json; charset=utf-8");},
+				cache : false,
+				success : function(data, textStatus, jqXHR) {
+					alert(data);
+				},
+				error : function(xhr, textStatus, errorThrown) {
+					alert(xhr.responseText);
+				}
+			});
+	   }
 	   
 	</script>
 </body>

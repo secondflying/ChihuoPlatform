@@ -7,40 +7,33 @@
 <link href="../jquery/css/ui-lightness/jquery-ui-1.8.22.custom.css"
 	rel="stylesheet" />
 <style class="demo-style">
-#dialog-form {
+.dialog-form {
 	font-size: 62.5%;
-}
-#dialog-form1 {
-	font-size: 62.5%;
-}
-#dialog-form label,#dialog-form input {
-	display: block;
-}
-#dialog-form1 label,#dialog-form1 input {
-	display: block;
 }
 
-#dialog-form input.text {
-	margin-bottom: 12px;
-	width: 95%;
-	padding: .4em;
+.dialog-form-label{
+	display: block;
 }
-#dialog-form1 input.text {
+.dialog-form-input{
+	display: block;
 	margin-bottom: 12px;
 	width: 95%;
 	padding: .4em;
 }
 
-#dialog-form fieldset {
+
+.dialog-form-input-text {
+	margin-bottom: 12px;
+	width: 95%;
+	padding: .4em;
+}
+
+.dialog-form-fieldset {
 	padding: 0;
 	border: 0;
 	margin-top: 25px;
 }
-#dialog-form1 fieldset {
-	padding: 0;
-	border: 0;
-	margin-top: 25px;
-}
+
 #centerdiv{
 	width:100%;
 }
@@ -73,26 +66,37 @@
 		</div>
 	</div>
 	
-	<div id="dialog-form" title="种类编辑">
+	<div id="dialog-form" class="dialog-form" title="种类编辑">
 		<form id="myForm" enctype="multipart/form-data" method="post"
 			action="../rest/restaurants">
 			<fieldset>
-				<label for="name">名称</label> <input type="text" name="name" id="name" class="text"/>
+				<label for="name" class="dialog-form-label">名称</label> <input type="text" name="name" id="name" class="dialog-form-input"/>
 			</fieldset>
 		</form>
 	</div>
 	
-	<div id="dialog-form1" title="餐桌编辑">
+	<div id="dialog-form1" class="dialog-form" title="餐桌编辑">
 		<form id="myForm1" enctype="multipart/form-data" method="post"
 			action="../rest/restaurants">
 			<fieldset>
-				<label for="name">名称</label><input type="text" name="name"
-				    id="rname" class="text"/>
-				<label for="tid">种类</label>
+				<label for="name" class="dialog-form-label">名称</label><input type="text" name="name"
+				    id="rname" class="dialog-form-input"/>
+				<label for="tid" class="dialog-form-label">种类</label>
 				<select name="tid" id="tid">
 				</select>
-				<label for="capacity">容量</label> <input type="text" name="capacity"
-				    id="capacity" class="text"/>
+				<label for="capacity" class="dialog-form-label">容量</label> <input type="text" name="capacity"
+				    id="capacity" class="dialog-form-input"/>
+			</fieldset>
+		</form>
+	</div>
+	
+	<div id="dialog-form2" class="dialog-form" title="开台">
+		<form id="myForm2" enctype="multipart/form-data" method="post"
+			action="../rest/restaurants">
+			<fieldset>
+				<input type="text" name="did" id="did" style="visibility:hidden"/>
+				<label for="number" class="dialog-form-label">人数：</label> <input type="text" name="number"
+				    id="number" class="dialog-form-input"/>
 			</fieldset>
 		</form>
 	</div>
@@ -173,7 +177,7 @@
 					var obj = {};
 					obj.id = value.id;
 					obj.cell = value;
-					obj.cell.name="<a onclick='categoryClick("+value.id+")'>"+value.name+"</a>";
+					obj.cell.name="<a href='#' onclick='categoryClick("+value.id+")'>"+value.name+"</a>";
 					obj.cell.tool = "<button class='edit' value='" + value.id + "'>编辑</button>&nbsp;<button class='delete' value='" + value.id + "'>删除</button>";
 					json.rows.push(obj);
 					
@@ -285,6 +289,7 @@
 				colModel : [ 
 							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'},
 							{display : '容量',name : 'capacity',width : 120,sortable : false,align : 'center'},
+							{display : '状态',name : 'status',width : 120,sortable : false,align : 'center'},
 							{display : '操作',name : 'tool',width : 150,sortable : false,align : 'center'}
 						   ],
 				buttons : [ 
@@ -312,6 +317,8 @@
 					var obj = {};
 					obj.id = value.id;
 					obj.cell = value;
+					obj.cell.name="<a href='#' onclick='deskClick("+value.id+","+value.oid+")'>"+value.name+"</a>";
+					obj.cell.status=value.orderStatus?"忙":"";
 					obj.cell.tool = "<button class='edit recipesedit' value='" + value.id + "'>编辑</button>&nbsp;<button class='delete recipesdel' value='" + value.id + "'>删除</button>";
 					json.rows.push(obj);
 				}
@@ -403,6 +410,55 @@
 			buttons : {
 				"确定" : function() {
 					$('#myForm1').submit();
+				},
+				"取消" : function() {
+					$(this).dialog("close");
+				}
+			},
+			close : function() {
+			}
+		});
+	   
+	   //////////////////////
+	   var options2 = { 
+				url:      "../rest/restaurants",
+		        resetForm: true,
+		        success: function (responseText, statusText, xhr, $form) {
+				    $("#dialog-form2").dialog("close"); 
+				    $('#flex2').flexOptions({newp:1}).flexReload();
+				    
+				},
+		        error: function (xhr, textStatus, errorThrown) {
+				    alert(xhr.responseText);
+				}
+		    };
+	   function deskClick(id,oid)
+		{
+		   if(oid){
+			   window.location.href="order.html?id="+urlParams["id"]+"&oid="+oid; 
+		   }
+		    else{
+		    	document.getElementById("did").value = id+"";
+				
+				options2.url = "../rest/restaurants/"+urlParams["id"]+"/orders";
+				$('#myForm2').unbind('submit');
+				$('#myForm2').submit(function() {
+					$(this).ajaxSubmit(options2);
+					return false;
+				});
+				
+				$("#dialog-form2").dialog("open");
+		    }			 
+		} 
+	    
+	   $("#dialog-form2").dialog({
+			autoOpen : false,
+			height : 500,
+			width : 450,
+			modal : true,
+			buttons : {
+				"确定" : function() {
+					$('#myForm2').submit();
 				},
 				"取消" : function() {
 					$(this).dialog("close");

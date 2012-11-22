@@ -83,7 +83,7 @@
 		   CreateDeskGrid();
 		});
 	   ////////////////
-	   //种类的相关方法
+	   //种类的相关方法//
 	   ////////////////
 	   function CreateCategoryGrid()
 	   {
@@ -177,7 +177,7 @@
 					obj.id = value.id;
 					obj.cell = value;
 					obj.cell.name="<a onclick='deskClick("+value.id+")'>"+value.name+"</a>";
-					obj.cell.status=value.status==0?"":"忙";
+					obj.cell.status=value.status?"忙":"";
 					json.rows.push(obj);
 				}
 			});

@@ -18,7 +18,7 @@ public class OrderDao extends GenericHibernateDAO﻿<Order, Integer> {
 	
 	//判断该桌是否有status 为1的order，有的话，说明该桌已开台
 	public boolean isDeskCanOrder(int did) {
-		Criteria crit = getSession().createCriteria(Order.class).add(Restrictions.not(Restrictions.eq("status", 1)));
+		Criteria crit = getSession().createCriteria(Order.class).add(Restrictions.eq("status", 1));
 		crit = crit.createCriteria("desk").add(Restrictions.eq("id", did));
 		return crit.list().isEmpty();
 	}
