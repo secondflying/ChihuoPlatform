@@ -18,10 +18,10 @@ public class OrderItem implements java.io.Serializable {
 	@XmlElement
 	private Integer id;
 	private Integer count;
+	private Recipe recipe;
 	
 	@XmlTransient
 	private Order order;
-	private Recipe recipe;
 	private Integer status;
 
 	public OrderItem() {
