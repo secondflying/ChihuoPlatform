@@ -57,10 +57,7 @@ public class OrderResource {
 	@POST
 	@Consumes("multipart/form-data")
 	public Response update(@FormDataParam("rid") int rid,
-			@FormDataParam("count") int count,
-			@FormDataParam("description") String description,
-			@DefaultValue("-1") @FormDataParam("cid") int cid,
-			@FormDataParam("image") InputStream upImg) {
+			@FormDataParam("count") int count) {
 
 		OrderDao dao = new OrderDao();
 		Order order = dao.findById(id);
