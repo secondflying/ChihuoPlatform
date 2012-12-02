@@ -25,5 +25,6 @@
         <mapping resource="com/chihuo/bussiness/DeskStatusView.hbm.xml" />
         <mapping resource="com/chihuo/bussiness/Order.hbm.xml" />
         <mapping resource="com/chihuo/bussiness/OrderItem.hbm.xml" />
+        <mapping resource="com/chihuo/bussiness/Users.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

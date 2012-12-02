@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -37,10 +39,20 @@ public class RestaurantsResource {
 	UriInfo uriInfo;
 	@Context
 	Request request;
+	@Context
+	HttpServletRequest httpRequest;
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Restaurant> get() {
+		Cookie[] cookies = httpRequest.getCookies();
+		if (cookies != null) {
+			System.out.println("Request Cookie: ");
+			for (Cookie cookie : cookies) {
+	            System.out.println("name: " + cookie.getName() + "  value:" + cookie.getValue() + "  age:" + cookie.getMaxAge() + "  secure:" + cookie.getSecure());
+			}
+		}
+		
 		RestaurantDao dao = new RestaurantDao();
 		return dao.findByStatus(1);
 	}
