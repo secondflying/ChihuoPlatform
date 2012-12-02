@@ -3,6 +3,7 @@ package com.chihuo.resource;
 import java.net.URI;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -51,6 +52,7 @@ public class DeskTypesResource {
 	}
 
 	@POST
+	@RolesAllowed({"OWER"})
 	@Consumes("multipart/form-data")
 	public Response create(@FormDataParam("name") String name) {
 
@@ -69,6 +71,7 @@ public class DeskTypesResource {
 	
 	@Path("{id}")
 	@POST
+	@RolesAllowed({"OWER"})
 	@Consumes("multipart/form-data")
 	public Response update(@PathParam("id") int id,@FormDataParam("name") String name) {
 		DeskTypeDao dao = new DeskTypeDao();
@@ -84,6 +87,7 @@ public class DeskTypesResource {
 	
 	@Path("{id}")
 	@DELETE
+	@RolesAllowed({"OWER"})
 	public void delete(@PathParam("id") int id) {
 		DeskTypeDao dao = new DeskTypeDao();
 		DeskType c = dao.findById(id);

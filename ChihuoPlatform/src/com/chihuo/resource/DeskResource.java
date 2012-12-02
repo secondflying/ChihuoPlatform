@@ -1,5 +1,6 @@
 package com.chihuo.resource;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -44,6 +45,7 @@ public class DeskResource {
 	
 
 	@POST
+	@RolesAllowed({"OWER"})
 	@Consumes("multipart/form-data")
 	public Response update(@FormDataParam("name") String name,
 			@FormDataParam("capacity") int capacity,
@@ -73,6 +75,7 @@ public class DeskResource {
 	
 
 	@DELETE
+	@RolesAllowed({"OWER"})
 	public void delete() {
 		DeskDao dao = new DeskDao();
 		Desk c = dao.findById(id);

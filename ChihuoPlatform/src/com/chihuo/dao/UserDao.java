@@ -5,16 +5,16 @@ package com.chihuo.dao;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
-import com.chihuo.bussiness.Users;
+import com.chihuo.bussiness.User;
 
-public class UserDao extends GenericHibernateDAO﻿<Users, Integer> {
-	public Users findByName(String name){
-		Criteria crit = getSession().createCriteria(Users.class).add(Restrictions.eq("name", name));
-		return (Users)crit.uniqueResult();
+public class UserDao extends GenericHibernateDAO﻿<User, Integer> {
+	public User findByName(String name){
+		Criteria crit = getSession().createCriteria(User.class).add(Restrictions.eq("name", name));
+		return (User)crit.uniqueResult();
 	}
 	
-	public Users findByNameAndPassword(String name, String password){
-		Criteria crit = getSession().createCriteria(Users.class).add(Restrictions.eq("name", name)).add(Restrictions.eq("password", password));
-		return (Users)crit.uniqueResult();
+	public User findByNameAndPassword(String name, String password){
+		Criteria crit = getSession().createCriteria(User.class).add(Restrictions.eq("name", name)).add(Restrictions.eq("password", password));
+		return (User)crit.uniqueResult();
 	}
 }

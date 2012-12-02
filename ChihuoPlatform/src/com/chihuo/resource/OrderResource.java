@@ -3,6 +3,7 @@ package com.chihuo.resource;
 import java.io.InputStream;
 import java.net.URI;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -45,6 +46,7 @@ public class OrderResource {
 	}
 
 	@GET
+	@RolesAllowed({"USER"})
 	@Produces("application/json; charset=UTF-8")
 	public Order get() {
 		OrderDao dao = new OrderDao();
@@ -56,6 +58,7 @@ public class OrderResource {
 
 	// 加减菜
 	@POST
+	@RolesAllowed({"USER"})
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@FormParam("rid") int rid,
@@ -117,6 +120,7 @@ public class OrderResource {
 	// 请求结账
 	@Path("/tocheck")
 	@PUT
+	@RolesAllowed({"USER"})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response tocheck() throws JSONException {
 		OrderDao dao = new OrderDao();
@@ -133,6 +137,7 @@ public class OrderResource {
 	//结账 
 	@Path("/check")
 	@PUT
+	@RolesAllowed({"OWER"})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response check() throws JSONException {
 		OrderDao dao = new OrderDao();
@@ -150,6 +155,7 @@ public class OrderResource {
 	// 撤单
 	@Path("/cancel")
 	@PUT
+	@RolesAllowed({"OWER"})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response cancel() throws JSONException {
 		OrderDao dao = new OrderDao();
@@ -166,6 +172,7 @@ public class OrderResource {
 	// 改变菜的状态，如以上，
 	@Path("{iid}")
 	@PUT
+	@RolesAllowed({"OWER"})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response alterOrderItemStatus(@PathParam("iid") int iid) {
 		OrderDao dao = new OrderDao();
@@ -186,15 +193,6 @@ public class OrderResource {
 
 		return Response.status(Response.Status.OK).entity(oi)
 				.type(MediaType.APPLICATION_JSON).build();
-	}
-
-	@DELETE
-	public void delete() {
-		OrderDao dao = new OrderDao();
-		Order c = dao.findById(id);
-		checkNull(c);
-		c.setStatus(-1);
-		dao.saveOrUpdate(c);
 	}
 
 	private void checkNull(Order c) {

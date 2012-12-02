@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
+import javax.annotation.security.RolesAllowed;
 import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -53,6 +54,7 @@ public class RecipeResource {
 	
 
 	@POST
+	@RolesAllowed({"OWER"})
 	@Consumes("multipart/form-data")
 	public Response update(@FormDataParam("name") String name,
 			@FormDataParam("price") Double price,
@@ -118,6 +120,7 @@ public class RecipeResource {
 	}
 	
 	@DELETE
+	@RolesAllowed({"OWER"})
 	public void delete() {
 		RecipeDao dao = new RecipeDao();
 		Recipe c = dao.findById(id);

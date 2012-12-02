@@ -1,5 +1,6 @@
 package com.chihuo.resource;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +18,9 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.chihuo.bussiness.Users;
+import com.chihuo.bussiness.Role;
+import com.chihuo.bussiness.User;
+import com.chihuo.dao.RoleDao;
 import com.chihuo.dao.UserDao;
 
 @Path("/userinfo")
@@ -32,6 +35,7 @@ public class UserinfoResource {
 	HttpServletResponse httpResponse;
 
 	@GET
+	@RolesAllowed({"USER"})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createCategory(@CookieParam("uid") String uid) {
 		if (uid == null || uid.isEmpty()) {
@@ -39,7 +43,8 @@ public class UserinfoResource {
 					.entity("未登录").type(MediaType.TEXT_PLAIN).build();
 		}
 		UserDao dao = new UserDao();
-		Users u = dao.findById(Integer.parseInt(uid));
+		User u = dao.findById(Integer.parseInt(uid));
+		
 		if (u == null) {
 			return Response.status(Response.Status.BAD_REQUEST).entity("用户不存在")
 					.type(MediaType.TEXT_PLAIN).build();

@@ -14,7 +14,9 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.chihuo.bussiness.Users;
+import com.chihuo.bussiness.Role;
+import com.chihuo.bussiness.User;
+import com.chihuo.dao.RoleDao;
 import com.chihuo.dao.UserDao;
 
 @Path("/register")
@@ -32,23 +34,19 @@ public class RegisterResource {
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces(MediaType.APPLICATION_JSON )
 	public Response createCategory(@FormParam("username") String username, @FormParam("password") String password) {
-
 		UserDao dao = new UserDao();
-		Users u = dao.findByName(username);
+		User u = dao.findByName(username);
 		if(u != null){
 			return Response.status(Response.Status.BAD_REQUEST)
 					.entity("该用户已存在").type(MediaType.TEXT_PLAIN).build();
 		}
 		
-		Users user = new Users();
+		User user = new User();
 		user.setName(username);
 		user.setPassword(password);
-		dao.saveOrUpdate(user);
 		
 		return Response.ok(user)
 	               .cookie(new NewCookie(new javax.ws.rs.core.Cookie("uid", user.getId().toString()),"用户名",NewCookie.DEFAULT_MAX_AGE,false))
 	               .build();
 	}
-
-	
 }

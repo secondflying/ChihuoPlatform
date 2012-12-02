@@ -10,6 +10,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.security.RolesAllowed;
 import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -70,6 +71,7 @@ public class RecipesResource {
 	}
 
 	@POST
+	@RolesAllowed({"OWER"})
 	@Consumes("multipart/form-data")
 	public Response create(@FormDataParam("name") String name,
 			@FormDataParam("price") Double price,

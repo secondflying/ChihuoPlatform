@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -65,6 +66,7 @@ public class DesksResource {
 	}
 	
 	@POST
+	@RolesAllowed({"OWER"})
 	@Consumes("multipart/form-data")
 	public Response create(@FormDataParam("name") String name,
 			@FormDataParam("capacity") int capacity,

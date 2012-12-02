@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
+import javax.annotation.security.RolesAllowed;
 import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -52,6 +53,7 @@ public class RestaurantResource {
 	}
 	
 	@POST
+	@RolesAllowed({"OWER"})
 	@Consumes("multipart/form-data")
 	public Response update(@FormDataParam("name") String name,
 			@FormDataParam("telephone") String telephone,
@@ -63,6 +65,8 @@ public class RestaurantResource {
 		RestaurantDao dao = new RestaurantDao();
 		Restaurant r = dao.findById(id);
 		checkNull(r);
+		
+		//TODO 需要判断该restaurant是否是该用户的，如果不是，则无权限修改
 		
 		r.setName(name);
 		r.setAddress(address);
@@ -115,6 +119,7 @@ public class RestaurantResource {
 	}
 
 	@DELETE
+	@RolesAllowed({"OWER"})
 	public void delete() {
 		RestaurantDao dao = new RestaurantDao();
 		Restaurant c = dao.findById(id);
@@ -125,6 +130,7 @@ public class RestaurantResource {
 	}
 	
 	@PUT
+	@RolesAllowed({"ADMIN"})
 	@Path("/verify")
 	public void verify() {
 		RestaurantDao dao = new RestaurantDao();
@@ -136,6 +142,7 @@ public class RestaurantResource {
 	}
 	
 	@PUT
+	@RolesAllowed({"ADMIN"})
 	@Path("/noverify")
 	public void notverify() {
 		RestaurantDao dao = new RestaurantDao();

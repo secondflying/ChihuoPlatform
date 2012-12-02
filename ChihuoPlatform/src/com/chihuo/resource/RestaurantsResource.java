@@ -7,12 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.security.RolesAllowed;
 import javax.imageio.ImageIO;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -26,6 +25,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.Desk;
@@ -41,36 +41,17 @@ public class RestaurantsResource {
 	Request request;
 	@Context
 	HttpServletRequest httpRequest;
+	@Context SecurityContext sc;
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Restaurant> get() {
-		Cookie[] cookies = httpRequest.getCookies();
-		if (cookies != null) {
-			System.out.println("Request Cookie: ");
-			for (Cookie cookie : cookies) {
-	            System.out.println("name: " + cookie.getName() + "  value:" + cookie.getValue() + "  age:" + cookie.getMaxAge() + "  secure:" + cookie.getSecure());
-			}
-		}
-		
 		RestaurantDao dao = new RestaurantDao();
 		return dao.findByStatus(1);
 	}
 	
-//	@GET
-//	@Produces({ MediaType.APPLICATION_JSON })
-//	public Response get() {
-//		HashMap map = new HashMap();
-//	    map.put( new Integer( 2 ), "two" );
-//	    map.put( new Integer( 4 ), "four" );
-//	    
-//	    GenericEntity<HashMap> entity = new GenericEntity<HashMap>(map) {};
-//		return Response.status(Response.Status.OK)
-//				.entity(entity).build();
-//	}
-//	
-
 	@POST
+	@RolesAllowed({"OWER"})
 	@Consumes("multipart/form-data")
 	public Response create(@FormDataParam("name") String name,
 			@FormDataParam("telephone") String telephone,
@@ -137,6 +118,7 @@ public class RestaurantsResource {
 	}
 
 	@GET
+	@RolesAllowed({"ADMIN"})
 	@Path("/all")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Restaurant> getAll() {
@@ -145,6 +127,7 @@ public class RestaurantsResource {
 	}
 
 	@GET
+	@RolesAllowed({"ADMIN"})
 	@Path("/toverify")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Restaurant> getToVerify() {
@@ -153,6 +136,7 @@ public class RestaurantsResource {
 	}
 	
 	@GET
+	@RolesAllowed({"ADMIN"})
 	@Path("/verified")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Restaurant> getVerified() {
@@ -161,6 +145,7 @@ public class RestaurantsResource {
 	}
 	
 	@GET
+	@RolesAllowed({"ADMIN"})
 	@Path("/notverified")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Restaurant> getNotVerified() {

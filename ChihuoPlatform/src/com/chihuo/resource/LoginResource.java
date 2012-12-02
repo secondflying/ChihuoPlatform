@@ -16,7 +16,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.chihuo.bussiness.Users;
+import com.chihuo.bussiness.User;
 import com.chihuo.dao.UserDao;
 
 @Path("/login")
@@ -36,7 +36,7 @@ public class LoginResource {
 	public Response createCategory(@FormParam("username") String username, @FormParam("password") String password) {
 
 		UserDao dao = new UserDao();
-		Users u = dao.findByNameAndPassword(username,password);
+		User u = dao.findByNameAndPassword(username,password);
 		if(u == null){
 			return Response.status(Response.Status.BAD_REQUEST)
 					.entity("用户名密码不匹配").type(MediaType.TEXT_PLAIN).build();
@@ -51,11 +51,11 @@ public class LoginResource {
 //	@GET
 //	@Produces(MediaType.APPLICATION_JSON )
 //	public Response login2() {
-//		Users u = new Users();
-//		u.setId(222);
+//		User u = new User();
+//		u.setId(1);
 //		u.setName("fff");
 //		
-//		httpResponse.setHeader( "Set-Cookie", "uid=333; Path=/; HttpOnly");
+//		////httpResponse.setHeader( "Set-Cookie", "uid=333; Path=/; HttpOnly");
 //
 //		return Response.ok(u)
 //	               .cookie(new NewCookie("uid", u.getId().toString(),"/",null,1,"userid",NewCookie.DEFAULT_MAX_AGE,false))

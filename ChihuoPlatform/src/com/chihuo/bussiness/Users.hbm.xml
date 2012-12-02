@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 2012-11-27 16:53:06 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.chihuo.bussiness.Users" table="users">
+    <class name="com.chihuo.bussiness.User" table="users">
         <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="identity" />
@@ -17,5 +17,10 @@
         <property name="status" type="java.lang.Integer">
             <column name="status" />
         </property>
+        <set name="roles" table="user_role" cascade="save-update" inverse="false">  
+            <key column="uid"></key>  
+            <many-to-many class="com.chihuo.bussiness.Role" column="rid">  
+            </many-to-many>  
+        </set> 
     </class>
 </hibernate-mapping>

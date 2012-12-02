@@ -3,6 +3,7 @@ package com.chihuo.resource;
 import java.net.URI;
 import java.util.Date;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -36,6 +37,7 @@ public class OrdersResource {
 
 	//开台
 	@POST
+	@RolesAllowed({"OWER"})
 	@Consumes("multipart/form-data")
 	public Response create(@FormDataParam("did") int did,
 			@FormDataParam("number") int number) {
@@ -83,6 +85,7 @@ public class OrdersResource {
 	
 	
 	@GET
+	@RolesAllowed({"USER"})
 	@Produces("application/json; charset=UTF-8")
 	public Response getByCode(@QueryParam("code") String code) {
 		OrderDao odao = new OrderDao();
