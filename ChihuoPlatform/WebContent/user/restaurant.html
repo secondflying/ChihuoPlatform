@@ -7,6 +7,25 @@
 <link href="../jquery/css/ui-lightness/jquery-ui-1.8.22.custom.css"
 	rel="stylesheet" />
 <style class="demo-style">
+#dialog-form {
+	font-size: 62.5%;
+}
+
+#dialog-form label,#dialog-form input {
+	display: block;
+}
+
+#dialog-form input.text {
+	margin-bottom: 12px;
+	width: 95%;
+	padding: .4em;
+}
+
+#dialog-form fieldset {
+	padding: 0;
+	border: 0;
+	margin-top: 25px;
+}
 #imgdiv {
 	width:100%
 }
@@ -57,8 +76,19 @@
 			<input id="categoryBtn" type="button" value="菜品" style="display:inline"/>
 			<input id="deskBtn" type="button" value="餐桌" style="display:inline"/>
 		</div>
+		<div class="right">
+			<input id="orderBtn" type="button" value="开台" style="display:inline" onclick="orderClick()"/>
+		</div>
 	</div>
-	
+	<div id="dialog-form" title="开台">
+		<form id="myForm" enctype="multipart/form-data" method="get"
+			action="../rest/restaurants">
+			<fieldset>
+				<label for="code">密码：</label> <input type="text" name="code"
+					id="code" class="text" />
+			</fieldset>
+		</form>
+	</div>
 	<script src="../jquery/js/jquery-1.7.2.min.js"></script>
 	<script src="../jquery/js/jquery-ui-1.8.22.custom.min.js"></script>
 	<script src="../jquery/js/jquery.cookie.js"></script>
@@ -66,8 +96,9 @@
 	<script src="../jquery/js/jquery.form.js"></script>
 	<script src="../jquery/js/flexigrid.js"></script>
 	<script src="../jquery/js/rest.js"></script>
+	<script src="../js/cookie.js"></script>
 	<script>
-	   
+		
 	   $(document).ready(function() {
 		   initElement();
 		});
@@ -95,32 +126,36 @@
 			});
 	   }
 	   
-	   function toverifyRestaurant(id) {
-			 $.ajax({
-				type : "PUT",
-				url : "../rest/restaurants/" + id+"/verify",
-				cache : false,
-				success : function(data, textStatus, jqXHR) {
-					initElement();
+	   $("#dialog-form").dialog({
+			autoOpen : false,
+			height : 500,
+			width : 450,
+			modal : true,
+			buttons : {
+				"确定" : function() {
+					var ocode=document.getElementById("code").value;
+					$.getJSON("../rest/restaurants/" + urlParams["id"]+"/orders?code="+ocode, function(data) {
+						var expdate = new Date();
+						expdate.setTime (expdate.getTime() + (86400 * 1000));
+						setCookie("OrderId",data.id, expdate);
+						alert("开台成功！");
+						$("#dialog-form").dialog("close"); 
+					});
+					
 				},
-				error : function(xhr, textStatus, errorThrown) {
-					alert(xhr.responseText);
+				"取消" : function() {
+					$(this).dialog("close");
 				}
-			}); 
-		}
-	   function noverifyRestaurant(id) {
-			 $.ajax({
-				type : "PUT",
-				url : "../rest/restaurants/" + id+"/noverify",
-				cache : false,
-				success : function(data, textStatus, jqXHR) {
-					initElement();
-				},
-				error : function(xhr, textStatus, errorThrown) {
-					alert(xhr.responseText);
-				}
-			}); 
-		}
+			},
+			close : function() {
+			}
+		});
+	  function orderClick(){
+
+			$("#dialog-form").dialog("open");
+	  }
+	   
+	   
 	</script>
 </body>
 </html>

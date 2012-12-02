@@ -9,6 +9,10 @@
 </head>
 <body>
 	<div id="top"></div>
+	<div><label id="username">用户</label>
+	<input id="exitBtn" type="button" value="退出" onclick="exitclick()"/>
+	<input id="loginBtn" type="button" value="登陆" style="display:none" onclick="loginclick()"/>
+	</div>
 	<table id="flex1" style="display: none"></table>
 	
 	<script src="../jquery/js/jquery-1.7.2.min.js"></script>
@@ -18,8 +22,9 @@
 	<script src="../jquery/js/jquery.form.js"></script>
 	<script src="../jquery/js/flexigrid.js"></script>
 	<script src="../jquery/js/rest.js"></script>
+	<script src="../js/cookie.js"></script>
 	<script>
-	
+	   var userId;
 	   var options = { 
 			url:      "../rest/restaurants",
 	        resetForm: true,
@@ -32,6 +37,21 @@
 	    }; 
 	   
 	   $(document).ready(function() {
+			userId=getCookie("userId");
+			if(userId==""){
+				document.getElementById("username").style.display="none";
+				document.getElementById("exitBtn").style.display="none";
+				document.getElementById("loginBtn").style.display="block";
+			}
+			else{
+				$.getJSON("../rest/userinfo?uid=" + userId, function(data) {
+					document.getElementById("username").style.display="block";
+					document.getElementById("username").innerHTML=data.name;
+					document.getElementById("exitBtn").style.display="block";
+					document.getElementById("loginBtn").style.display="none";
+					});
+			}
+			
 			
 			$("#flex1").flexigrid({
 				url : "../rest/restaurants",
@@ -84,6 +104,25 @@
 	   
 		function refreshRestaurant() {
 			$('#flex1').flexOptions({newp: 1}).flexReload();
+		}
+		
+		function loginclick(){
+			window.location.href="login.html";
+		   }
+		function exitclick(){
+			$.ajax({
+				type : "post",
+				url : "../rest/logout",
+				//beforesend: function(xhr){xhr.setrequestheader("content-type","multipart/form-data");},
+				cache : false,
+				success : function(data, textStatus, jqXHR) {
+					deleteCookie("userId");
+					window.location.href="login.html";
+				},
+				error : function(xhr, textStatus, errorThrown) {
+					alert(xhr.responseText);
+				}
+			}); 
 		}
 	</script>
 </body>

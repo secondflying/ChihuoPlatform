@@ -56,9 +56,11 @@
 	<script src="../jquery/js/jquery.form.js"></script>
 	<script src="../jquery/js/flexigrid.js"></script>
 	<script src="../jquery/js/rest.js"></script>
+	<script src="../js/cookie.js"></script>
 	<script>
-	
+	var oid;
 	$(document).ready(function() {
+		   oid = getCookie("OrderId");
 		   $("#flex1").flexigrid({
 				url : "../rest/restaurants/"+urlParams["id"]+"/categories",
 				method : 'GET',
@@ -124,6 +126,7 @@
 	   function preProcessR(json) {
 			json.page = 1;
 			json.total = 1;
+			
 			$.each(json, function(index, value) {
 				if (!isNaN(index)) {
 					json.total++;
@@ -131,15 +134,18 @@
 					obj.id = value.id;
 					obj.cell = value;
 					obj.cell.image="<img style='width:100px; height:80px;' src='http://localhost:8080/MenuImages/" + value.image + "'>";
-					obj.cell.tool="<button class='edit recipesedit' value='" + value.id + "' onclick='jiaclick("+value.id+","+value.cid+")'>加菜</button>&nbsp;<button class='delete recipesdel' value='" + value.id + "'>减菜</button>";;
+					obj.cell.tool="<input type='checkbox' value='"+value.id+"'  onclick='jiaclick("+value.id+","+value.cid+",this.checked)'/>";
 					json.rows.push(obj);
 				}
-			});
-			return json;
+			}); 
+			
+			return json; 
 		}
 	   
 	   function successR(obj) {
-			
+		   $.getJSON("../rest/restaurants/" + urlParams["id"]+"/orders/"+oid, function(data) {
+			   updateSelected(data);				
+			});
 		}
 	   
 	   function refreshRGrid(){
@@ -150,21 +156,47 @@
 		{
 			$('#flex2').flexOptions({url : "../rest/restaurants/"+urlParams["id"]+"/recipes?cid="+id}).flexReload();
 		}
-	   function jiaclick(id,cid)
+	   function jiaclick(id,cid,checked)
 	   {
+		   if(oid==null){
+			   alert("请先开台再点菜！");
+			   return;
+		   }
+		   var count=0;
+		   if(checked==true){
+			   count=1;
+		   }
+		   else{
+			   count=-1;
+		   }
+		   
 		   $.ajax({
 				type : "post",
-				url : "../rest/restaurants/"+urlParams["id"]+"/orders/7",
-				data:{'rid':id,'count':1},
+				url : "../rest/restaurants/"+urlParams["id"]+"/orders/"+oid,
+				data:{'rid':id,'count':count},
 				//beforesend: function(xhr){xhr.setrequestheader("content-type","multipart/form-data");},
 				cache : false,
 				success : function(data, textStatus, jqXHR) {
-					alert(data);
+					updateSelected(data);
 				},
 				error : function(xhr, textStatus, errorThrown) {
 					alert(xhr.responseText);
 				}
-			});
+			}); 
+	   }
+	   
+	   function updateSelected(data){
+		   jQuery('#flex2 :checkbox').each(function(i,item){
+			    var rid=item.value;
+			    var oitems=data.orderItems;
+			    
+			    $.each(oitems, function(index, value) {
+			    	 if(value.recipe.id==rid){
+							item.checked=true;
+					 }
+				});
+			    
+			});		
 	   }
 	   
 	</script>

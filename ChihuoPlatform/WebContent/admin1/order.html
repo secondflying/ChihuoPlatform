@@ -64,7 +64,13 @@
 		<div class="left"><label>时间：</label></div>
 		<div class="right"><label id="time"></label></div>
 	</div>
-	
+	<table id="flex1" style="display: none"></table>
+	<div class="contentdiv">
+		<div class="left">
+			<input id="overBtn" type="button" value="结账" style="display:inline" onclick="overclick()"/>
+			<input id="cancelBtn" type="button" value="撤单" style="display:inline" onclick="cancelclick()"/>
+		</div>
+	</div>
 	<script src="../jquery/js/jquery-1.7.2.min.js"></script>
 	<script src="../jquery/js/jquery-ui-1.8.22.custom.min.js"></script>
 	<script src="../jquery/js/jquery.cookie.js"></script>
@@ -80,13 +86,108 @@
 	   
 	   function initElement()
 	   {
-		   $.getJSON("../rest/restaurants/" + urlParams["id"]+"/orders/"+urlParams["oid"], function(data) {
-				document.getElementById("code").innerHTML = data.code?data.code:"";
-				document.getElementById("deskname").innerHTML = data.desk.name?data.desk.name:"";
-				document.getElementById("number").innerHTML = data.number?data.number:"";
-				document.getElementById("time").innerHTML=data.starttime?data.starttime:"";
-				
+		   $("#flex1").flexigrid({
+				url : "../rest/restaurants/" + urlParams["id"]+"/orders/"+urlParams["oid"],
+				method : 'GET',
+				dataType : 'json',
+				colModel : [ 
+							{display : '名称',name : 'name',width : 120,sortable : false,align : 'center'}, 
+							{display : '价格',name : 'price',width : 120,sortable : false,align : 'center'}, 
+							{display : '数量',name : 'count',width : 100,sortable : false,align : 'center'},
+							{display : '描述',name : 'description',width : 150,sortable : false,align : 'center'},
+							{display : '状态',name : 'status',width : 100,sortable : false,align : 'center'}
+						   ],
+				buttons : [ 
+				            {name : '刷新',bclass : 'add',onpress : refreshOrder}, 
+				            {separator : true}
+				          ],
+				preProcess : preProcess,
+				onSuccess : success,
+				title : '订单明细',
+				usepager : true,
+				showTableToggleBtn : false,
+				width : 900,
+				height : 500
 			});
+	   }
+	   
+	   function preProcess(json) {
+		   document.getElementById("code").innerHTML = json.code?json.code:"";
+			document.getElementById("deskname").innerHTML = json.desk.name?json.desk.name:"";
+			document.getElementById("number").innerHTML = json.number?json.number:"";
+			document.getElementById("time").innerHTML=json.starttime?json.starttime:"";
+			json.page = 1;
+			json.total = 1;
+			var items=json.orderItems;
+			$.each(items, function(index, value) {
+				if (!isNaN(index)) {
+					json.total++;
+					var obj = {};
+					obj.id = value.id;
+					obj.cell = value;
+					obj.cell.name=value.recipe.name;
+					obj.cell.price=value.recipe.price;
+					obj.cell.count=value.count;
+					obj.cell.description=value.recipe.description;
+					
+					if(value.status!=0){
+						obj.cell.status="<input type='checkbox' value='"+value.id+"' checked disabled  onclick='statusclick("+value.id+")'/>";
+					}else{
+						obj.cell.status="<input type='checkbox' value='"+value.id+"'  onclick='statusclick("+value.id+")'/>";
+					}
+					
+					json.rows.push(obj);
+				}
+			});
+			return json;
+		}
+	   function success(obj){
+		   
+	   }
+	   function refreshOrder(){
+		   $('#flex1').flexOptions({newp:1}).flexReload();
+	   }
+	   function statusclick(id)
+	   {
+		   $.ajax({
+				type : "PUT",
+				url : "../rest/restaurants/" +urlParams["id"]+"/orders/"+urlParams["oid"]+"/"+id,
+				cache : false,
+				success : function(data, textStatus, jqXHR) {
+					$('#flex1').flexOptions({newp:1}).flexReload();
+				},
+				error : function(xhr, textStatus, errorThrown) {
+					alert(xhr.responseText);
+				}
+			}); 
+	   }
+	   
+	   function overclick(){
+		   $.ajax({
+				type : "PUT",
+				url : "../rest/restaurants/" +urlParams["id"]+"/orders/"+urlParams["oid"]+"/check",
+				cache : false,
+				success : function(data, textStatus, jqXHR) {
+					window.location.href="deskmanager.html?id="+urlParams["id"];
+				},
+				error : function(xhr, textStatus, errorThrown) {
+					alert(xhr.responseText);
+				}
+			}); 
+	   }
+	   
+	   function cancelclick(){
+		   $.ajax({
+				type : "PUT",
+				url : "../rest/restaurants/" +urlParams["id"]+"/orders/"+urlParams["oid"]+"/cancel",
+				cache : false,
+				success : function(data, textStatus, jqXHR) {
+					window.location.href="deskmanager.html?id="+urlParams["id"];
+				},
+				error : function(xhr, textStatus, errorThrown) {
+					alert(xhr.responseText);
+				}
+			}); 
 	   }
 	</script>
 </body>
