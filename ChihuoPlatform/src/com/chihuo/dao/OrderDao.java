@@ -41,9 +41,10 @@ public class OrderDao extends GenericHibernateDAO﻿<Order, Integer> {
 		return (Order) crit.uniqueResult();
 	}
 	
-	public List<Order> findByUser(User u) {
+	public List<Order> findByUser(Restaurant r, User u) {
 		Criteria crit = getSession().createCriteria(Order.class);
-		crit = crit.createCriteria("user").add(Restrictions.eq("id", u.getId()));
+		crit = crit.add(Restrictions.eq("user.id", u.getId()));
+		crit = crit.add(Restrictions.eq("restaurant.id", r.getId()));
 
 		return (List<Order>)crit.list();
 	}
