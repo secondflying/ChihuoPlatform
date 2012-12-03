@@ -11,14 +11,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import com.chihuo.bussiness.Desk;
 import com.chihuo.bussiness.Order;
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.dao.DeskDao;
 import com.chihuo.dao.OrderDao;
+import com.chihuo.util.PublicHelper;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class OrdersResource {
@@ -34,7 +37,8 @@ public class OrdersResource {
 	@RolesAllowed({"OWER"})
 	@Consumes("multipart/form-data")
 	public Response create(@FormDataParam("did") int did,
-			@FormDataParam("number") int number) {
+			@FormDataParam("number") int number,
+			@Context SecurityContext securityContext) {
 		OrderDao odao = new OrderDao();
 		DeskDao cdao = new DeskDao();
 		
@@ -67,6 +71,7 @@ public class OrdersResource {
 		order.setStarttime(new Date());
 		order.setStatus(1);
 		order.setRestaurant(restaurant);
+		order.setUser(PublicHelper.getLoginUser(securityContext));
 
 		// TODO 在生成的code里面包含桌号，避免同时有相同code的order
 		order.setCode(Math.round(Math.random() * 9000 + 1000) + "");
