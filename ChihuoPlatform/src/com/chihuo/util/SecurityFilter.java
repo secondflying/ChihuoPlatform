@@ -3,7 +3,6 @@ package com.chihuo.util;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.CookieParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.UriInfo;
@@ -32,6 +31,8 @@ public class SecurityFilter implements ContainerRequestFilter {
 			User user = dao.findById(uid);
 			
 	        request.setSecurityContext(new Authorizer(user,uriInfo));
+		}else {
+			//throw new WebApplicationException(401);
 		}
 		
         return request;

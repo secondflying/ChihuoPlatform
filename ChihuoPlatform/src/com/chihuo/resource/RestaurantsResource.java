@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import javax.annotation.security.RolesAllowed;
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -21,27 +20,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
 
-import com.chihuo.bussiness.Desk;
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.dao.RestaurantDao;
+import com.chihuo.util.PublicHelper;
 import com.sun.jersey.multipart.FormDataParam;
 
 @Path("/restaurants")
 public class RestaurantsResource {
-	@Context
-	UriInfo uriInfo;
-	@Context
-	Request request;
-	@Context
-	HttpServletRequest httpRequest;
-	@Context SecurityContext sc;
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -58,7 +47,8 @@ public class RestaurantsResource {
 			@FormDataParam("address") String address,
 			@DefaultValue("-1000") @FormDataParam("x") double x,
 			@DefaultValue("-1000") @FormDataParam("y") double y,
-			@FormDataParam("image") InputStream upImg) {
+			@FormDataParam("image") InputStream upImg,
+			@Context SecurityContext securityContext) {
 
 		Restaurant r = new Restaurant();
 		r.setName(name);
@@ -71,6 +61,7 @@ public class RestaurantsResource {
 			r.setY(y);
 		}
 		r.setStatus(0);
+		r.setUser(PublicHelper.getLoginUser(securityContext));
 
 		if (upImg != null) {
 			try {
@@ -114,7 +105,7 @@ public class RestaurantsResource {
 	
 	@Path("{id}")
 	public RestaurantResource getRestaurant(@PathParam("id") int id) {
-		return new RestaurantResource(uriInfo, request, id);
+		return new RestaurantResource(id);
 	}
 
 	@GET

@@ -19,26 +19,16 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.dao.RestaurantDao;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class RestaurantResource {
-	@Context
-	UriInfo uriInfo;
-	@Context
-	Request request;
 	int id;
-
-	public RestaurantResource(UriInfo uriInfo, Request request, int id) {
-		this.uriInfo = uriInfo;
-		this.request = request;
+	public RestaurantResource(int id) {
 		this.id = id;
 	}
 
@@ -159,7 +149,7 @@ public class RestaurantResource {
 		Restaurant c = dao.findById(id);
 		checkNull(c);
 		
-		return new CategoriesResource(uriInfo, request, c);
+		return new CategoriesResource(c);
 	}
 	
 	@Path("/recipes")
@@ -168,7 +158,7 @@ public class RestaurantResource {
 		Restaurant c = dao.findById(id);
 		checkNull(c);
 		
-		return new RecipesResource(uriInfo, request, c);
+		return new RecipesResource(c);
 	}
 	
 	@Path("/desktypes")
@@ -177,7 +167,7 @@ public class RestaurantResource {
 		Restaurant c = dao.findById(id);
 		checkNull(c);
 		
-		return new DeskTypesResource(uriInfo, request, c);
+		return new DeskTypesResource(c);
 	}
 	
 	@Path("/desks")
@@ -186,7 +176,7 @@ public class RestaurantResource {
 		Restaurant c = dao.findById(id);
 		checkNull(c);
 		
-		return new DesksResource(uriInfo, request, c);
+		return new DesksResource(c);
 	}
 	
 	@Path("/orders")
@@ -195,7 +185,7 @@ public class RestaurantResource {
 		Restaurant c = dao.findById(id);
 		checkNull(c);
 		
-		return new OrdersResource(uriInfo, request, c);
+		return new OrdersResource(c);
 	}
 	
 	private void checkNull(Restaurant c){

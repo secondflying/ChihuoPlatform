@@ -34,6 +34,9 @@ public class Restaurant implements java.io.Serializable {
 	@XmlElement
 	private Integer status;
 	
+	@XmlElement
+	private User user;
+	
 	public Restaurant() {
 	}
 
@@ -110,6 +113,14 @@ public class Restaurant implements java.io.Serializable {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }

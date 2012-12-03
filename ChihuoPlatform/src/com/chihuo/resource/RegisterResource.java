@@ -14,9 +14,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.chihuo.bussiness.Role;
 import com.chihuo.bussiness.User;
-import com.chihuo.dao.RoleDao;
 import com.chihuo.dao.UserDao;
 
 @Path("/register")

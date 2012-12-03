@@ -12,9 +12,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.Desk;
 import com.chihuo.bussiness.Order;
@@ -24,14 +22,10 @@ import com.chihuo.dao.OrderDao;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class OrdersResource {
-	UriInfo uriInfo;
-	Request request;
 	Restaurant restaurant;
 	
-	public OrdersResource(UriInfo uriInfo, Request request,
+	public OrdersResource(
 			Restaurant restaurant) {
-		this.uriInfo = uriInfo;
-		this.request = request;
 		this.restaurant = restaurant;
 	}
 
@@ -101,7 +95,7 @@ public class OrdersResource {
 	
 	@Path("{id}")
 	public OrderResource getSingleResource(@PathParam("id") int id) {
-		return new OrderResource(uriInfo, request, restaurant, id);
+		return new OrderResource(restaurant, id);
 	}
 
 }

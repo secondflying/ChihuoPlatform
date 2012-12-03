@@ -12,9 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.DeskType;
 import com.chihuo.bussiness.Restaurant;
@@ -22,14 +20,10 @@ import com.chihuo.dao.DeskTypeDao;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class DeskTypesResource {
-	UriInfo uriInfo;
-	Request request;
 	Restaurant restaurant;
 
-	public DeskTypesResource(UriInfo uriInfo, Request request,
+	public DeskTypesResource(
 			Restaurant restaurant) {
-		this.uriInfo = uriInfo;
-		this.request = request;
 		this.restaurant = restaurant;
 	}
 

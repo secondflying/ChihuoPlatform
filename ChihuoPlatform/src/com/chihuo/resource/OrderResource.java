@@ -1,12 +1,9 @@
 package com.chihuo.resource;
 
-import java.io.InputStream;
 import java.net.URI;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -15,8 +12,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -29,18 +26,13 @@ import com.chihuo.bussiness.Restaurant;
 import com.chihuo.dao.OrderDao;
 import com.chihuo.dao.OrderItemDao;
 import com.chihuo.dao.RecipeDao;
-import com.sun.jersey.multipart.FormDataParam;
 
 public class OrderResource {
-	UriInfo uriInfo;
-	Request request;
 	Restaurant restaurant;
 	int id;
 
-	public OrderResource(UriInfo uriInfo, Request request,
+	public OrderResource(
 			Restaurant restaurant, int id) {
-		this.uriInfo = uriInfo;
-		this.request = request;
 		this.restaurant = restaurant;
 		this.id = id;
 	}
@@ -62,7 +54,8 @@ public class OrderResource {
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@FormParam("rid") int rid,
-			@FormParam("count") int count) {
+			@FormParam("count") int count,
+			@Context UriInfo uriInfo) {
 
 		OrderDao dao = new OrderDao();
 		Order order = dao.findById(id);

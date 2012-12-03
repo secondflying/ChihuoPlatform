@@ -15,9 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.Desk;
 import com.chihuo.bussiness.DeskStatusView;
@@ -29,14 +27,10 @@ import com.chihuo.dao.DeskViewDao;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class DesksResource {
-	UriInfo uriInfo;
-	Request request;
 	Restaurant restaurant;
 
-	public DesksResource(UriInfo uriInfo, Request request,
+	public DesksResource(
 			Restaurant restaurant) {
-		this.uriInfo = uriInfo;
-		this.request = request;
 		this.restaurant = restaurant;
 	}
 
@@ -98,6 +92,6 @@ public class DesksResource {
 
 	@Path("{id}")
 	public DeskResource getSingleResource(@PathParam("id") int id) {
-		return new DeskResource(uriInfo, request, restaurant, id);
+		return new DeskResource(restaurant, id);
 	}
 }

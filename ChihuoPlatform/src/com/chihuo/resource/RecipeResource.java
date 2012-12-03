@@ -18,9 +18,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.Category;
 import com.chihuo.bussiness.Recipe;
@@ -30,14 +28,10 @@ import com.chihuo.dao.RecipeDao;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class RecipeResource {
-	UriInfo uriInfo;
-	Request request;
 	Restaurant restaurant;
 	int id;
 
-	public RecipeResource(UriInfo uriInfo, Request request, Restaurant restaurant,int id) {
-		this.uriInfo = uriInfo;
-		this.request = request;
+	public RecipeResource( Restaurant restaurant,int id) {
 		this.restaurant = restaurant;
 		this.id = id;
 	}

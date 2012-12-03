@@ -22,9 +22,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.Category;
 import com.chihuo.bussiness.Recipe;
@@ -34,14 +32,10 @@ import com.chihuo.dao.RecipeDao;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class RecipesResource {
-	UriInfo uriInfo;
-	Request request;
 	Restaurant restaurant;
 
-	public RecipesResource(UriInfo uriInfo, Request request,
+	public RecipesResource(
 			Restaurant restaurant) {
-		this.uriInfo = uriInfo;
-		this.request = request;
 		this.restaurant = restaurant;
 	}
 
@@ -139,6 +133,6 @@ public class RecipesResource {
 
 	@Path("{id}")
 	public RecipeResource getSingleResource(@PathParam("id") int id) {
-		return new RecipeResource(uriInfo, request, restaurant, id);
+		return new RecipeResource(restaurant,id);
 	}
 }

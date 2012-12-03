@@ -17,9 +17,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.Category;
 import com.chihuo.bussiness.Restaurant;
@@ -27,14 +25,10 @@ import com.chihuo.dao.CategoryDao;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class CategoryResource {
-	UriInfo uriInfo;
-	Request request;
 	Restaurant restaurant;
 	int id;
 
-	public CategoryResource(UriInfo uriInfo, Request request, Restaurant restaurant,int id) {
-		this.uriInfo = uriInfo;
-		this.request = request;
+	public CategoryResource(Restaurant restaurant,int id) {
 		this.restaurant = restaurant;
 		this.id = id;
 	}
