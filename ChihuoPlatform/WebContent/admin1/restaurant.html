@@ -79,6 +79,7 @@
 		<div class="right">
 			<input id="managerBtn" type="button" value="菜品管理" style="display:inline"/>
 			<input id="deskBtn" type="button" value="餐桌管理" style="display:inline"/>
+			<input id="ordersBtn" type="button" value="订单管理" style="display:inline" onclick="ordersClick()"/>
 		</div>
 	</div>
 	<div id="dialog-form" title="餐厅信息编辑">
@@ -174,10 +175,10 @@
 					}
 				});
 				$("#managerBtn").click(function(){
-					window.open("manager.html?id="+data.id);
+					window.location.href="manager.html?id="+data.id;
 				});
 				$("#deskBtn").click(function(){
-					window.open("deskmanager.html?id="+data.id);
+					window.location.href="deskmanager.html?id="+data.id;
 				});
 			});
 	   }
@@ -195,6 +196,10 @@
 				}
 			}); 
 		}
+	   
+	   function ordersClick(){
+		   window.location.href="orders.html?rid="+urlParams["id"];
+	   }
 	   
 
 		$("#dialog-form").dialog({

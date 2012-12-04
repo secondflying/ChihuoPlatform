@@ -2,17 +2,13 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>餐厅</title>
+<title>我的餐厅</title>
 <link href="../jquery/css/flexgrid/flexigrid.css" rel="stylesheet" />
 <link href="../jquery/css/ui-lightness/jquery-ui-1.8.22.custom.css"
 	rel="stylesheet" />
 </head>
 <body>
 	<div id="top"></div>
-	<div><label id="username">用户</label>
-	<input id="exitBtn" type="button" value="退出" onclick="exitclick()"/>
-	<input id="loginBtn" type="button" value="登陆" style="display:none" onclick="loginclick()"/>
-	</div>
 	<table id="flex1" style="display: none"></table>
 	
 	<script src="../jquery/js/jquery-1.7.2.min.js"></script>
@@ -22,10 +18,10 @@
 	<script src="../jquery/js/jquery.form.js"></script>
 	<script src="../jquery/js/flexigrid.js"></script>
 	<script src="../jquery/js/rest.js"></script>
-	<script src="../js/cookie.js"></script>
 	<script>
+	
 	   var options = { 
-			url:      "../rest/restaurants",
+			url:      "../rest/user/restaurants",
 	        resetForm: true,
 	        success: function (responseText, statusText, xhr, $form) {
 			    $('#flex1').flexOptions({newp: 1}).flexReload();
@@ -36,42 +32,9 @@
 	    }; 
 	   
 	   $(document).ready(function() {
-		   //获取用户信息，查看是否登录
-			var jqxhr = $.get("../rest/userinfo").success(function(data) {
-				document.getElementById("username").style.display="block";
-				document.getElementById("username").innerHTML=data.name;
-				document.getElementById("exitBtn").style.display="block";
-				document.getElementById("loginBtn").style.display="none";
-			}).error(function(xhr) {
-				if(xhr.status == 401||xhr.status==403){
-					//alert("请登录");
-					document.getElementById("username").style.display="none";
-					document.getElementById("exitBtn").style.display="none";
-					document.getElementById("loginBtn").style.display="block";
-				}else if(xhr.status == 400){
-					//alert("用户不存在");
-					document.getElementById("username").style.display="none";
-					document.getElementById("exitBtn").style.display="none";
-					document.getElementById("loginBtn").style.display="block";
-				}
-			});
-			/* if(userId==""){
-				document.getElementById("username").style.display="none";
-				document.getElementById("exitBtn").style.display="none";
-				document.getElementById("loginBtn").style.display="block";
-			}
-			else{
-				$.getJSON("../rest/userinfo?uid=" + userId, function(data) {
-					document.getElementById("username").style.display="block";
-					document.getElementById("username").innerHTML=data.name;
-					document.getElementById("exitBtn").style.display="block";
-					document.getElementById("loginBtn").style.display="none";
-					});
-			} */
-			
 			
 			$("#flex1").flexigrid({
-				url : "../rest/restaurants",
+				url : "../rest/user/restaurants",
 				method : 'GET',
 				dataType : 'json',
 				colModel : [ 
@@ -121,24 +84,6 @@
 	   
 		function refreshRestaurant() {
 			$('#flex1').flexOptions({newp: 1}).flexReload();
-		}
-		
-		function loginclick(){
-			window.location.href="login.html";
-		   }
-		function exitclick(){
-			$.ajax({
-				type : "post",
-				url : "../rest/logout",
-				//beforesend: function(xhr){xhr.setrequestheader("content-type","multipart/form-data");},
-				cache : false,
-				success : function(data, textStatus, jqXHR) {
-					window.location.href="login.html";
-				},
-				error : function(xhr, textStatus, errorThrown) {
-					alert(xhr.responseText);
-				}
-			}); 
 		}
 	</script>
 </body>
