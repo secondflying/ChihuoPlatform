@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>设置覆盖物可编辑</title>
+<script src="http://app.mapabc.com/apis?&t=flashmap&v=2.2&key=f03346eb3a99be025979045e8fa1a281c515961186fbe4718b394fc32b88d026c4e149bd81ab5469" type="text/javascript">
+</script>
+<script type="text/javascript">
+var mapObj=null;
+function mapInit() {
+	var mapOptions = new MMapOptions();//构建地图辅助类
+	console.log(mapOptions);
+	mapOptions.zoom=3;//要加载的地图的缩放级别
+	mapOptions.center=new MLngLat(116.397428,39.90923);//要加载的地图的中心点经纬度坐标
+	
+	mapOptions.toolbar = DEFAULT;//工具条 
+    mapOptions.toolbarPos = new MPoint(15,15);  //工具条 
+    
+    mapOptions.overviewMap = 0;//是否显示鹰眼 
+    mapOptions.scale = 0;//是否显示比例尺 
+    
+	mapOptions.returnCoordType = COORD_TYPE_OFFSET;//返回数字坐标
+	mapOptions.zoomBox = false;//鼠标滚轮缩放和双击放大时是否有红框动画效果。
+	mapObj=new MMap("map",mapOptions); //地图初始化
+	
+	mapObj.addEventListener(mapObj,MOUSE_UP,mouseUp);
+}
+function setEditTrue(overlayid){
+	//根据overlay对象的id,设置overlay为可编辑状态
+	mapObj.setOverlayEditableById(overlayid,true);
+}
+function setEditFalse(overlayid){
+	//根据overlay对象的id,设置overlay为不可编辑状态
+	mapObj.setOverlayEditableById(overlayid,false);
+}
+
+function mouseUp(param){
+	　　console.log(param.mapId+";"+param.eventType+";"+param.eventX+";"+param.eventY);
+	
+	var obj=mapObj.getOverlayById("rectangle101"); 
+	console.log("minx:" + obj.lnglatArr[0].lngX + "; miny:" + obj.lnglatArr[0].latY + "; maxx:" + obj.lnglatArr[1].lngX + "; maxy:" + obj.lnglatArr[1].latY);
+}
+
+function addRectangle(){ //在地图上画矩形
+	mapObj.removeAllOverlays();//删除地图对象上所有覆盖物
+	var arr = new Array();
+	arr.push(new MLngLat("70 ","55"));
+	arr.push(new MLngLat("140","15"));
+	var linestyle=new MLineStyle();//创建线样式对象
+	linestyle.thickness=3;//线的粗细度，默认为2
+	linestyle.color=0x0000ff;//线的颜色，16进制整数，默认为0x005890（蓝色）
+
+	var fillstyle=new MFillStyle();//创建填充样式对象
+	fillstyle.color=0xf5deb3;//面的填充颜色，16进制整数。
+	fillstyle.alpha=0.2;//填充面的透明度，范围0~1，0为透明，1为不透明（默认）
+
+	var areastyle=new MAreaStyle();//创建面样式对象
+	areastyle.borderStyle=linestyle;//面的边框风格。
+	areastyle.fillStyle=fillstyle;//面的填充风格。
+
+	var tipoption=new MTipOptions();//添加信息窗口
+	tipoption.title="信息窗口标题";//信息窗口标题
+	tipoption.content="信息窗口内容";//信息窗口内容
+
+	var areaopt = new MAreaOptions();　//构建一个名为areopt的面选项对象。
+	areaopt.areaStyle=areastyle;//设置面的风格
+	areaopt.tipOption=tipoption;//设置面的信息窗口参数选项
+	areaopt.canShowTip=true;//设置面是否显示信息窗口
+	areaopt.isEditable=true;//设置面是否为可编辑状态，true，可编辑；false，不可编辑（默认）
+
+	var rectangle = new MRectangle(arr,areaopt);//通过由左上、右下角组成的经纬度数组和参数选项构建矩形对象
+	rectangle.id="rectangle101";// 对象编号，也是对象的唯一标识
+	mapObj.addOverlay(rectangle,true);//向地图添加覆盖物
+}
+</script>
+</head>
+<body onload="mapInit();">
+<div id="map" style="width:500px; height:400px"></div>
+<table>
+<tr>
+	<td><input type="button" value="添加面" onclick="addArea()"></td>
+	<td><input type="button" value="设置面为可编辑" onclick="setEditTrue('polygon1')"></td>
+	<td><input type="button" value="设置面为不可编辑" onclick="setEditFalse('polygon1')"></td>
+</tr>
+<tr>
+	<td><input type="button" value="添加矩形" onclick="addRectangle()"></td>
+	<td><input type="button" value="设置面为可编辑" onclick="setEditTrue('rectangle101')"></td>
+	<td><input type="button" value="设置面为不可编辑" onclick="setEditFalse('rectangle101')"></td>
+</tr>
+</table>
+</body>
+</html>
