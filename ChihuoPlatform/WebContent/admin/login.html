@@ -50,6 +50,9 @@
 			<input id="loginBtn" type="button" value="登陆" style="display:inline" onclick="loginclick()"/>
 			<input id="registerBtn" type="button" value="注册" style="display:inline" onclick="registerclick()"/>
 		</div>
+		<div class="right">
+			<input id="man_restaurantBtn" type="button" value="管理餐厅" style="display:none" onclick="tomanagerclick()"/>
+		</div>
 	</div>
 	<div id="dialog-form" title="餐厅注册">
 		<form id="myForm" enctype="application/x-www-form-urlencoded" method="post"
@@ -78,9 +81,10 @@
 	        resetForm: true,
 	        success: function (responseText, statusText, xhr, $form) {
 			    $("#dialog-form").dialog("close"); 
-			    window.location.href="restaurants.html";
+			    document.getElementById("man_restaurantBtn").style.display="inline";
 			},
 	        error: function (xhr, textStatus, errorThrown) {
+			    document.getElementById("man_restaurantBtn").style.display="none";
 			    alert(xhr.responseText);
 			}
 	    }; 
@@ -128,6 +132,11 @@
 			close : function() {
 			}
 		});
+		
+		
+		function tomanagerclick(){
+			window.location.href="restaurants.html";
+		}
 	</script>
 </body>
 </html>
