@@ -42,6 +42,7 @@ public class RegisterResource {
 		User user = new User();
 		user.setName(username);
 		user.setPassword(password);
+		dao.saveOrUpdate(user);
 		
 		return Response.ok(user)
 	               .cookie(new NewCookie(new javax.ws.rs.core.Cookie("uid", user.getId().toString()),"用户名",NewCookie.DEFAULT_MAX_AGE,false))
