@@ -112,7 +112,7 @@ body {
 					<span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
-				<li><a href="#">管理平台</a></li>
+				<li><a href="manager.jsp">管理平台</a></li>
 				<li><a href="#">个人资料</a></li>
 				<li><a href="" id="logout-a">退出</a></li>
 				</ul>
