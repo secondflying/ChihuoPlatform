@@ -77,13 +77,25 @@ body {
 							maxlength="30" id="id_username"> <input type="submit"
 							value="确定" class="btn btn-success ">
 					</form>
-					<div id="cateList">
-						<span class="cart"><a href="#">冷菜</a><a class="dismissX" href="#">&times;</a></span>
+					<div>
+						<ul id="cateList" class="nav nav-pills">
+				            <!-- <li class="active"><a href="#">所有插件</a></li>
+				            <li><a href="#">下拉项</a></li>
+				            <li><a href="#">滚动侦测</a></li>
+				            <li><a href="#">标签页</a></li>
+				            <li><a href="#">工具提示</a></li>
+				            <li><a href="#">弹出提示</a></li>
+				            <li><a href="#">通知</a></li>
+				            <li><a href="#">按钮</a></li> -->
+				        </ul>
+				          
+						<!-- <span class="cart"><a href="#">冷菜</a><a class="dismissX" href="#">&times;</a></span> --> 
 					</div>
+					<div class="row"><a href="#" class="btn btn-success pull-right">删除</a></div>
 				</div>
 
 
-				<div class=" well">
+				<div class=" well" id="recipeManage">
 					<h5>
 						菜品维护 <a href="#" class="btn btn-success pull-right"><i
 							class="icon-plus icon-white"></i> 新增</a>
@@ -112,7 +124,7 @@ body {
 
 	<script src="assets/js/jquery-latest.js"></script>
 	<script src="assets/js/bootstrap.min.js"></script>
-
+	<script type="text/javascript" src="assets/js/bootbox.js"></script>
 	<script>
 		$(document).ready(function() {
 			
@@ -121,9 +133,16 @@ body {
 						//$('#cateList').empty();
 						$.each(data, function(index, value) {
 							if (!isNaN(index)) {
-								console.log(value);
-								//var html = '<span><a>' + value.name + "</a></span>";
-								//$('#cateList').append(html);
+								console.log(value);//<li class="active"><a href="#">所有插件</a></li>
+								var html;
+								if(index==0){
+									html = '<li id="cate'+value.id+'" class="active"><a href="#" onclick="cateClick('+value.id+')">' + value.name + "</a></li>";
+								}
+								else{
+									html = '<li id="cate'+value.id+'"><a href="#" onclick="cateClick('+value.id+')">' + value.name + "</a></li>";
+								}
+								
+								$('#cateList').append(html);
 							}
 						});
 					});
@@ -142,6 +161,13 @@ body {
 						});
 					});
 				});
+		function cateClick(id){
+			/* bootbox.alert(id); */
+			$("#cateList li").attr({ class:"" });
+			var cid="cate"+id;
+			$("#"+cid).attr({class:"active"}); 
+		}
+		
 	</script>
 
 </body>
