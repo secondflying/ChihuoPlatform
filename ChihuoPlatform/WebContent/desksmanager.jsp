@@ -64,7 +64,7 @@ body {
 					<li><a href="#">餐厅信息</a></li>
 					<li><a href="manager.jsp">菜品维护</a></li>
 					<li class="active"><a href="desksmanager.jsp">餐桌维护</a></li>
-					<li><a href="#">订单管理</a></li>
+					<li><a href="ordermanager.jsp">订单管理</a></li>
 					<li><a href="#">权限设置</a></li>
 				</ul>
 			</div>
