@@ -106,22 +106,23 @@ body {
 				<li><a href="#signup-modal" data-toggle="modal" id="register-a">注册</a></li>
 			</ul>
 
-			<div class="btn-group  pull-right" id="user-div" style="display:none">
+			<div class="btn-group  pull-right" id="user-div"
+				style="display: none">
 				<button class="btn" id="user-btn">u2</button>
 				<button class="btn  btn-info dropdown-toggle" data-toggle="dropdown">
 					<span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
-				<li><a href="manager.jsp">管理平台</a></li>
-				<li><a href="#">个人资料</a></li>
-				<li><a href="" id="logout-a">退出</a></li>
+					<li><a href="manager.jsp">管理平台</a></li>
+					<li><a href="#">个人资料</a></li>
+					<li><a href="" id="logout-a">退出</a></li>
 				</ul>
 			</div>
 			<h2 class="muted">淘吃客</h2>
 		</div>
 	</div>
 
-	 <div class="home">
+	<div class="home">
 		<div class="container">
 			<!-- <header class="hero-unit">
 				<h1>
@@ -142,14 +143,14 @@ body {
 					aria-hidden="true">×</button>
 				<h3 id="myModalLabel">登录到淘宝客</h3>
 			</div>
-			<form class="form-horizontal" id="login-form" enctype="application/x-www-form-urlencoded" method="post" action="rest/login">
+			<form class="form-horizontal" id="login-form"
+				enctype="application/x-www-form-urlencoded" method="post"
+				action="rest/login">
 				<fieldset>
 					<input type="text" placeholder="用户名 或 email" name="username"
-						maxlength="30" id="idusername"> 
-					<input type="password"
-						placeholder="密码" name="password" id="idpassword"> 
-					<input type="button"  id="login-btn"
-						value="登 录" class="btn btn-success">
+						maxlength="30" id="idusername"> <input type="password"
+						placeholder="密码" name="password" id="idpassword"> <input
+						type="button" id="login-btn" value="登 录" class="btn btn-success">
 				</fieldset>
 			</form>
 			<a href="/accounts/password/reset/"><span>忘记密码?</span></a> · <a
@@ -162,14 +163,16 @@ body {
 					aria-hidden="true">×</button>
 				<h3 id="myModalLabel">免费注册</h3>
 			</div>
-			<form class="form-horizontal" id="register-form" enctype="application/x-www-form-urlencoded" method="post">
+			<form class="form-horizontal" id="register-form"
+				enctype="application/x-www-form-urlencoded" method="post">
 				<fieldset>
-				<input type="text" placeholder="用户名" name="username" maxlength="30"
-					id="id_username"><input type="text" placeholder="邮箱"
-					name="email" maxlength="30" id="id_username"> <input
-					type="password" placeholder="密码" name="password" id="id_password">
-				<input type="button" value="注 册" id="register-btn" class="btn btn-success">
-			</fieldset>
+					<input type="text" placeholder="用户名" name="username" maxlength="30"
+						id="id_username"><input type="text" placeholder="邮箱"
+						name="email" maxlength="30" id="id_username"> <input
+						type="password" placeholder="密码" name="password" id="id_password">
+					<input type="button" value="注 册" id="register-btn"
+						class="btn btn-success">
+				</fieldset>
 			</form>
 			已有账号？<a href="/signup/"><span>点此登录</span></a>
 		</div>
@@ -177,52 +180,54 @@ body {
 
 	<script src="assets/js/jquery-latest.js"></script>
 	<script src="assets/js/bootstrap.min.js"></script>
-	<script src="assets/js/bootstrap-alert.js"></script>
 	<script src="jquery/js/jquery.form.js"></script>
 	<script type="text/javascript" src="assets/js/bootbox.js"></script>
 	<script>
-		var options = { 
-			url:      "",
-	        resetForm: true,
-	        success: function (responseText, statusText, xhr, $form) {
-			    /* $("#dialog-form").dialog("close");  
-			    window.location.href="restaurants.html";*/
-			    
-			    document.getElementById("user-div").style.display="block";
-			    document.getElementById("login-a").style.display="none";
-			    document.getElementById("register-a").style.display="none";
-			    document.getElementById("user-btn").innerText=responseText.name;
-			    $('#login-modal').modal('hide');
-			    $('#signup-modal').modal('hide');
+		var options = {
+			url : "",
+			resetForm : true,
+			success : function(responseText, statusText, xhr, $form) {
+				/* $("#dialog-form").dialog("close");  
+				window.location.href="restaurants.html";*/
+
+				document.getElementById("user-div").style.display = "block";
+				document.getElementById("login-a").style.display = "none";
+				document.getElementById("register-a").style.display = "none";
+				document.getElementById("user-btn").innerText = responseText.name;
+				$('#login-modal').modal('hide');
+				$('#signup-modal').modal('hide');
 			},
-	        error: function (xhr, textStatus, errorThrown) {
-	        	
-	        	bootbox.alert(xhr.responseText);
-			     /* alert(xhr.responseText); */
+			error : function(xhr, textStatus, errorThrown) {
+
+				bootbox.alert(xhr.responseText);
+				/* alert(xhr.responseText); */
 			}
-	    };
-		
-		 $(document).ready(function() {
-			  $("#login-btn").click(function(){
+		};
+
+		$(document).ready(function() {
+			$("#login-btn").click(function() {
 				loginClick();
 				return false;
 			});
-			  $("#register-btn").click(function(){
-				  registerClick();
-			  });
-			  $("#logout-a").click(function(){
-				  logoutClick();
-			  });
+			$("#register-btn").click(function() {
+				registerClick();
+			});
+			$("#logout-a").click(function() {
+				logoutClick();
+			});
+			
+			//判断是否已登录
+
 		});
-		 
-		 function loginClick(){
-			 options.url = "rest/login";
-			 $('#login-form').unbind('submit');
-				$('#login-form').submit(function() {
-					$(this).ajaxSubmit(options);
-					return false;
-				});
-			$('#login-form').submit(); 
+
+		function loginClick() {
+			options.url = "rest/login";
+			$('#login-form').unbind('submit');
+			$('#login-form').submit(function() {
+				$(this).ajaxSubmit(options);
+				return false;
+			});
+			$('#login-form').submit();
 			/* var user=$("#idusername").val();
 			var pass=$("#idpassword").val();
 			var objdata={
@@ -247,31 +252,31 @@ body {
 						bootbox.alert(xhr.responseText);
 					}
 				}); */
-		 }
-		 function registerClick(){
-			 options.url = "rest/register";
-			 $('#register-form').unbind('submit');
-				$('#register-form').submit(function() {
-					$(this).ajaxSubmit(options);
-					return false;
-				});
+		}
+		function registerClick() {
+			options.url = "rest/register";
+			$('#register-form').unbind('submit');
+			$('#register-form').submit(function() {
+				$(this).ajaxSubmit(options);
+				return false;
+			});
 			$('#register-form').submit();
-		 }
-		 function logoutClick(){
-			 $.ajax({
-					type : "POST",
-					url : "rest/logout",
-					cache : false,
-					success : function(data, textStatus, jqXHR) {
-						document.getElementById("user-div").style.display="none";
-					    document.getElementById("login-a").style.display="block";
-					    document.getElementById("register-a").style.display="block";
-					},
-					error : function(xhr, textStatus, errorThrown) {
-						bootbox.alert(xhr.responseText);
-					}
-				});
-		 }
+		}
+		function logoutClick() {
+			$.ajax({
+						type : "POST",
+						url : "rest/logout",
+						cache : false,
+						success : function(data, textStatus, jqXHR) {
+							document.getElementById("user-div").style.display = "none";
+							document.getElementById("login-a").style.display = "block";
+							document.getElementById("register-a").style.display = "block";
+						},
+						error : function(xhr, textStatus, errorThrown) {
+							bootbox.alert(xhr.responseText);
+						}
+					});
+		}
 	</script>
 </body>
 </html>

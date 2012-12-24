@@ -21,8 +21,6 @@ import com.sun.jersey.multipart.FormDataParam;
 				@FormDataParam("text2") String text2,
 				@FormDataParam("file2") InputStream file2) {
 	
-			//get your data
-	
 			return Response.ok().build();
-		}
+			}
 	}
