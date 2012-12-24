@@ -62,8 +62,8 @@ body {
 			<div class="span2">
 				<ul class="nav nav-tabs nav-stacked">
 					<li><a href="#">餐厅信息</a></li>
-					<li class="active"><a href="manager.jsp">菜品维护</a></li>
-					<li><a href="desksmanager.jsp">餐桌维护</a></li>
+					<li><a href="manager.jsp">菜品维护</a></li>
+					<li class="active"><a href="desksmanager.jsp">餐桌维护</a></li>
 					<li><a href="#">订单管理</a></li>
 					<li><a href="#">权限设置</a></li>
 				</ul>
@@ -71,9 +71,9 @@ body {
 			<div class="span10">
 				<div class=" well">
 					<h3 id="restaurantName"></h3>
-					<h5>新增菜品分类</h5>
+					<h5>新增餐桌分类</h5>
 					<form id="categoryForm" class="form-inline" enctype="multipart/form-data" method="post">
-						<input type="text" placeholder="菜品分类：如家常菜" name="name"
+						<input type="text" placeholder="餐桌分类：如大厅" name="name"
 							maxlength="30" id="categoryName"> <input type="button"
 							value="确定" class="btn btn-success " onclick="addCategory();">
 					</form>
@@ -86,21 +86,19 @@ body {
 				</div>
 
 
-				<div class=" well" id="recipeManage">
+				<div class=" well" id="deskManage">
 					<h5>
-						菜品维护 <a class="btn btn-success pull-right" href="#addRecipe-modal" data-toggle="modal"><i
+						餐桌维护 <a class="btn btn-success pull-right" href="#addDesk-modal" data-toggle="modal"><i
 							class="icon-plus icon-white"></i> 新增</a>
 					</h5>
 
 					<hr>
-					<table id="recipeList" class="table table-hover">
+					<table id="deskList" class="table table-hover">
 						<thead>
 							<tr>
 								<th>名称</th>
-								<th>图片</th>
-								<th>单价</th>
-								<th>单位</th>
-								<th>更新时间</th>
+								<th>容量</th>
+								<th>状态</th>
 								<th>编辑</th>
 							</tr>
 						</thead>
@@ -111,17 +109,12 @@ body {
 
 			</div>
 		</div>
-		<div class="modal hide fade" id="addRecipe-modal">
-			<!-- <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">×</button>
-				<h3 id="myModalLabel">新增菜品</h3>
-			</div> -->
-			<form class="form-horizontal" id="recipe-form" enctype="multipart/form-data" method="post">
+		<div class="modal hide fade" id="addDesk-modal">
+			<form class="form-horizontal" id="desk-form" enctype="multipart/form-data" method="post">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">×</button>
-					<h3 id="myModalLabel">菜品编辑</h3>
+					<h3 id="myModalLabel">餐桌编辑</h3>
 				</div>
 				<br>
 				<fieldset>
@@ -130,32 +123,20 @@ body {
 				      <label class="control-label" for="name">名称</label>
 				      <div class="controls">
 				        <input type="text" class="input-xlarge span4" name="name" id="rname"/>
-				        <input type="text" name="cid" id="cid" style="display:none" />
+				        <input type="text" name="tid" id="tid" style="display:none" />
 				      </div>
 				    </div>
 				    <div class="control-group">
-				      <label class="control-label" for="price">价格</label>
+				      <label class="control-label" for="capacity">容量</label>
 				      <div class="controls">
-				        <input type="text" class="input-xlarge span4" name="price" id="price"/>
+				        <input type="text" class="input-xlarge span4" name="capacity" id="capacity"/>
 				        <input type="text" name="rid" id="rid" style="display:none" />
 				      </div>
 				    </div>
 				    <div class="control-group">
-				      <label class="control-label" for="description">描述</label>
-				      <div class="controls">
-				        <input type="text" name="description" class="input-xlarge span4" id="rdescription"/>
-				      </div>
-				    </div>
-				    <div class="control-group">
-				      <label class="control-label" for="image">图片</label>
-				      <div class="controls">
-				        <input type="file" name="image" id="rimage" />
-				      </div>
-				    </div>
-				    <div class="control-group">
-				    <label class="control-label span2" for="login-btn"></label>
+				      <label class="control-label span2" for="login-btn"></label>
 				      <input type="button"  id="recipe-btn"
-						value="确  定" class="btn btn-success span3" onclick="addRecipe();">
+						value="确  定" class="btn btn-success span3" onclick="addDesk();">
 				    </div>
 				</fieldset>
 			</form>
@@ -191,18 +172,18 @@ body {
 			});
 		}
 		
-		/* 获取所有菜类 */
+		/* 获取所有餐桌分类 */
 		function getCategories(){
-			$.getJSON("rest/restaurants/"+restaurant.id+"/categories", function(data) {
+			$.getJSON("rest/restaurants/"+restaurant.id+"/desktypes", function(data) {
 				$('#cateList').empty();
 				$.each(data, function(index, value) {
 					if (!isNaN(index)) {
-						console.log(value);//<li class="active"><a href="#">所有插件</a></li>
+						console.log(value);
 						var html;
 						if(selectCid==null){
 							if(index==0){
 								html = '<li id="cate'+value.id+'" class="active"><a href="#" onclick="cateClick('+value.id+')">' + value.name + "</a></li>";
-								getRecipes(value.id);
+								getDesks(value.id);
 								selectCid=value.id;
 							}
 							else{
@@ -224,37 +205,36 @@ body {
 			});
 		}
 		
-		/* 获取某一类菜品 */
-		function getRecipes(cid){
-			$.getJSON("rest/restaurants/"+restaurant.id+"/recipes?cid="+cid, function(data) {
-				$('#recipeList tbody').empty();
+		/* 获取某一类餐桌 */
+		function getDesks(cid){
+			$.getJSON("rest/restaurants/"+restaurant.id+"/desks?tid="+cid, function(data) {
+				$('#deskList tbody').empty();
 				$.each(data, function(index, value) {
 					if (!isNaN(index)) {
 						console.log(value);
 						var html = '<tr><td>' + value.name
-								+ '</td><td><img style="width:100px; height:80px;" src="http://localhost:8080/MenuImages/' + value.image + '">' + '</td><td>'
-								+ value.price
-								+ '</td><td></td><td></td><td><a href="#" onclick="editRecipe('+value.id+')">编辑</a><br /><a href="#" onclick="deleteRecipe('+value.id+')">删除</a></td></tr>'
-						$('#recipeList tbody').append(html);
+								+ '</td><td>' +value.capacity+ '</td><td>'
+								+ (value.orderStatus?"忙":"")
+								+ '</td><td><a href="#" onclick="editDesk('+value.id+')">编辑</a><br /><a href="#" onclick="deleteDesk('+value.id+')">删除</a></td></tr>'
+						$('#deskList tbody').append(html);
 					}
 				});
 			});
 		}
 		
-		/* 点击菜类 */
+		/* 点击餐桌类 */
 		function cateClick(id){
-			/* bootbox.alert(id); */
 			selectCid=id;
 			$("#cateList li").attr({ class:"" });
 			var cid="cate"+id;
 			$("#"+cid).attr({class:"active"}); 
-			getRecipes(id);
+			getDesks(id);
 		}
 		
-		/* 新增菜类 */
+		/* 新增餐桌类 */
 		function addCategory(){
 			var options = { 
-					url:"rest/restaurants/"+restaurant.id+"/categories",
+					url:"rest/restaurants/"+restaurant.id+"/desktypes",
 			        resetForm: true,
 			        success: function (responseText, statusText, xhr, $form) {
 			        	getCategories();
@@ -272,10 +252,10 @@ body {
 			$('#categoryForm').submit();
 		}
 		
-		/* 删除菜类 */
+		/* 删除餐桌类 */
 		function deleteCategory(){
 			
-			bootbox.confirm("确定要删除当前选中的菜类吗？",
+			bootbox.confirm("确定要删除当前选中的类别吗？",
 					"取消",
 					"确定",
 					function (isOk){
@@ -284,7 +264,7 @@ body {
 						}
 						$.ajax({
 							type : "DELETE",
-							url : "rest/restaurants/"+restaurant.id+"/categories/" + selectCid,
+							url : "rest/restaurants/"+restaurant.id+"/desktypes/" + selectCid,
 							cache : false,
 							success : function(data, textStatus, jqXHR) {
 								selectCid=null;
@@ -299,48 +279,46 @@ body {
 			
 		}
 		
-		/* 新增菜品 */
-		function addRecipe(){
-			$("#cid").val(selectCid);
+		/* 新增餐桌 */
+		function addDesk(){
+			$("#tid").val(selectCid);
 			var options = { 
-					url:"rest/restaurants/"+restaurant.id+"/recipes",
+					url:"rest/restaurants/"+restaurant.id+"/desks",
 			        resetForm: true,
 			        success: function (responseText, statusText, xhr, $form) {
-			        	$('#addRecipe-modal').modal('hide');
-			        	getRecipes(selectCid);
+			        	$('#addDesk-modal').modal('hide');
+			        	getDesks(selectCid);
 					},
 			        error: function (xhr, textStatus, errorThrown) {
-			        	$('#addRecipe-modal').modal('hide');
+			        	$('#addDesk-modal').modal('hide');
 			        	bootbox.alert(xhr.responseText);
 					}
 			    };
 			var rid=$("#rid").val();
 			if(rid!=null&&rid!=""){
-				options.url="rest/restaurants/"+restaurant.id+"/recipes/" + rid;
-			}
-			$('#recipe-form').unbind('submit');
-			$('#recipe-form').submit(function() {
+				options.url="rest/restaurants/"+restaurant.id+"/desks/" + rid;
+			} 
+			$('#desk-form').unbind('submit');
+			$('#desk-form').submit(function() {
 				$(this).ajaxSubmit(options);
 				return false;
 			});
-			$('#recipe-form').submit();
+			$('#desk-form').submit();
 		}
 		
-		/* 编辑菜品 */
-		function editRecipe(id) {
-			$.getJSON("rest/restaurants/"+restaurant.id+"/recipes/" + id, function(data) {				
-					$("#rdescription").val(data.description?data.description:"");
+		/* 编辑餐桌 */
+		function editDesk(id) {
+			$.getJSON("rest/restaurants/"+restaurant.id+"/desks/" + id, function(data) {				
 					$("#rname").val(data.name?data.name:"");
-					$("#rimage").val(data.image?data.image:"");
-					$("#price").val(data.price?data.price:"");
-					$("#cid").val(data.cid);
+					$("#capacity").val(data.capacity?data.capacity:"");
+					$("#tid").val(data.tid);
 					$("#rid").val(id);
-					$('#addRecipe-modal').modal('show');
+					$('#addDesk-modal').modal('show');
 				});
 			} 
 		
-		/* 删除菜品 */
-		function deleteRecipe(id) {
+		/* 删除餐桌 */
+		function deleteDesk(id) {
 			bootbox.confirm("确定要删除吗？",
 					"取消",
 					"确定",
@@ -350,10 +328,10 @@ body {
 						}
 						$.ajax({
 							type : "DELETE",
-							url : "rest/restaurants/"+restaurant.id+"/recipes/" + id,
+							url : "rest/restaurants/"+restaurant.id+"/desks/" + id,
 							cache : false,
 							success : function(data, textStatus, jqXHR) {
-								getRecipes(selectCid);
+								getDesks(selectCid);
 							},
 							error : function(xhr, textStatus, errorThrown) {
 								bootbox.alert(xhr.responseText);

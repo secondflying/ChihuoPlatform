@@ -142,12 +142,12 @@ body {
 					aria-hidden="true">×</button>
 				<h3 id="myModalLabel">登录到淘宝客</h3>
 			</div>
-			<form class="form-horizontal" id="login-form" method="post" action="rest/login">
+			<form class="form-horizontal" id="login-form" enctype="application/x-www-form-urlencoded" method="post" action="rest/login">
 				<fieldset>
 					<input type="text" placeholder="用户名 或 email" name="username"
-						maxlength="30" id="id_username"> 
+						maxlength="30" id="idusername"> 
 					<input type="password"
-						placeholder="密码" name="password" id="id_password"> 
+						placeholder="密码" name="password" id="idpassword"> 
 					<input type="button"  id="login-btn"
 						value="登 录" class="btn btn-success">
 				</fieldset>
@@ -162,7 +162,7 @@ body {
 					aria-hidden="true">×</button>
 				<h3 id="myModalLabel">免费注册</h3>
 			</div>
-			<form class="form-horizontal" id="register-form" method="post">
+			<form class="form-horizontal" id="register-form" enctype="application/x-www-form-urlencoded" method="post">
 				<fieldset>
 				<input type="text" placeholder="用户名" name="username" maxlength="30"
 					id="id_username"><input type="text" placeholder="邮箱"
@@ -222,7 +222,31 @@ body {
 					$(this).ajaxSubmit(options);
 					return false;
 				});
-			$('#login-form').submit();
+			$('#login-form').submit(); 
+			/* var user=$("#idusername").val();
+			var pass=$("#idpassword").val();
+			var objdata={
+					username:user,
+					password:pass
+			};
+			 $.ajax({
+					type : "POST",
+					url : "rest/login",
+					data: objdata,
+					cache : false,
+					success : function(data, textStatus, jqXHR) {
+						
+						document.getElementById("user-div").style.display="block";
+					    document.getElementById("login-a").style.display="none";
+					    document.getElementById("register-a").style.display="none";
+					    document.getElementById("user-btn").innerText=data.name;
+					    $('#login-modal').modal('hide');
+					},
+					error : function(xhr, textStatus, errorThrown) {
+						$('#login-modal').modal('hide');
+						bootbox.alert(xhr.responseText);
+					}
+				}); */
 		 }
 		 function registerClick(){
 			 options.url = "rest/register";
