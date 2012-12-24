@@ -27,9 +27,9 @@ public class Order implements java.io.Serializable {
 	private Date endtime;
 	private String code;
 	private Set<OrderItem> orderItems = new HashSet<OrderItem>(0);
+	private Integer status;
 
 	@XmlTransient
-	private Integer status;
 	private Restaurant restaurant;
 
 	public Order() {
