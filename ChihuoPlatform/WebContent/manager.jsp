@@ -136,7 +136,7 @@ body {
 				    <div class="control-group">
 				      <label class="control-label" for="price">价格</label>
 				      <div class="controls">
-				        <input type="text" class="input-xlarge span4" name="price" id="price"/>
+				        <input type="number" step="0.01" class="input-xlarge span4" name="price" id="price"/>
 				        <input type="text" name="rid" id="rid" style="display:none" />
 				      </div>
 				    </div>
@@ -149,7 +149,11 @@ body {
 				    <div class="control-group">
 				      <label class="control-label" for="image">图片</label>
 				      <div class="controls">
-				        <input type="file" name="image" id="rimage" />
+				        <input type="file" name="image" id="rimage" style="display:none" />
+				        <div class="input-append">
+				        	<input id="photoCover" class="input-large" type="text"/>
+				        	<a class="btn" onclick="$('input[id=rimage]').click();">浏览</a>
+				        </div>
 				      </div>
 				    </div>
 				    <div class="control-group">
@@ -171,6 +175,9 @@ body {
 		var selectCid;
 		$(document).ready(function() {
 			getRestaurants();	
+		});
+		$('input[id=rimage]').change(function (){
+			$('#photoCover').val($(this).val());
 		});
 		
 		/* 获取餐厅 */
@@ -332,6 +339,7 @@ body {
 					$("#rdescription").val(data.description?data.description:"");
 					$("#rname").val(data.name?data.name:"");
 					$("#rimage").val(data.image?data.image:"");
+					$('#photoCover').val(data.image?data.image:"");
 					$("#price").val(data.price?data.price:"");
 					$("#cid").val(data.cid);
 					$("#rid").val(id);

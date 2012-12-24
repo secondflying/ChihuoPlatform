@@ -129,7 +129,7 @@ body {
 				    <div class="control-group">
 				      <label class="control-label" for="capacity">容量</label>
 				      <div class="controls">
-				        <input type="text" class="input-xlarge span4" name="capacity" id="capacity"/>
+				        <input type="number" class="input-xlarge span4" name="capacity" id="capacity"/>
 				        <input type="text" name="rid" id="rid" style="display:none" />
 				      </div>
 				    </div>
