@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition name="commonPage">
+    	<put-attribute name="cssFile" value="/tiles/cssPath.jsp" />
+    	<put-attribute name="top" value="/tiles/top.jsp" />
+    	<put-attribute name="jsFile" value="/tiles/jsPath.jsp" />
+    </definition>
+
+    <definition name="index" extends="commonPage" template="/layouts/index.jsp">
+		<put-attribute name="title" value="淘吃客 - 首页" />
+    </definition>
+
+    <definition name="recipeManager" extends="commonPage" template="/layouts/recipeManager.jsp">
+		<put-attribute name="title" value="淘吃客 - 菜品管理" />
+    </definition>
+    
+</tiles-definitions>
