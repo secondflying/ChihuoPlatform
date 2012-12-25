@@ -13,19 +13,14 @@ body {
 }
 
 #login-modal,#signup-modal {
-	width: 300px;
-	padding: 10px 8px;
-	background: white;
-	border: 5px solid rgba(0, 0, 0, 0.2);
-	border-radius: 10px;
-	box-shadow: 0 1px 0 white inset;
-	overflow: hidden;
-	margin-left: -150px;
+	width: 358px;
+	height:358px;
+	background-image:url("img/login/loginBJ.png");
+	margin-left: -179px;
+	padding:0 -10px;
 }
 
 #login-modal fieldset,#signup-modal fieldset {
-	border-bottom: 1px solid #DDD;
-	padding: 10px 0 20px 0;
 	margin: 0 0 20px 0;
 }
 

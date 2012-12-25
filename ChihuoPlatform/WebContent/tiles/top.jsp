@@ -25,11 +25,11 @@
 
 <div class="container">
 	<div class="modal hide fade" id="login-modal">
-		<div class="modal-header">
+		<!-- <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"
 				aria-hidden="true">×</button>
-			<h3 id="myModalLabel">登录到淘宝客</h3>
-		</div>
+			<h3 id="myModalLabel">登录到淘吃客</h3>
+		</div> -->
 		<form class="form-horizontal" id="login-form"
 			enctype="application/x-www-form-urlencoded" method="post"
 			action="rest/login">
@@ -40,8 +40,8 @@
 					type="button" id="login-btn" value="登 录" class="btn btn-success">
 			</fieldset>
 		</form>
-		<a href="/accounts/password/reset/"><span>忘记密码?</span></a> · <a
-			href="#signup-modal"><span>注册账号</span></a>
+		<!-- <a href="/accounts/password/reset/"><span>忘记密码?</span></a> · <a
+			href="#signup-modal"><span>注册账号</span></a> -->
 	</div>
 
 	<div class="modal hide fade" id="signup-modal">
