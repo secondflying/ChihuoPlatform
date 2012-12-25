@@ -18,7 +18,7 @@
 				<li><a href="#" id="logout-a">退出</a></li>
 			</ul>
 		</div>
-		<h2 class="muted"><a href="index2.jsp">淘吃客</a></h2>
+		<h2 class="muted"><a href="#">淘吃客</a></h2>
 	</div>
 </div>
 
