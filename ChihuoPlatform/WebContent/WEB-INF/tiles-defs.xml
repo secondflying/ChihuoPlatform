@@ -17,4 +17,12 @@
 		<put-attribute name="title" value="淘吃客 - 菜品管理" />
     </definition>
     
+    <definition name="desksManager" extends="commonPage" template="/layouts/desksManager.jsp">
+		<put-attribute name="title" value="淘吃客 - 餐桌管理" />
+    </definition>
+    
+    <definition name="orderManager" extends="commonPage" template="/layouts/ordermanager.jsp">
+		<put-attribute name="title" value="淘吃客 - 订单管理" />
+    </definition>
+    
 </tiles-definitions>
