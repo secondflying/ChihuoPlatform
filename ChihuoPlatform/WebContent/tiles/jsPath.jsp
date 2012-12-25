@@ -6,18 +6,23 @@
 <script src="jquery/js/jquery.form.js"></script>
 <script type="text/javascript" src="assets/js/bootbox.js"></script>
 <script>
+
+	
 	var options = {
 		url : "",
 		resetForm : true,
 		success : function(responseText, statusText, xhr, $form) {
-			/* $("#dialog-form").dialog("close");  
-			window.location.href="restaurants.html";*/
 			loginCallback(responseText);
 		},
 		error : function(xhr, textStatus, errorThrown) {
-			bootbox.alert(xhr.responseText);
-			/* alert(xhr.responseText); */
-		}
+					var div=$("#login-modal");  
+				    div.animate({marginLeft:'+=25px'},50 );
+				    div.animate({marginLeft:'-=50px'},50);
+				    div.animate({marginLeft:'+=50px'},50 );
+				    div.animate({marginLeft:'-=50px'},50);
+				    div.animate({marginLeft:'+=50px'},50 );
+				    div.animate({marginLeft:'-=25px'},50);
+			}
 	};
 
 	$(document).ready(function() {
@@ -67,30 +72,6 @@
 			return false;
 		});
 		$('#login-form').submit();
-		/* var user=$("#idusername").val();
-		var pass=$("#idpassword").val();
-		var objdata={
-				username:user,
-				password:pass
-		};
-		 $.ajax({
-				type : "POST",
-				url : "rest/login",
-				data: objdata,
-				cache : false,
-				success : function(data, textStatus, jqXHR) {
-					
-					document.getElementById("user-div").style.display="block";
-				    document.getElementById("login-a").style.display="none";
-				    document.getElementById("register-a").style.display="none";
-				    document.getElementById("user-btn").innerText=data.name;
-				    $('#login-modal').modal('hide');
-				},
-				error : function(xhr, textStatus, errorThrown) {
-					$('#login-modal').modal('hide');
-					bootbox.alert(xhr.responseText);
-				}
-			}); */
 	}
 	function registerClick() {
 		options.url = "rest/register";
