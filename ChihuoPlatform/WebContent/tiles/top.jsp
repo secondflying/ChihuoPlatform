@@ -22,7 +22,6 @@
 	</div>
 </div>
 
-
 <div class="container">
 	<div class="modal hide fade" id="login-modal">
 		<!-- <div class="modal-header">
@@ -34,11 +33,27 @@
 			enctype="application/x-www-form-urlencoded" method="post"
 			action="rest/login">
 			<fieldset>
-				<input type="text" placeholder="用户名 或 email" name="username"
-					maxlength="30" id="idusername"> <input type="password"
-					placeholder="密码" name="password" id="idpassword"> <input
-					type="button" id="login-btn" value="登 录" class="btn btn-success">
+				<div class="input-prepend">
+					<span class="add-on">
+						<i class="icon-user"></i>
+					</span>
+					<input type="text" placeholder="用户名 或 email" name="username"
+						maxlength="30" id="idusername">
+				</div>
+				<div class="input-prepend">
+					<span class="add-on">
+						<i class="icon-lock"></i>
+					</span>
+					<input type="password"
+					placeholder="密码" name="password" id="idpassword">
+				</div>
+				 
+					<button id="login-btn" class="button1">登 录</button>
 			</fieldset>
+			<div class="squaredFour">
+				<input type="checkbox" value="None" id="squaredFour" name="check">
+				<label for="squaredFour"></label>
+			</div>
 		</form>
 		<!-- <a href="/accounts/password/reset/"><span>忘记密码?</span></a> · <a
 			href="#signup-modal"><span>注册账号</span></a> -->
