@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <div class="container">
 	<div class="">
-		<ul class="nav nav-pills pull-right">
+		<ul class="nav nav-pills pull-right" id="login-div">
 			<li><a href="#login-modal" data-toggle="modal" id="login-a">登录</a></li>
 			<li><a href="#signup-modal" data-toggle="modal" id="register-a">注册</a></li>
 		</ul>
@@ -15,14 +15,12 @@
 			<ul class="dropdown-menu">
 				<li><a href="recipeManager.jsp">管理平台</a></li>
 				<li><a href="#">个人资料</a></li>
-				<li><a href="" id="logout-a">退出</a></li>
+				<li><a href="#" id="logout-a">退出</a></li>
 			</ul>
 		</div>
-		<h2 class="muted">淘吃客</h2>
+		<h2 class="muted"><a href="index2.jsp">淘吃客</a></h2>
 	</div>
 </div>
-
-
 
 
 <div class="container">

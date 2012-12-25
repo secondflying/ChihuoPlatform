@@ -12,16 +12,9 @@
 		success : function(responseText, statusText, xhr, $form) {
 			/* $("#dialog-form").dialog("close");  
 			window.location.href="restaurants.html";*/
-
-			document.getElementById("user-div").style.display = "block";
-			document.getElementById("login-a").style.display = "none";
-			document.getElementById("register-a").style.display = "none";
-			document.getElementById("user-btn").innerText = responseText.name;
-			$('#login-modal').modal('hide');
-			$('#signup-modal').modal('hide');
+			loginCallback(responseText);
 		},
 		error : function(xhr, textStatus, errorThrown) {
-
 			bootbox.alert(xhr.responseText);
 			/* alert(xhr.responseText); */
 		}
@@ -40,8 +33,31 @@
 		});
 
 		//判断是否已登录
-
+		//获取用户信息，查看是否登录
+		$.get("rest/userinfo").success(function(data) {
+			loginCallback(data);
+		}).error(function(xhr) {
+			logoutCallback();
+			/* if(xhr.status == 401){
+				alert("请登录");
+			}else if(xhr.status == 400){
+				alert("用户不存在");
+			} */
+		});
 	});
+	
+	function loginCallback(responseText){
+		$("#login-div").hide();
+		$("#user-div").show();
+		document.getElementById("user-btn").innerText = responseText.name;
+		$('#login-modal').modal('hide');
+		$('#signup-modal').modal('hide');
+	}
+	
+	function logoutCallback(){
+		$("#login-div").show();
+		$("#user-div").hide();
+	}
 
 	function loginClick() {
 		options.url = "rest/login";
@@ -91,9 +107,8 @@
 			url : "rest/logout",
 			cache : false,
 			success : function(data, textStatus, jqXHR) {
-				document.getElementById("user-div").style.display = "none";
-				document.getElementById("login-a").style.display = "block";
-				document.getElementById("register-a").style.display = "block";
+				logoutCallback();
+				window.location.href = "index2.jsp";
 			},
 			error : function(xhr, textStatus, errorThrown) {
 				bootbox.alert(xhr.responseText);
