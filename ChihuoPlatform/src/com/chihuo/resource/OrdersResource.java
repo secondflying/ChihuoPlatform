@@ -34,7 +34,7 @@ public class OrdersResource {
 
 	//开台
 	@POST
-	@RolesAllowed({"OWER"})
+	@RolesAllowed({"WAITER"})
 	@Consumes("multipart/form-data")
 	public Response create(@FormDataParam("did") int did,
 			@FormDataParam("number") int number,
@@ -54,16 +54,7 @@ public class OrdersResource {
 					.type(MediaType.TEXT_PLAIN).build();
 		}
 		
-//			//判断服务员的用户名是否正确
-//			String username = jsonObject.getString("username");
-//			WaiterDao wdao = new WaiterDao();
-//			Waiter waiter = wdao.getUserByUsername(username);
-//			if (waiter == null) {
-//				return Response.status(Response.Status.NOT_FOUND)
-//						.entity("名称为'" + username + "'的服务员不存在")
-//						.type(MediaType.TEXT_PLAIN).build();
-//			}
-
+		
 		// TODO order状态： 1为新开台 3为请求结账 4为已结账 5为撤单
 		Order order = new Order();
 		order.setDesk(d);
@@ -71,7 +62,7 @@ public class OrdersResource {
 		order.setStarttime(new Date());
 		order.setStatus(1);
 		order.setRestaurant(restaurant);
-		order.setUser(PublicHelper.getLoginUser(securityContext));
+		order.setWaiter(PublicHelper.getLoginWaiter(securityContext));
 
 		// TODO 在生成的code里面包含桌号，避免同时有相同code的order
 		order.setCode(Math.round(Math.random() * 9000 + 1000) + "");

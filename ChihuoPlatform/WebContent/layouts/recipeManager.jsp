@@ -34,7 +34,7 @@ body {
 		<div class="row">
 			<div class="span2">
 				<ul class="nav nav-pills nav-stacked">
-					<li><a href="#">餐厅信息</a></li>
+					<li><a href="infoManager.jsp">餐厅信息</a></li>
 					<li class="active"><a href="recipeManager.jsp">菜品维护</a></li>
 					<li><a href="desksmanager.jsp">餐桌维护</a></li>
 					<li><a href="ordermanager.jsp">订单管理</a></li>

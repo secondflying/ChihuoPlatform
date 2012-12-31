@@ -13,6 +13,10 @@
 		<put-attribute name="title" value="淘吃客 - 首页" />
     </definition>
 
+    <definition name="infoManager" extends="commonPage" template="/layouts/infoManager.jsp">
+		<put-attribute name="title" value="淘吃客 - 餐厅设置" />
+    </definition>
+    
     <definition name="recipeManager" extends="commonPage" template="/layouts/recipeManager.jsp">
 		<put-attribute name="title" value="淘吃客 - 菜品管理" />
     </definition>

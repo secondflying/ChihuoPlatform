@@ -50,7 +50,7 @@ public class OrderResource {
 
 	// 加减菜
 	@POST
-	@RolesAllowed({"USER"})
+	@RolesAllowed({"USER,WAITER"})
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@FormParam("rid") int rid,
@@ -130,7 +130,7 @@ public class OrderResource {
 	//结账 
 	@Path("/check")
 	@PUT
-	@RolesAllowed({"OWER"})
+	@RolesAllowed({"OWER,WAITER"})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response check() throws JSONException {
 		OrderDao dao = new OrderDao();
@@ -148,7 +148,7 @@ public class OrderResource {
 	// 撤单
 	@Path("/cancel")
 	@PUT
-	@RolesAllowed({"OWER"})
+	@RolesAllowed({"OWER,WAITER"})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response cancel() throws JSONException {
 		OrderDao dao = new OrderDao();

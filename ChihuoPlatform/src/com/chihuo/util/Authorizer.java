@@ -7,6 +7,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.Role;
 import com.chihuo.bussiness.User;
+import com.chihuo.bussiness.Waiter;
 
 public class Authorizer implements SecurityContext {
 
@@ -14,6 +15,7 @@ public class Authorizer implements SecurityContext {
 
 	private UriInfo uriInfo;
 	private User user;
+	private Waiter waiter;
 
 	public Authorizer(final User user, UriInfo uriInfo) {
 		this.user = user;
@@ -22,11 +24,23 @@ public class Authorizer implements SecurityContext {
 		if (user != null) {
 			principal = new Principal() {
 				public String getName() {
-					return user.getId() + "";
+					return "USER:" + user.getId();
 				}
 			};
 		}
+	}
 
+	public Authorizer(final Waiter waiter, UriInfo uriInfo) {
+		this.waiter = waiter;
+		this.uriInfo = uriInfo;
+
+		if (user != null) {
+			principal = new Principal() {
+				public String getName() {
+					return "WAITER:" + user.getId();
+				}
+			};
+		}
 	}
 
 	public Principal getUserPrincipal() {
@@ -38,16 +52,16 @@ public class Authorizer implements SecurityContext {
 	 *            Role to be checked
 	 */
 	public boolean isUserInRole(String role) {
-		if (role.equals("USER")) {
-			if (user != null) {
-				return true;
-			}
-		} else {
-			if (user != null) {
-				for (Role r : user.getRoles()) {
-					if (r.getName().equals(role)) {
-						return true;
-					}
+		if (user != null && role.equals("USER")) {
+			return true;
+		}
+		if (waiter != null && role.equals("WAITER")) {
+			return true;
+		}
+		if (user != null) {
+			for (Role r : user.getRoles()) {
+				if (r.getName().equals(role)) {
+					return true;
 				}
 			}
 		}

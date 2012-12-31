@@ -8,6 +8,7 @@ import org.hibernate.criterion.Restrictions;
 import com.chihuo.bussiness.Order;
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.bussiness.User;
+import com.chihuo.bussiness.Waiter;
 
 public class OrderDao extends GenericHibernateDAO﻿<Order, Integer> {
 	
@@ -41,13 +42,11 @@ public class OrderDao extends GenericHibernateDAO﻿<Order, Integer> {
 		return (Order) crit.uniqueResult();
 	}
 	
-	public List<Order> findByUser(Restaurant r, User u) {
+	public List<Order> findByWaiter(Restaurant r, Waiter u) {
 		Criteria crit = getSession().createCriteria(Order.class);
-		crit = crit.add(Restrictions.eq("user.id", u.getId()));
+		crit = crit.add(Restrictions.eq("waiter.id", u.getId()));
 		crit = crit.add(Restrictions.eq("restaurant.id", r.getId()));
 
 		return (List<Order>)crit.list();
 	}
-	
-
 }

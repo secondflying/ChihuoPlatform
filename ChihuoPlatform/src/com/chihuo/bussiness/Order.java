@@ -21,7 +21,7 @@ public class Order implements java.io.Serializable {
 	@XmlElement
 	private Integer id;
 	private Desk desk;
-	private User user;
+	private Waiter waiter;
 	private Integer number;
 	private Date starttime;
 	private Date endtime;
@@ -120,12 +120,11 @@ public class Order implements java.io.Serializable {
 		this.orderItems = orderItems;
 	}
 
-	public User getUser() {
-		return user;
+	public Waiter getWaiter() {
+		return waiter;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setWaiter(Waiter waiter) {
+		this.waiter = waiter;
 	}
-
 }

@@ -16,6 +16,7 @@ import javax.ws.rs.core.SecurityContext;
 import com.chihuo.bussiness.Order;
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.bussiness.User;
+import com.chihuo.bussiness.Waiter;
 import com.chihuo.dao.OrderDao;
 import com.chihuo.dao.RestaurantDao;
 import com.chihuo.util.PublicHelper;
@@ -33,7 +34,7 @@ public class MyUserResource {
 	}
 	
 	@GET
-	@RolesAllowed({"OWER"})
+	@RolesAllowed({"WAITER"})
 	@Path("/restaurants/{rid}/orders")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Order> getMyOrder(@PathParam("rid") int id,@Context SecurityContext securityContext) {
@@ -46,8 +47,8 @@ public class MyUserResource {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
 		
-		User user = PublicHelper.getLoginUser(securityContext);
+		Waiter user = PublicHelper.getLoginWaiter(securityContext);
 		OrderDao dao = new OrderDao();
-		return dao.findByUser(r,user);
+		return dao.findByWaiter(r,user);
 	}
 }
