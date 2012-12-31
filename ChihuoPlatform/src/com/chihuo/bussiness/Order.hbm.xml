@@ -14,8 +14,8 @@
         <many-to-one name="desk" class="com.chihuo.bussiness.Desk" fetch="select">
             <column name="did" />
         </many-to-one>
-        <many-to-one name="user" class="com.chihuo.bussiness.User" fetch="select">
-            <column name="uid" />
+        <many-to-one name="waiter" class="com.chihuo.bussiness.Waiter" fetch="select">
+            <column name="wid" />
         </many-to-one>
         <property name="number" type="java.lang.Integer">
             <column name="number" />
