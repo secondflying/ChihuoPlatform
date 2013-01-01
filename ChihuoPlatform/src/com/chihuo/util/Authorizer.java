@@ -1,9 +1,12 @@
 package com.chihuo.util;
 
 import java.security.Principal;
+import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.chihuo.bussiness.Role;
 import com.chihuo.bussiness.User;
@@ -52,15 +55,18 @@ public class Authorizer implements SecurityContext {
 	 *            Role to be checked
 	 */
 	public boolean isUserInRole(String role) {
-		if (user != null && role.equals("USER")) {
+		String[] roles = StringUtils.split(role,",");
+		List<String> list = java.util.Arrays.asList(roles);
+		
+		if (user != null && list.contains("USER")) {
 			return true;
 		}
-		if (waiter != null && role.equals("WAITER")) {
+		if (waiter != null && list.contains("WAITER")) {
 			return true;
 		}
 		if (user != null) {
 			for (Role r : user.getRoles()) {
-				if (r.getName().equals(role)) {
+				if (list.contains(r.getName())) {
 					return true;
 				}
 			}

@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
@@ -47,10 +48,10 @@ public class WaiterLoginResource {
 	}
 	
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response testAuth() {
-
-		return Response.ok().header("Authorization", "apikey=0PN5J17HBGZHT7JJ3X82, hash=frJIUN8DYpKDtOLCwo//yllqDzg=").build();
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response test() {
+		//return Response.status(Status.NO_CONTENT).entity("hello").build(); //this will throw 200
+		return Response.status(Status.NO_CONTENT).build();
 	}
 
 }
