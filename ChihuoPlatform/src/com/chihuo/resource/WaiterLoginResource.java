@@ -10,13 +10,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang.StringUtils;
-
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.bussiness.Waiter;
 import com.chihuo.dao.RestaurantDao;
 import com.chihuo.dao.WaiterDao;
+import com.chihuo.util.PublicHelper;
 
 @Path("/wlogin")
 public class WaiterLoginResource {
@@ -41,10 +39,8 @@ public class WaiterLoginResource {
 					.entity("用户名密码不匹配").type(MediaType.TEXT_PLAIN).build();
 		}
 		
-		String uid = "uid=" + u.getId();
-		String token = "token=" + DigestUtils.shaHex(StringUtils.join(new String[]{u.getId().toString() , u.getPassword()}));
-
-		return Response.ok(restaurant2).header("Authorization", StringUtils.join(new String[]{uid,token},',')).build();
+		
+		return Response.ok(restaurant2).header("Authorization", PublicHelper.encryptUser(u.getId(), u.getPassword(),3)).build();
 	}
 	
 	@GET

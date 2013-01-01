@@ -11,10 +11,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.User;
 import com.chihuo.dao.UserDao;
+import com.chihuo.util.PublicHelper;
 
 @Path("/userinfo")
 public class UserinfoResource {
@@ -28,16 +30,10 @@ public class UserinfoResource {
 	HttpServletResponse httpResponse;
 
 	@GET
-	@RolesAllowed({"USER"})
+	@RolesAllowed({ "USER,OWER" })
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createCategory(@CookieParam("uid") String uid) {
-		if (uid == null || uid.isEmpty()) {
-			return Response.status(Response.Status.UNAUTHORIZED)
-					.entity("未登录").type(MediaType.TEXT_PLAIN).build();
-		}
-		UserDao dao = new UserDao();
-		User u = dao.findById(Integer.parseInt(uid));
-		
+	public Response get(@Context SecurityContext securityContext) {
+		User u = PublicHelper.getLoginUser(securityContext);
 		if (u == null) {
 			return Response.status(Response.Status.BAD_REQUEST).entity("用户不存在")
 					.type(MediaType.TEXT_PLAIN).build();

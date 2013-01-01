@@ -8,7 +8,6 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.chihuo.bussiness.Role;
 import com.chihuo.bussiness.User;
 import com.chihuo.bussiness.Waiter;
 
@@ -55,23 +54,20 @@ public class Authorizer implements SecurityContext {
 	 *            Role to be checked
 	 */
 	public boolean isUserInRole(String role) {
-		String[] roles = StringUtils.split(role,",");
+		String[] roles = StringUtils.split(role, ",");
 		List<String> list = java.util.Arrays.asList(roles);
-		
-		if (user != null && list.contains("USER")) {
-			return true;
-		}
-		if (waiter != null && list.contains("WAITER")) {
-			return true;
-		}
+
 		if (user != null) {
-			for (Role r : user.getRoles()) {
-				if (list.contains(r.getName())) {
-					return true;
-				}
+			if (user.getUtype() == 1 && list.contains("USER")) {
+				return true;
+			} else if (user.getUtype() == 2 && list.contains("OWER")) {
+				return true;
 			}
 		}
 
+		if (waiter != null && list.contains("WAITER")) {
+			return true;
+		}
 		return false;
 	}
 

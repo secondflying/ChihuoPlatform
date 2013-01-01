@@ -17,10 +17,8 @@
         <property name="status" type="java.lang.Integer">
             <column name="status" />
         </property>
-        <set name="roles" table="user_role" cascade="save-update" inverse="false">  
-            <key column="uid"></key>  
-            <many-to-many class="com.chihuo.bussiness.Role" column="rid">  
-            </many-to-many>  
-        </set> 
+        <property name="utype" type="java.lang.Integer">
+            <column name="utype" />
+        </property>
     </class>
 </hibernate-mapping>

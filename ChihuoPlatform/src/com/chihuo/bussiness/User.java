@@ -20,11 +20,11 @@ public class User implements java.io.Serializable {
 	@XmlElement
 	private Integer id;
 	private String name;
-	private Set<Role> roles;
 	
 	@XmlTransient
 	private String password;
 	private Integer status;
+	private Integer utype;
 
 	public User() {
 	}
@@ -67,12 +67,12 @@ public class User implements java.io.Serializable {
 		this.status = status;
 	}
 
-	public Set<Role> getRoles() {
-		return roles;
+	public Integer getUtype() {
+		return utype;
 	}
 
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
+	public void setUtype(Integer utype) {
+		this.utype = utype;
 	}
 
 }

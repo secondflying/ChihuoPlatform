@@ -32,21 +32,16 @@ public class SecurityFilter implements ContainerRequestFilter {
 	@Override
 	public ContainerRequest filter(ContainerRequest request) {
 
-		String auth = request.getHeaderValue("Authorization");
+		String authHead = request.getHeaderValue("Authorization");
+		Cookie authCookie = request.getCookies().get("Authorization");
 
-		Map<String, Cookie> cookieMap = request.getCookies();
-		Cookie userCookie = cookieMap.get("uid");
-
-		// 网页登录
-		if (userCookie != null) {
-			int uid = Integer.parseInt(userCookie.getValue());
-
-			UserDao dao = new UserDao();
-			User user = dao.findById(uid);
-
-			request.setSecurityContext(new Authorizer(user, uriInfo));
-		} else {
-			// throw new WebApplicationException(401);
+		String auth = "";
+		if (authCookie != null) {
+			// 网页登录
+			auth = authCookie.getValue();
+		} else if (StringUtils.isNotBlank(auth)) {
+			// 手机端登录
+			auth = authHead;
 		}
 
 		// 手机端登录，暂时用于服务员
@@ -57,16 +52,32 @@ public class SecurityFilter implements ContainerRequestFilter {
 				properties.load(new StringReader(propertiesFormat));
 				Map map2 = new HashMap(properties);
 				int uid = Integer.parseInt(map2.get("uid").toString());
+				int utype = Integer.parseInt(map2.get("utype").toString());
 				String token = map2.get("token").toString();
 
-				WaiterDao dao = new WaiterDao();
-				Waiter waiter = dao.findById(uid);
+				if (utype == 1 || utype == 2) {
+					UserDao dao = new UserDao();
+					User user = dao.findById(uid);
 
-				if (token.equals(DigestUtils.shaHex(StringUtils
-						.join(new String[] { waiter.getId().toString(),
-								waiter.getPassword() })))) {
-					request.setSecurityContext(new Authorizer(waiter, uriInfo));
+					String signature = DigestUtils.shaHex(StringUtils
+							.join(new String[] { user.getId().toString(),
+									user.getPassword() }));
+					if (token.equals(signature)) {
+						request.setSecurityContext(new Authorizer(user, uriInfo));
+					}
+				} else if (utype == 3) {
+					WaiterDao dao = new WaiterDao();
+					Waiter waiter = dao.findById(uid);
+
+					String signature = DigestUtils.shaHex(StringUtils
+							.join(new String[] { waiter.getId().toString(),
+									waiter.getPassword() }));
+					if (token.equals(signature)) {
+						request.setSecurityContext(new Authorizer(waiter,
+								uriInfo));
+					}
 				}
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -4,9 +4,8 @@ import java.security.Principal;
 
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 
 import com.chihuo.bussiness.User;
 import com.chihuo.bussiness.Waiter;
@@ -40,5 +39,13 @@ public class PublicHelper {
 		}
 		return null;
 	}
-
+	
+	
+	public static String encryptUser(Integer uid2, String password,Integer utype2){
+		String uid = "uid=" + uid2;
+		String token = "token=" + DigestUtils.shaHex(StringUtils.join(new String[]{uid , password}));
+		String utype = "utype=" + utype2;
+		return StringUtils.join(new String[]{uid,token,utype},',');
+	}
+	
 }

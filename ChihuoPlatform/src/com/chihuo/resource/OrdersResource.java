@@ -75,7 +75,7 @@ public class OrdersResource {
 	
 	
 	@GET
-	@RolesAllowed({"USER"})
+	@RolesAllowed({"USER,OWER,WAITER"})
 	@Produces("application/json; charset=UTF-8")
 	public Response getByCode(@QueryParam("code") String code) {
 		OrderDao odao = new OrderDao();
