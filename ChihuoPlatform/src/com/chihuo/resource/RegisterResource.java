@@ -40,7 +40,7 @@ public class RegisterResource {
 					.entity("该用户已存在").type(MediaType.TEXT_PLAIN).build();
 		}
 		
-		if(utype != 1 || utype != 2){
+		if(utype != 1 && utype != 2){
 			return Response.status(Response.Status.BAD_REQUEST)
 					.entity("用户类型错误").type(MediaType.TEXT_PLAIN).build();
 		}

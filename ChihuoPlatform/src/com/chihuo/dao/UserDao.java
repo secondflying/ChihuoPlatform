@@ -13,8 +13,8 @@ public class UserDao extends GenericHibernateDAO﻿<User, Integer> {
 		return (User)crit.uniqueResult();
 	}
 	
-	public User findByNameAndPassword(String name, String password){
-		Criteria crit = getSession().createCriteria(User.class).add(Restrictions.eq("name", name)).add(Restrictions.eq("password", password));
+	public User findByNameAndPassword(String name, String password,Integer utype){
+		Criteria crit = getSession().createCriteria(User.class).add(Restrictions.eq("name", name)).add(Restrictions.eq("password", password)).add(Restrictions.eq("utype", utype));
 		return (User)crit.uniqueResult();
 	}
 }

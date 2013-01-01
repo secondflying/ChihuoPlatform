@@ -47,7 +47,7 @@
 					<input type="password"
 					placeholder="密码" name="password" id="idpassword">
 				</div>
-				 
+				 	<input type="hidden" name="utype" id="utype" value="2" />
 					<button id="login-btn" class="button1">登 录</button>
 			</fieldset>
 			<div class="squaredFour">

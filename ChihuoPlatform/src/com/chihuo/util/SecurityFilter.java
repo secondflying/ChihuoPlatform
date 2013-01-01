@@ -1,11 +1,5 @@
 package com.chihuo.util;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
@@ -39,21 +33,18 @@ public class SecurityFilter implements ContainerRequestFilter {
 		if (authCookie != null) {
 			// 网页登录
 			auth = authCookie.getValue();
-		} else if (StringUtils.isNotBlank(auth)) {
+		} else if (StringUtils.isNotBlank(authHead)) {
 			// 手机端登录
 			auth = authHead;
 		}
 
 		// 手机端登录，暂时用于服务员
 		if (StringUtils.isNotBlank(auth)) {
-			String propertiesFormat = auth.replaceAll(",", "\n");
-			Properties properties = new Properties();
-			try {
-				properties.load(new StringReader(propertiesFormat));
-				Map map2 = new HashMap(properties);
-				int uid = Integer.parseInt(map2.get("uid").toString());
-				int utype = Integer.parseInt(map2.get("utype").toString());
-				String token = map2.get("token").toString();
+			String []tmp = StringUtils.split(auth,'|');
+			if (tmp.length == 3) {
+				int uid = Integer.parseInt(tmp[0]);
+				int utype = Integer.parseInt(tmp[2]);
+				String token = tmp[1];
 
 				if (utype == 1 || utype == 2) {
 					UserDao dao = new UserDao();
@@ -78,9 +69,7 @@ public class SecurityFilter implements ContainerRequestFilter {
 					}
 				}
 
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			} 
 
 		}
 

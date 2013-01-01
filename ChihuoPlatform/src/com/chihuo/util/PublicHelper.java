@@ -19,7 +19,7 @@ public class PublicHelper {
 		if (p != null) {
 			String [] tmp = StringUtils.split(p.getName(),':');
 			if("USER".equals(tmp[0])){
-				int uid = Integer.parseInt(tmp[0]);
+				int uid = Integer.parseInt(tmp[1]);
 				UserDao dao = new UserDao();
 				return dao.findById(uid);
 			}
@@ -41,11 +41,9 @@ public class PublicHelper {
 	}
 	
 	
-	public static String encryptUser(Integer uid2, String password,Integer utype2){
-		String uid = "uid=" + uid2;
-		String token = "token=" + DigestUtils.shaHex(StringUtils.join(new String[]{uid , password}));
-		String utype = "utype=" + utype2;
-		return StringUtils.join(new String[]{uid,token,utype},',');
+	public static String encryptUser(Integer uid, String password,Integer utype){
+		String token = DigestUtils.shaHex(StringUtils.join(new String[]{uid.toString() , password}));
+		return StringUtils.join(new String[]{uid.toString(),token,utype.toString()},'|');
 	}
 	
 }
