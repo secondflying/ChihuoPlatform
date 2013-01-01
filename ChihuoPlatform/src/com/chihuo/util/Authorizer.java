@@ -40,7 +40,7 @@ public class Authorizer implements SecurityContext {
 		if (waiter != null) {
 			principal = new Principal() {
 				public String getName() {
-					return "WAITER:" + user.getId();
+					return "WAITER:" + waiter.getId();
 				}
 			};
 		}
