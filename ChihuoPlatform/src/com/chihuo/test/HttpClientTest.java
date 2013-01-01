@@ -66,8 +66,8 @@ public class HttpClientTest {
 	@Before
 	public void setUp() throws Exception {
 		client = new DefaultHttpClient();
-		HttpHost proxy = new HttpHost("localhost", 8888);
-		client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+//		HttpHost proxy = new HttpHost("localhost", 8888);
+//		client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 	}
 
 	@After
