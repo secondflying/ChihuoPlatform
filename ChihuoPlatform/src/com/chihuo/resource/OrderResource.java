@@ -38,7 +38,7 @@ public class OrderResource {
 	}
 
 	@GET
-	@RolesAllowed({"USER"})
+	@RolesAllowed({"USER,WAITER"})
 	@Produces("application/json; charset=UTF-8")
 	public Order get() {
 		OrderDao dao = new OrderDao();
@@ -113,7 +113,7 @@ public class OrderResource {
 	// 请求结账
 	@Path("/tocheck")
 	@PUT
-	@RolesAllowed({"USER"})
+	@RolesAllowed({"USER,WAITER"})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response tocheck() throws JSONException {
 		OrderDao dao = new OrderDao();
@@ -162,10 +162,10 @@ public class OrderResource {
 				.type(MediaType.APPLICATION_JSON).build();
 	}
 
-	// 改变菜的状态，如以上，
+	// 改变菜的状态，如已上，
 	@Path("{iid}")
 	@PUT
-	@RolesAllowed({"OWER"})
+	@RolesAllowed({"OWER,WAITER"})
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response alterOrderItemStatus(@PathParam("iid") int iid) {
 		OrderDao dao = new OrderDao();
