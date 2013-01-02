@@ -4,6 +4,7 @@ package com.chihuo.bussiness;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -27,18 +28,18 @@ public class Order implements java.io.Serializable {
 	private Date endtime;
 	private String code;
 	private Integer status;
-
+	private List<OrderItem> orderItems;
+	
 	@XmlTransient
 	private Restaurant restaurant;
-	@XmlTransient
-	private Set<OrderItem> orderItems = new HashSet<OrderItem>(0);
+	
 
 	public Order() {
 	}
 
 	public Order(Restaurant restaurant, Desk desk, Integer number,
 			Date starttime, Date endtime, String code, Integer status,
-			Set<OrderItem> orderItems) {
+			List<OrderItem> orderItems) {
 		this.restaurant = restaurant;
 		this.desk = desk;
 		this.number = number;
@@ -113,11 +114,11 @@ public class Order implements java.io.Serializable {
 		this.status = status;
 	}
 
-	public Set<OrderItem> getOrderItems() {
+	public List<OrderItem> getOrderItems() {
 		return this.orderItems;
 	}
 
-	public void setOrderItems(Set<OrderItem> orderItems) {
+	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
 

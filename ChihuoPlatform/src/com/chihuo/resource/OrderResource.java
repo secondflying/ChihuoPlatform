@@ -40,8 +40,22 @@ public class OrderResource {
 	@GET
 	@RolesAllowed({ "USER,OWER,WAITER" })
 	@Produces("application/json; charset=UTF-8")
-	public Order get(@Context UriInfo uriInfo) {
+	public Order get() {
+
+		OrderItemDao oDao = new OrderItemDao();
+		List<OrderItem> list = oDao.queryByOrder(order.getId());
+
+		order.setOrderItems(list);
 		return order;
+	}
+	
+	@Path("list")
+	@GET
+	@RolesAllowed({ "USER,OWER,WAITER" })
+	@Produces("application/json; charset=UTF-8")
+	public List<OrderItem> getList() {
+		OrderItemDao oDao = new OrderItemDao();
+		return oDao.queryByOrder(order.getId());
 	}
 
 	// 加减菜
@@ -97,17 +111,6 @@ public class OrderResource {
 		UriBuilder ub = uriInfo.getAbsolutePathBuilder();
 		URI listUri = ub.path("list").build();
 		return Response.seeOther(listUri).build();
-	}
-
-	// 获取订单详细列表
-	@Path("list")
-	@GET
-	@RolesAllowed({ "OWER,WAITER" })
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<OrderItem> getOrderList() {
-
-		OrderItemDao oDao = new OrderItemDao();
-		return oDao.queryByOrder(order.getId());
 	}
 
 	// 改变菜的状态，如已上，
@@ -176,3 +179,6 @@ public class OrderResource {
 	}
 
 }
+
+
+

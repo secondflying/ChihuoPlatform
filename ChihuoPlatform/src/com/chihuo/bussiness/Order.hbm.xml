@@ -32,11 +32,11 @@
         <property name="status" type="java.lang.Integer">
             <column name="status" />
         </property>
-        <set name="orderItems" table="order_item" inverse="true" lazy="true" fetch="select"  order-by="id desc">
+        <!-- <set name="orderItems" table="order_item" inverse="true" lazy="true" fetch="select"  order-by="id desc">
             <key>
                 <column name="oid" />
             </key>
             <one-to-many class="com.chihuo.bussiness.OrderItem" />
-        </set>
+        </set> -->
     </class>
 </hibernate-mapping>
