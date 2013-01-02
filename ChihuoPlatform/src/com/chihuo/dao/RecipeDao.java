@@ -17,6 +17,12 @@ public class RecipeDao extends GenericHibernateDAO﻿<Recipe, Integer> {
 		return (List<Recipe>)crit.list();
 	}
 	
+	public Recipe findByIdInRestaurant(Restaurant r,int id) {
+		Criteria crit = getSession().createCriteria(Recipe.class).add(Restrictions.eq("id", id)).add(Restrictions.not(Restrictions.eq("status", -1)));
+		crit = crit.createCriteria("restaurant").add(Restrictions.eq("id", r.getId()));;
+		return (Recipe) crit.uniqueResult();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Recipe> findByCategory(Category r) {
 		Criteria crit = getSession().createCriteria(Recipe.class).add(Restrictions.not(Restrictions.eq("status", -1)));

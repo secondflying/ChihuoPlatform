@@ -8,10 +8,10 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="recipe" class="com.chihuo.bussiness.Recipe" fetch="select">
+        <many-to-one name="recipe" class="com.chihuo.bussiness.Recipe" fetch="join">
             <column name="rid" />
         </many-to-one>
-        <many-to-one name="order" class="com.chihuo.bussiness.Order" fetch="select">
+        <many-to-one name="order" class="com.chihuo.bussiness.Order" fetch="join">
             <column name="oid" />
         </many-to-one>
         <property name="count" type="java.lang.Integer">

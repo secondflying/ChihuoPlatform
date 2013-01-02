@@ -16,7 +16,6 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -29,21 +28,17 @@ import com.sun.jersey.multipart.FormDataParam;
 
 public class RecipeResource {
 	Restaurant restaurant;
-	int id;
+	Recipe recipe;
 
-	public RecipeResource( Restaurant restaurant,int id) {
+	public RecipeResource( Restaurant restaurant,Recipe recipe) {
 		this.restaurant = restaurant;
-		this.id = id;
+		this.recipe = recipe;
 	}
 
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	public Recipe get() {
-		RecipeDao dao = new RecipeDao();
-		Recipe c = dao.findById(id);
-		checkNull(c);
-
-		return c;
+		return recipe;
 	}
 	
 
@@ -57,8 +52,6 @@ public class RecipeResource {
 			@FormDataParam("image") InputStream upImg){
 		
 		RecipeDao dao = new RecipeDao();
-		Recipe recipe = dao.findById(id);
-		checkNull(recipe);
 		
 		recipe.setName(name);
 		recipe.setPrice(price);
@@ -66,7 +59,7 @@ public class RecipeResource {
 		
 		if (cid != -1) {
 			CategoryDao cdao = new CategoryDao();
-			Category category = cdao.findById(cid);
+			Category category = cdao.findByIdInRestaurant(restaurant, cid);
 			if (category == null || category.getStatus() == -1) {
 				return Response.status(Response.Status.BAD_REQUEST)
 						.entity("种类ID不存在").type(MediaType.TEXT_PLAIN).build();
@@ -117,19 +110,10 @@ public class RecipeResource {
 	@RolesAllowed({"OWER"})
 	public void delete() {
 		RecipeDao dao = new RecipeDao();
-		Recipe c = dao.findById(id);
-		checkNull(c);
-		c.setStatus(-1);
-		dao.saveOrUpdate(c);
+		recipe.setStatus(-1);
+		dao.saveOrUpdate(recipe);
 	}
 	
-	private void checkNull(Recipe c){
-		if (c == null) {
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-		}
-		if(c.getStatus() == -1){
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-		}
-	}
+	
 
 }

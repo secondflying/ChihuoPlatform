@@ -1,5 +1,6 @@
 package com.chihuo.dao;
 
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
@@ -12,5 +13,21 @@ public class OrderItemDao extends GenericHibernateDAO﻿<OrderItem, Integer> {
 		crit.createCriteria("order").add(Restrictions.eq("id", oid));
 		crit.createCriteria("recipe").add(Restrictions.eq("id", rid));
 		return (OrderItem) crit.uniqueResult();
+	}
+
+	public OrderItem findByIdInOrder(int oid, int iid) {
+		Criteria crit = getSession().createCriteria(OrderItem.class)
+				.add(Restrictions.not(Restrictions.eq("status", -1)))
+				.add(Restrictions.eq("id", iid))
+				.add(Restrictions.eq("order.id", oid));
+		return (OrderItem) crit.uniqueResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<OrderItem> queryByOrder(int oid) {
+		Criteria crit = getSession().createCriteria(OrderItem.class)
+				.add(Restrictions.not(Restrictions.eq("status", -1)))
+				.add(Restrictions.eq("order.id", oid));
+		return (List<OrderItem>) crit.list();
 	}
 }

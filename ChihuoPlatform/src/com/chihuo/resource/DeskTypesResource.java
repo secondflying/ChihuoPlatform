@@ -39,7 +39,7 @@ public class DeskTypesResource {
 	@Produces("application/json; charset=UTF-8")
 	public DeskType getSingle(@PathParam("id") int id) {
 		DeskTypeDao dao = new DeskTypeDao();
-		DeskType c = dao.findById(id);
+		DeskType c = dao.findByIdInRestaurant(restaurant, id);
 		checkNull(c);
 		
 		return c;
@@ -49,7 +49,6 @@ public class DeskTypesResource {
 	@RolesAllowed({"OWER"})
 	@Consumes("multipart/form-data")
 	public Response create(@FormDataParam("name") String name) {
-
 		DeskType d = new DeskType();
 		d.setName(name);
 		d.setRestaurant(restaurant);
@@ -69,13 +68,11 @@ public class DeskTypesResource {
 	@Consumes("multipart/form-data")
 	public Response update(@PathParam("id") int id,@FormDataParam("name") String name) {
 		DeskTypeDao dao = new DeskTypeDao();
-		DeskType c = dao.findById(id);
+		DeskType c = dao.findByIdInRestaurant(restaurant, id);
 		checkNull(c);
 		
 		c.setName(name);
-
 		dao.saveOrUpdate(c);
-
 		return Response.status(Response.Status.OK).build();
 	}
 	
@@ -84,7 +81,7 @@ public class DeskTypesResource {
 	@RolesAllowed({"OWER"})
 	public void delete(@PathParam("id") int id) {
 		DeskTypeDao dao = new DeskTypeDao();
-		DeskType c = dao.findById(id);
+		DeskType c = dao.findByIdInRestaurant(restaurant, id);
 		checkNull(c);
 		
 		c.setStatus(-1);

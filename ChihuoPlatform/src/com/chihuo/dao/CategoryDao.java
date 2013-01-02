@@ -15,4 +15,13 @@ public class CategoryDao extends GenericHibernateDAO﻿<Category, Integer> {
 		crit = crit.createCriteria("restaurant").add(Restrictions.eq("id", r.getId()));;
 		return (List<Category>)crit.list();
 	}
+	
+	public Category findByIdInRestaurant(Restaurant r,int id) {
+		Criteria crit = getSession().
+									createCriteria(Category.class)
+									.add(Restrictions.eq("id", id))
+									.add(Restrictions.not(Restrictions.eq("status", -1)))
+									.createCriteria("restaurant").add(Restrictions.eq("id", r.getId()));
+		return (Category) crit.uniqueResult();
+	}
 }

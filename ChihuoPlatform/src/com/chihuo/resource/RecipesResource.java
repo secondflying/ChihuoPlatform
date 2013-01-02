@@ -20,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -44,7 +45,7 @@ public class RecipesResource {
 	public Response getRecipes(@DefaultValue("-1") @QueryParam("cid") int cid) {
 		if (cid != -1) {
 			CategoryDao cdao = new CategoryDao();
-			Category category = cdao.findById(cid);
+			Category category = cdao.findByIdInRestaurant(restaurant, cid);
 			if (category == null || category.getStatus() == -1) {
 				return Response.status(Response.Status.BAD_REQUEST)
 						.entity("种类ID不存在").type(MediaType.TEXT_PLAIN).build();
@@ -82,7 +83,7 @@ public class RecipesResource {
 		
 		if (cid != -1) {
 			CategoryDao cdao = new CategoryDao();
-			Category category = cdao.findById(cid);
+			Category category = cdao.findByIdInRestaurant(restaurant, cid);
 			if (category == null || category.getStatus() == -1) {
 				return Response.status(Response.Status.BAD_REQUEST)
 						.entity("种类ID不存在").type(MediaType.TEXT_PLAIN).build();
@@ -133,6 +134,19 @@ public class RecipesResource {
 
 	@Path("{id}")
 	public RecipeResource getSingleResource(@PathParam("id") int id) {
-		return new RecipeResource(restaurant,id);
+		RecipeDao dao = new RecipeDao();
+		Recipe c = dao.findByIdInRestaurant(restaurant,id);
+		checkNull(c);
+		
+		return new RecipeResource(restaurant,c);
+	}
+	
+	private void checkNull(Recipe c){
+		if (c == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		if(c.getStatus() == -1){
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
 	}
 }

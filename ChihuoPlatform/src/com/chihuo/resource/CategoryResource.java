@@ -15,7 +15,6 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -26,21 +25,17 @@ import com.sun.jersey.multipart.FormDataParam;
 
 public class CategoryResource {
 	Restaurant restaurant;
-	int id;
+	Category category;
 
-	public CategoryResource(Restaurant restaurant,int id) {
+	public CategoryResource(Restaurant restaurant,Category category) {
 		this.restaurant = restaurant;
-		this.id = id;
+		this.category = category;
 	}
 
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	public Category get() {
-		CategoryDao dao = new CategoryDao();
-		Category c = dao.findById(id);
-		checkNull(c);
-
-		return c;
+		return category;
 	}
 	
 
@@ -52,11 +47,9 @@ public class CategoryResource {
 			@FormDataParam("image") InputStream upImg){
 		
 		CategoryDao dao = new CategoryDao();
-		Category c = dao.findById(id);
-		checkNull(c);
 		
-		c.setName(name);
-		c.setDescription(description);
+		category.setName(name);
+		category.setDescription(description);
 
 		if (upImg != null) {
 			try {
@@ -83,7 +76,7 @@ public class CategoryResource {
 						file.mkdirs();
 						ImageIO.write(bi, "png", file);
 					}
-					c.setImage(image);
+					category.setImage(image);
 				}
 
 			} catch (IOException e) {
@@ -92,7 +85,7 @@ public class CategoryResource {
 			}
 		}
 
-		dao.saveOrUpdate(c);
+		dao.saveOrUpdate(category);
 
 		return Response.status(Response.Status.OK).build();
 	}
@@ -102,19 +95,9 @@ public class CategoryResource {
 	@RolesAllowed({"OWER"})
 	public void delete() {
 		CategoryDao dao = new CategoryDao();
-		Category c = dao.findById(id);
-		checkNull(c);
-		c.setStatus(-1);
-		dao.saveOrUpdate(c);
+		category.setStatus(-1);
+		dao.saveOrUpdate(category);
 	}
 	
-	private void checkNull(Category c){
-		if (c == null) {
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-		}
-		if(c.getStatus() == -1){
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-		}
-	}
-
+	
 }

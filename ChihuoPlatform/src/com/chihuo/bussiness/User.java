@@ -19,11 +19,14 @@ public class User implements java.io.Serializable {
 
 	@XmlElement
 	private Integer id;
+	@XmlElement
 	private String name;
 	
 	@XmlTransient
 	private String password;
+	@XmlTransient
 	private Integer status;
+	@XmlTransient
 	private Integer utype;
 
 	public User() {

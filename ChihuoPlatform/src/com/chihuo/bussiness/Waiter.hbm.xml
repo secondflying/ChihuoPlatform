@@ -17,7 +17,7 @@
         <property name="status" type="java.lang.Integer">
             <column name="status" />
         </property>
-        <many-to-one name="restaurant" class="com.chihuo.bussiness.Restaurant" fetch="select">
+        <many-to-one name="restaurant" class="com.chihuo.bussiness.Restaurant" fetch="join">
             <column name="rid" />
         </many-to-one>
     </class>

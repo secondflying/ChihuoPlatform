@@ -8,13 +8,13 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="restaurant" class="com.chihuo.bussiness.Restaurant" fetch="select">
+        <many-to-one name="restaurant" class="com.chihuo.bussiness.Restaurant" fetch="join">
             <column name="rid" />
         </many-to-one>
-        <many-to-one name="desk" class="com.chihuo.bussiness.Desk" fetch="select">
+        <many-to-one name="desk" class="com.chihuo.bussiness.Desk" fetch="join">
             <column name="did" />
         </many-to-one>
-        <many-to-one name="waiter" class="com.chihuo.bussiness.Waiter" fetch="select">
+        <many-to-one name="waiter" class="com.chihuo.bussiness.Waiter" fetch="join">
             <column name="wid" />
         </many-to-one>
         <property name="number" type="java.lang.Integer">

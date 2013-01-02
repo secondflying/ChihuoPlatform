@@ -19,6 +19,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -105,7 +106,11 @@ public class RestaurantsResource {
 	
 	@Path("{id}")
 	public RestaurantResource getRestaurant(@PathParam("id") int id) {
-		return new RestaurantResource(id);
+		RestaurantDao dao = new RestaurantDao();
+		Restaurant r = dao.findById(id);
+		checkNull(r);
+		
+		return new RestaurantResource(r);
 	}
 
 	@GET
@@ -142,5 +147,14 @@ public class RestaurantsResource {
 	public List<Restaurant> getNotVerified() {
 		RestaurantDao dao = new RestaurantDao();
 		return dao.findByStatus(2);
+	}
+	
+	private void checkNull(Restaurant c){
+		if (c == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		if(c.getStatus() == -1){
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
 	}
 }

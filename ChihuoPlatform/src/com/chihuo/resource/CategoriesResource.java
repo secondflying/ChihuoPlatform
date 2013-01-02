@@ -18,6 +18,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -96,6 +97,19 @@ public class CategoriesResource {
 
 	@Path("{id}")
 	public CategoryResource getSingleResource(@PathParam("id") int id) {
-		return new CategoryResource(restaurant, id);
+		CategoryDao dao = new CategoryDao();
+		Category category = dao.findByIdInRestaurant(restaurant, id);
+		checkNull(category);
+		return new CategoryResource(restaurant, category);
 	}
+	
+	private void checkNull(Category c){
+		if (c == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		if(c.getStatus() == -1){
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+	}
+
 }

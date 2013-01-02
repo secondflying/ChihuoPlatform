@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -43,8 +44,8 @@ public class OrdersResource {
 		DeskDao cdao = new DeskDao();
 		
 		//判断桌子是否能开台
-		Desk d = cdao.findById(did);
-		if (d == null || d.getStatus() == -1) {
+		Desk d = cdao.findByIdInRestaurant(this.restaurant,did);
+		if (d == null) {
 			return Response.status(Response.Status.NOT_FOUND)
 					.entity("桌号为" + did + "的桌子不存在")
 					.type(MediaType.TEXT_PLAIN).build();
@@ -91,7 +92,21 @@ public class OrdersResource {
 	
 	@Path("{id}")
 	public OrderResource getSingleResource(@PathParam("id") int id) {
-		return new OrderResource(restaurant, id);
+		OrderDao dao = new OrderDao();
+		Order c = dao.findByIdInRestaurant(this.restaurant, id);
+		checkNull(c);
+		
+		return new OrderResource(restaurant, c);
+	}
+	
+	
+	private void checkNull(Order c) {
+		if (c == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		if (c.getStatus() == -1) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
 	}
 
 }

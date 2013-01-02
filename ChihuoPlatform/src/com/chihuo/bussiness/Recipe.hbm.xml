@@ -8,10 +8,10 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="restaurant" class="com.chihuo.bussiness.Restaurant" fetch="select">
+        <many-to-one name="restaurant" class="com.chihuo.bussiness.Restaurant" fetch="join">
             <column name="rid" />
         </many-to-one>
-        <many-to-one name="category" class="com.chihuo.bussiness.Category" fetch="select">
+        <many-to-one name="category" class="com.chihuo.bussiness.Category" fetch="join">
             <column name="cid" />
         </many-to-one>
         <property name="name" type="string">

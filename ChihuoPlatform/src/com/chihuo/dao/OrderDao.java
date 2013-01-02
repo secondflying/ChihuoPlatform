@@ -7,15 +7,24 @@ import org.hibernate.criterion.Restrictions;
 
 import com.chihuo.bussiness.Order;
 import com.chihuo.bussiness.Restaurant;
-import com.chihuo.bussiness.User;
 import com.chihuo.bussiness.Waiter;
 
 public class OrderDao extends GenericHibernateDAO﻿<Order, Integer> {
 	
+	@SuppressWarnings("unchecked")
 	public List<Order> findByRestaurant(Restaurant r) {
 		Criteria crit = getSession().createCriteria(Order.class).add(Restrictions.not(Restrictions.eq("status", -1)));
 		crit = crit.createCriteria("restaurant").add(Restrictions.eq("id", r.getId()));
 		return (List<Order>)crit.list();
+	}
+	
+	public Order findByIdInRestaurant(Restaurant r,int id) {
+		Criteria crit = getSession().
+									createCriteria(Order.class)
+									.add(Restrictions.eq("id", id))
+									.add(Restrictions.not(Restrictions.eq("status", -1)))
+									.createCriteria("restaurant").add(Restrictions.eq("id", r.getId()));
+		return (Order) crit.uniqueResult();
 	}
 	
 	//判断该桌是否有status 为1的order，有的话，说明该桌已开台

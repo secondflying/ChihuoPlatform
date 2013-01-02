@@ -17,6 +17,12 @@ public class DeskDao extends GenericHibernateDAO﻿<Desk, Integer> {
 		return (List<Desk>)crit.list();
 	}
 	
+	public Desk findByIdInRestaurant(Restaurant r,int id) {
+		Criteria crit = getSession().createCriteria(Desk.class).add(Restrictions.eq("id", id)).add(Restrictions.not(Restrictions.eq("status", -1)));
+		crit = crit.createCriteria("restaurant").add(Restrictions.eq("id", r.getId()));;
+		return (Desk) crit.uniqueResult();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Desk> findByType(DeskType r) {
 		Criteria crit = getSession().createCriteria(Desk.class).add(Restrictions.not(Restrictions.eq("status", -1)));

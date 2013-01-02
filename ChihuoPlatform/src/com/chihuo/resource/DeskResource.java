@@ -7,7 +7,6 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -20,21 +19,17 @@ import com.sun.jersey.multipart.FormDataParam;
 
 public class DeskResource {
 	Restaurant restaurant;
-	int id;
+	Desk desk;
 
-	public DeskResource( Restaurant restaurant,int id) {
+	public DeskResource( Restaurant restaurant,Desk desk) {
 		this.restaurant = restaurant;
-		this.id = id;
+		this.desk = desk;
 	}
 
 	@GET
 	@Produces("application/json; charset=UTF-8")
 	public Desk get() {
-		DeskDao dao = new DeskDao();
-		Desk c = dao.findById(id);
-		checkNull(c);
-
-		return c;
+		return desk;
 	}
 	
 
@@ -46,15 +41,13 @@ public class DeskResource {
 			@DefaultValue("-1") @FormDataParam("tid") int tid){
 		
 		DeskDao dao = new DeskDao();
-		Desk desk = dao.findById(id);
-		checkNull(desk);
 		
 		desk.setName(name);
 		desk.setCapacity(capacity);
 		
 		if (tid != -1) {
 			DeskTypeDao cdao = new DeskTypeDao();
-			DeskType category = cdao.findById(tid);
+			DeskType category = cdao.findByIdInRestaurant(restaurant, tid);
 			if (category == null || category.getStatus() == -1) {
 				return Response.status(Response.Status.BAD_REQUEST)
 						.entity("餐桌类型不存在").type(MediaType.TEXT_PLAIN).build();
@@ -72,19 +65,10 @@ public class DeskResource {
 	@RolesAllowed({"OWER"})
 	public void delete() {
 		DeskDao dao = new DeskDao();
-		Desk c = dao.findById(id);
-		checkNull(c);
-		c.setStatus(-1);
-		dao.saveOrUpdate(c);
+		desk.setStatus(-1);
+		dao.saveOrUpdate(desk);
 	}
 	
-	private void checkNull(Desk c){
-		if (c == null) {
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-		}
-		if(c.getStatus() == -1){
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-		}
-	}
+	
 
 }

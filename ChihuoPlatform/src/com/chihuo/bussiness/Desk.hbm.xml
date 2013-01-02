@@ -14,10 +14,10 @@
         <property name="capacity" type="java.lang.Integer">
             <column name="capacity" />
         </property>
-        <many-to-one name="deskType" class="com.chihuo.bussiness.DeskType" fetch="select">
+        <many-to-one name="deskType" class="com.chihuo.bussiness.DeskType" fetch="join">
             <column name="typeid" />
         </many-to-one>
-        <many-to-one name="restaurant" class="com.chihuo.bussiness.Restaurant" fetch="select">
+        <many-to-one name="restaurant" class="com.chihuo.bussiness.Restaurant" fetch="join">
             <column name="rid" />
         </many-to-one>
         <property name="status" type="java.lang.Integer">

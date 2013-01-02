@@ -18,12 +18,13 @@ public class Waiter implements java.io.Serializable {
 	@XmlElement
 	private Integer id;
 	private String name;
-	private Restaurant restaurant;
-
 	
 	@XmlTransient
 	private String password;
+	@XmlTransient
 	private Integer status;
+	@XmlTransient
+	private Restaurant restaurant;
 	
 
 	public Waiter() {

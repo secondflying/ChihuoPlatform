@@ -13,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -39,7 +40,7 @@ public class DesksResource {
 	public Response get(@DefaultValue("-1") @QueryParam("tid") int tid) {
 		if (tid != -1) {
 			DeskTypeDao cdao = new DeskTypeDao();
-			DeskType dtype = cdao.findById(tid);
+			DeskType dtype = cdao.findByIdInRestaurant(restaurant, tid);
 			if (dtype == null || dtype.getStatus() == -1) {
 				return Response.status(Response.Status.BAD_REQUEST)
 						.entity("桌子类型不存在").type(MediaType.TEXT_PLAIN).build();
@@ -75,7 +76,7 @@ public class DesksResource {
 		
 		if (tid != -1) {
 			DeskTypeDao cdao = new DeskTypeDao();
-			DeskType category = cdao.findById(tid);
+			DeskType category = cdao.findByIdInRestaurant(restaurant, tid);
 			if (category == null || category.getStatus() == -1) {
 				return Response.status(Response.Status.BAD_REQUEST)
 						.entity("餐桌类型不存在").type(MediaType.TEXT_PLAIN).build();
@@ -92,6 +93,19 @@ public class DesksResource {
 
 	@Path("{id}")
 	public DeskResource getSingleResource(@PathParam("id") int id) {
-		return new DeskResource(restaurant, id);
+		DeskDao dao = new DeskDao();
+		Desk c = dao.findByIdInRestaurant(restaurant, id);
+		checkNull(c);
+		
+		return new DeskResource(restaurant, c);
+	}
+	
+	private void checkNull(Desk c){
+		if (c == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		if(c.getStatus() == -1){
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
 	}
 }

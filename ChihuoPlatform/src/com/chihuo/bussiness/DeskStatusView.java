@@ -32,6 +32,7 @@ public class DeskStatusView implements java.io.Serializable {
 	
 	@XmlTransient
 	private Integer status;
+	@XmlTransient
 	private Integer rid;
 	
 	public DeskStatusView() {

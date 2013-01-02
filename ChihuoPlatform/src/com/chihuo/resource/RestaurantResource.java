@@ -19,45 +19,49 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import com.chihuo.bussiness.Restaurant;
+import com.chihuo.bussiness.User;
 import com.chihuo.dao.RestaurantDao;
+import com.chihuo.util.PublicHelper;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class RestaurantResource {
-	int id;
-	public RestaurantResource(int id) {
-		this.id = id;
+	Restaurant r;
+
+	public RestaurantResource(Restaurant r) {
+		this.r = r;
 	}
 
-	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Restaurant get() {
-		RestaurantDao dao = new RestaurantDao();
-		Restaurant r = dao.findById(id);
-		checkNull(r);
 		return r;
 	}
-	
+
 	@POST
-	@RolesAllowed({"OWER"})
+	@RolesAllowed({ "OWER" })
 	@Consumes("multipart/form-data")
 	public Response update(@FormDataParam("name") String name,
 			@FormDataParam("telephone") String telephone,
 			@FormDataParam("address") String address,
 			@DefaultValue("-1000") @FormDataParam("x") double x,
 			@DefaultValue("-1000") @FormDataParam("y") double y,
-			@FormDataParam("image") InputStream upImg){
-		
+			@FormDataParam("image") InputStream upImg,
+			@Context SecurityContext securityContext) {
+
 		RestaurantDao dao = new RestaurantDao();
-		Restaurant r = dao.findById(id);
-		checkNull(r);
-		
-		//TODO 需要判断该restaurant是否是该用户的，如果不是，则无权限修改
-		
+
+		// TODO 需要判断该restaurant是否是该用户的，如果不是，则无权限修改
+		User user = PublicHelper.getLoginUser(securityContext);
+		if (user.getId() != r.getUser().getId()) {
+			throw new WebApplicationException(Response.Status.FORBIDDEN);
+		}
+
 		r.setName(name);
 		r.setAddress(address);
 		r.setTelephone(telephone);
@@ -109,91 +113,55 @@ public class RestaurantResource {
 	}
 
 	@DELETE
-	@RolesAllowed({"OWER"})
+	@RolesAllowed({ "OWER" })
 	public void delete() {
 		RestaurantDao dao = new RestaurantDao();
-		Restaurant c = dao.findById(id);
-		checkNull(c);
-		
-		c.setStatus(-1);
-		dao.saveOrUpdate(c);
+
+		r.setStatus(-1);
+		dao.saveOrUpdate(r);
 	}
-	
+
 	@PUT
-	@RolesAllowed({"ADMIN"})
+	@RolesAllowed({ "ADMIN" })
 	@Path("/verify")
 	public void verify() {
 		RestaurantDao dao = new RestaurantDao();
-		Restaurant c = dao.findById(id);
-		checkNull(c);
-		
-		c.setStatus(1);
-		dao.saveOrUpdate(c);
+		r.setStatus(1);
+		dao.saveOrUpdate(r);
 	}
-	
+
 	@PUT
-	@RolesAllowed({"ADMIN"})
+	@RolesAllowed({ "ADMIN" })
 	@Path("/noverify")
 	public void notverify() {
 		RestaurantDao dao = new RestaurantDao();
-		Restaurant c = dao.findById(id);
-		checkNull(c);
-		
-		c.setStatus(2);
-		dao.saveOrUpdate(c);
+		r.setStatus(2);
+		dao.saveOrUpdate(r);
 	}
-	
+
 	@Path("/categories")
 	public CategoriesResource getCategorie() {
-		RestaurantDao dao = new RestaurantDao();
-		Restaurant c = dao.findById(id);
-		checkNull(c);
-		
-		return new CategoriesResource(c);
+		return new CategoriesResource(r);
 	}
-	
+
 	@Path("/recipes")
 	public RecipesResource getRecipes() {
-		RestaurantDao dao = new RestaurantDao();
-		Restaurant c = dao.findById(id);
-		checkNull(c);
-		
-		return new RecipesResource(c);
+		return new RecipesResource(r);
 	}
-	
+
 	@Path("/desktypes")
 	public DeskTypesResource getDeskTypeResource() {
-		RestaurantDao dao = new RestaurantDao();
-		Restaurant c = dao.findById(id);
-		checkNull(c);
-		
-		return new DeskTypesResource(c);
+		return new DeskTypesResource(r);
 	}
-	
+
 	@Path("/desks")
 	public DesksResource getDeskResource() {
-		RestaurantDao dao = new RestaurantDao();
-		Restaurant c = dao.findById(id);
-		checkNull(c);
-		
-		return new DesksResource(c);
+		return new DesksResource(r);
 	}
-	
+
 	@Path("/orders")
 	public OrdersResource getOrderResource() {
-		RestaurantDao dao = new RestaurantDao();
-		Restaurant c = dao.findById(id);
-		checkNull(c);
-		
-		return new OrdersResource(c);
+		return new OrdersResource(r);
 	}
-	
-	private void checkNull(Restaurant c){
-		if (c == null) {
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-		}
-		if(c.getStatus() == -1){
-			throw new WebApplicationException(Response.Status.NOT_FOUND);
-		}
-	}
+
 }
