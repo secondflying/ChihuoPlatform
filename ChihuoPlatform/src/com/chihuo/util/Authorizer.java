@@ -58,9 +58,9 @@ public class Authorizer implements SecurityContext {
 		List<String> list = java.util.Arrays.asList(roles);
 
 		if (user != null) {
-			if (user.getUtype() == 1 && list.contains("USER")) {
+			if (user.getUtype() == CodeUserType.USER && list.contains("USER")) {
 				return true;
-			} else if (user.getUtype() == 2 && list.contains("OWER")) {
+			} else if (user.getUtype() == CodeUserType.OWER && list.contains("OWER")) {
 				return true;
 			}
 		}

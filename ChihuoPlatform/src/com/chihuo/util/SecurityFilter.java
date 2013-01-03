@@ -46,7 +46,7 @@ public class SecurityFilter implements ContainerRequestFilter {
 				int utype = Integer.parseInt(tmp[2]);
 				String token = tmp[1];
 
-				if (utype == 1 || utype == 2) {
+				if (utype == CodeUserType.USER || utype == CodeUserType.OWER) {
 					UserDao dao = new UserDao();
 					User user = dao.findById(uid);
 
@@ -56,7 +56,7 @@ public class SecurityFilter implements ContainerRequestFilter {
 					if (token.equals(signature)) {
 						request.setSecurityContext(new Authorizer(user, uriInfo));
 					}
-				} else if (utype == 3) {
+				} else if (utype == CodeUserType.WAITER) {
 					WaiterDao dao = new WaiterDao();
 					Waiter waiter = dao.findById(uid);
 

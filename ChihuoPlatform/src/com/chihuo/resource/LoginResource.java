@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import com.chihuo.bussiness.User;
 import com.chihuo.dao.UserDao;
 import com.chihuo.util.PublicHelper;
+import com.chihuo.util.CodeUserType;
 
 @Path("/login")
 public class LoginResource {
@@ -21,7 +22,7 @@ public class LoginResource {
 	@Produces(MediaType.APPLICATION_JSON )
 	public Response createCategory(@FormParam("username") String username, @FormParam("password") String password, @FormParam("utype") int utype) {
 
-		if(utype != 1 && utype != 2){
+		if(utype != CodeUserType.USER && utype != CodeUserType.OWER){
 			return Response.status(Response.Status.BAD_REQUEST)
 					.entity("用户类型错误").type(MediaType.TEXT_PLAIN).build();
 		}

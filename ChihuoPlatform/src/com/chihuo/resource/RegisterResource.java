@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 import com.chihuo.bussiness.User;
 import com.chihuo.dao.UserDao;
 import com.chihuo.util.PublicHelper;
+import com.chihuo.util.CodeUserType;
 
 @Path("/register")
 public class RegisterResource {
@@ -32,7 +33,7 @@ public class RegisterResource {
 	@POST
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces(MediaType.APPLICATION_JSON )
-	public Response createCategory(@FormParam("username") String username, @FormParam("password") String password, @FormParam("utype") int utype) {
+	public Response register(@FormParam("username") String username, @FormParam("password") String password, @FormParam("utype") int utype) {
 		UserDao dao = new UserDao();
 		User user = dao.findByName(username);
 		if(user != null){
@@ -40,7 +41,7 @@ public class RegisterResource {
 					.entity("该用户已存在").type(MediaType.TEXT_PLAIN).build();
 		}
 		
-		if(utype != 1 && utype != 2){
+		if(utype !=  CodeUserType.USER && utype != CodeUserType.OWER){
 			return Response.status(Response.Status.BAD_REQUEST)
 					.entity("用户类型错误").type(MediaType.TEXT_PLAIN).build();
 		}

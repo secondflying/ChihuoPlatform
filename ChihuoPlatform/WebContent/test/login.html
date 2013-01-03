@@ -4,6 +4,32 @@
 <meta charset="utf-8">
 <title>登录</title>
 <link href="css/poshytip/tip-darkgray/tip-darkgray.css" rel="stylesheet" />
+<style>
+
+.errorLabel{
+	display:none;
+	font-size:12px;
+	color:#ff0000;
+}
+.successLabel{
+	display:none;
+	font-size:12px;
+	color:#16C73F;
+}
+
+.errorRow .errorLabel{
+	display:inline;
+}
+.errorRow .successLabel{
+	display:none;
+}
+.successRow .errorLabel{
+	display:none;
+}
+.successRow .successLabel{
+	display:inline;
+}
+</style>
 </head>
 <body>
 	<form action="../rest/test" method="post" enctype="multipart/form-data">
@@ -12,26 +38,105 @@
 		<input type="file" name="file2" /> <br /> <input type="submit"
 			id="test" value="Submit" />
 
-		<div id="tipcontent"  style="display:none;">
+		<div id="tipcontent" style="display: none;">
 			<ul>
 				<li><a href="#">sdfsdfs</a></li>
 			</ul>
 		</div>
+		
+		<br />
+		<input type="button" value="all" id="all" />
+		<input type="button" value="add" id="add" />
+
+		<table id="testtable">
+			<thead>
+				<tr>
+					<th>f1</th>
+					<th>f1</th>
+					<th>f1</th>
+					<th>f1</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input class="rr" type="text" value="t1" /></td>
+					<td><input class="rr" type="text" value="t2" /></td>
+					<td><input class="rr" type="text" value="" /></td>
+					<td><input class="rr" type="hidden" value="id1" /><input type="button" value="保存" class="edit" /><input type="button" value="删除" class="delete" /><span class="errorLabel">*信息不全</span><span class="successLabel">√保存成功</span></td>
+				</tr>
+				<tr>
+					<td><input class="rr" type="text" value="tt1" /></td>
+					<td><input class="rr" type="text" value="tt2" /></td>
+					<td><input class="rr" type="text" value="tt3" /></td>
+					<td><input class="rr" type="hidden" value="id1" /><input type="button" value="保存" class="edit" /><input type="button" value="删除" class="delete" /><span class="errorLabel">*信息不全</span><span class="successLabel">√保存成功</span></td>
+				</tr>
+			</tbody>
+		</table>
+		
+		
 	</form>
 
 	<script src="js/jquery-1.7.2.min.js"></script>
 	<script src="js/jquery.poshytip.min.js"></script>
 	<script>
 		$(document).ready(function() {
-			$('#test').poshytip({
-				className : 'tip-darkgray',
-				content : function() {
-			        return $("#tipcontent").html();
-			    },
-				alignTo : 'target',
-				alignX : 'inner-left'
+			
+			  bindtest();
+
+			$('#all').click(function() {
+				  var result=[];
+				  $("#testtable tbody tr").each(function(index,obj){
+					  //console.log($(this));
+					  var list = [];
+					  $(this).children().children(".rr").each(function(index,obj){
+						  list.push(obj.value);
+					  });
+					  if(!(list[0] && list[1] && list[2])){
+					  		$(this).closest("tr").removeClass('successRow').addClass('errorRow');
+					  }else{
+					  		$(this).closest("tr").removeClass('errorRow').addClass('successRow');
+					  }
+					  
+					  /* console.log(list);
+					  result.push(list); */
+				  });
 			});
+			
+			$('#add').click(function() {
+				  var row = '<tr><td><input class="rr" type="text" /></td><td><input class="rr" type="text" /></td><td><input class="rr" type="text" /></td><td><input class="rr" type="hidden" /><input type="button" value="保存" class="edit" /><input type="button" value="删除" class="delete" /><span class="errorLabel">*信息不全</span><span class="successLabel">√保存成功</span></td></tr>'
+			      $('#testtable tbody').append(row);
+				  bindtest();
+				  return false;
+			});
+			
 		});
+		
+		function bindtest(){
+			$('#testtable .edit').unbind('click');
+			$('#testtable .delete').unbind('click');
+
+			$('#testtable .edit').click(function() {
+				  //console.log($(this).parent().parent().children().children(".rr"));
+				  var result=[];
+				  var list = [];
+				  $(this).parent().parent().children().children(".rr").each(function(index,obj){
+					  list.push(obj.value);
+				  });
+				  console.log(list);
+				  if(!(list[0] && list[1] && list[2])){
+				  		$(this).closest("tr").removeClass('successRow').addClass('errorRow');
+				  }else{
+				  		$(this).closest("tr").removeClass('errorRow').addClass('successRow');
+				  }
+				  
+				  return false;
+			});
+			
+			$('#testtable .delete').click(function() {
+				$(this).closest("tr").remove();
+				  return false;
+			});
+		}
 	</script>
 </body>
 </html>
