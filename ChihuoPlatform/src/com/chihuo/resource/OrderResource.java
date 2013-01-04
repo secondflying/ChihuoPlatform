@@ -38,7 +38,7 @@ public class OrderResource {
 	}
 
 	@GET
-	@RolesAllowed({ "USER,OWER,WAITER" })
+//	@RolesAllowed({ "USER,OWER,WAITER" })
 	@Produces("application/json; charset=UTF-8")
 	public Order get() {
 
@@ -49,18 +49,18 @@ public class OrderResource {
 		return order;
 	}
 	
-	@Path("list")
-	@GET
-	@RolesAllowed({ "USER,OWER,WAITER" })
-	@Produces("application/json; charset=UTF-8")
-	public List<OrderItem> getList() {
-		OrderItemDao oDao = new OrderItemDao();
-		return oDao.queryByOrder(order.getId());
-	}
+//	@Path("list")
+//	@GET
+//	@RolesAllowed({ "USER,OWER,WAITER" })
+//	@Produces("application/json; charset=UTF-8")
+//	public List<OrderItem> getList() {
+//		OrderItemDao oDao = new OrderItemDao();
+//		return oDao.queryByOrder(order.getId());
+//	}
 
 	// 加减菜
 	@POST
-	@RolesAllowed({ "USER,OWER,WAITER" })
+//	@RolesAllowed({ "USER,OWER,WAITER" })
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@FormParam("rid") int rid,
@@ -139,7 +139,7 @@ public class OrderResource {
 	// 请求结账
 	@Path("/tocheck")
 	@PUT
-	@RolesAllowed({ "USER,OWER,WAITER" })
+//	@RolesAllowed({ "USER,OWER,WAITER" })
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response tocheck() throws JSONException {
 		OrderDao dao = new OrderDao();

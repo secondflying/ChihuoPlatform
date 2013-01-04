@@ -1,5 +1,11 @@
 package com.chihuo.resource;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -10,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.catalina.Loader;
 import org.apache.commons.lang.StringUtils;
 
 import cn.jpush.api.ErrorCodeEnum;
@@ -20,6 +27,7 @@ import com.chihuo.bussiness.Device;
 import com.chihuo.bussiness.Waiter;
 import com.chihuo.dao.DeviceDao;
 import com.chihuo.util.CodeUserType;
+import com.chihuo.util.PublicConfig;
 import com.chihuo.util.PublicHelper;
 
 	@Path("/test")
@@ -32,9 +40,8 @@ import com.chihuo.util.PublicHelper;
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response testAuth(@Context SecurityContext securityContext,@Context HttpServletRequest request) {
-//			JPushClient jpush = new JPushClient("secondflying", "111111", "533f4284583112e9b1bf9e57");
-			JPushClient jpush = new JPushClient("langyan8973", "290057", "67a550f522d0500d0416d59f");
-			 
+			JPushClient jpush = new JPushClient(PublicConfig.getJUserName(), PublicConfig.getJPassword(), PublicConfig.getJAppkey());
+			
 			String udid = request.getHeader("X-device");
 
 			if(!StringUtils.isBlank(udid)){

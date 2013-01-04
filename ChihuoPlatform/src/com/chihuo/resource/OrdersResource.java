@@ -86,7 +86,7 @@ public class OrdersResource {
 	}
 
 	@GET
-	// @RolesAllowed({"USER,OWER,WAITER"})
+//	@RolesAllowed({"USER,OWER,WAITER"})
 	@Produces("application/json; charset=UTF-8")
 	public Response getByCode(@QueryParam("code") String code,
 			@Context HttpServletRequest request,
