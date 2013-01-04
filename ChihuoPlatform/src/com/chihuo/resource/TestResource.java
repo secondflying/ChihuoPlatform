@@ -37,7 +37,7 @@ import com.chihuo.util.PublicHelper;
 			 
 			String udid = request.getHeader("X-device");
 
-			if(StringUtils.isBlank(udid)){
+			if(!StringUtils.isBlank(udid)){
 				int sendNo = 1;
 				String msgTitle = "111";
 				String msgContent = "ririri";
