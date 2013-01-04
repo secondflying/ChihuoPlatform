@@ -91,6 +91,8 @@ public class OrdersResource {
 	public Response getByCode(@QueryParam("code") String code,
 			@Context HttpServletRequest request,
 			@Context SecurityContext securityContext) {
+		//TODO 记住谁加入了点餐
+		
 		// 用户加入点餐
 		OrderDao odao = new OrderDao();
 		Order order = odao.findByCode(restaurant, code);
