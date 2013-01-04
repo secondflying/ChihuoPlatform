@@ -1,6 +1,5 @@
 package com.chihuo.util;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.UriInfo;
@@ -19,9 +18,6 @@ public class SecurityFilter implements ContainerRequestFilter {
 
 	@Context
 	UriInfo uriInfo;
-
-	@Context
-	HttpServletRequest request;
 
 	@Override
 	public ContainerRequest filter(ContainerRequest request) {
@@ -68,9 +64,7 @@ public class SecurityFilter implements ContainerRequestFilter {
 								uriInfo));
 					}
 				}
-
 			} 
-
 		}
 
 		return request;
