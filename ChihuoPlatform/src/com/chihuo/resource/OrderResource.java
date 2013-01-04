@@ -107,10 +107,10 @@ public class OrderResource {
 			idao.saveOrUpdate(item);
 		}
 
-		// URI uri = uriInfo.getRequestUri();
-		UriBuilder ub = uriInfo.getAbsolutePathBuilder();
-		URI listUri = ub.path("list").build();
-		return Response.seeOther(listUri).build();
+		 URI uri = uriInfo.getRequestUri();
+//		UriBuilder ub = uriInfo.getAbsolutePathBuilder();
+//		URI listUri = ub.path("list").build();
+		return Response.seeOther(uri).build();
 	}
 
 	// 改变菜的状态，如已上，
