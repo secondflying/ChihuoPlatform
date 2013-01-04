@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2012-11-27 16:53:06 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.chihuo.bussiness.Logins" table="logins">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="device" class="com.chihuo.bussiness.Device" fetch="join">
+            <column name="did" />
+        </many-to-one>
+        
+        <property name="uid" type="java.lang.Integer">
+            <column name="uid" />
+        </property>
+        <property name="utype" type="java.lang.Integer">
+            <column name="utype" />
+        </property>
+        <property name="liginTime" type="timestamp">
+            <column name="ligintime" />
+        </property>
+    </class>
+</hibernate-mapping>
