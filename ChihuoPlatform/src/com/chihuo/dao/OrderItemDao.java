@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
+import com.chihuo.bussiness.Order;
 import com.chihuo.bussiness.OrderItem;
 
 public class OrderItemDao extends GenericHibernateDAO﻿<OrderItem, Integer> {
@@ -27,6 +28,7 @@ public class OrderItemDao extends GenericHibernateDAO﻿<OrderItem, Integer> {
 	public List<OrderItem> queryByOrder(int oid) {
 		Criteria crit = getSession().createCriteria(OrderItem.class)
 				.add(Restrictions.not(Restrictions.eq("status", -1)))
+				.addOrder(org.hibernate.criterion.Order.asc("id"))
 				.add(Restrictions.eq("order.id", oid));
 		return (List<OrderItem>) crit.list();
 	}
