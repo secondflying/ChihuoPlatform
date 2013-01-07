@@ -124,6 +124,14 @@ public class OrderResource {
 		LoginsDao lDao = new LoginsDao();
 		Device waiterDevice = lDao.getWaiterDeviceByOrder(order);
 		NotificationHelper.sendNotifcationToWaiter("加菜了", waiterDevice);
+		
+		String udid = request.getHeader("X-device");
+		List<Device> userDevices = lDao.getAnonymousDeviceByOrder(order);
+		for (Device device : userDevices) {
+			if (device.getDeviceid().equals(udid)) {
+				NotificationHelper.sendNotifcationToUser("菜上l", device);
+			}
+		}
 
 		URI uri = uriInfo.getRequestUri();
 		// UriBuilder ub = uriInfo.getAbsolutePathBuilder();
@@ -150,11 +158,11 @@ public class OrderResource {
 		oi.setStatus(1);
 		oDao.saveOrUpdate(oi);
 
-		// 发送通知给服务员和其他点餐者
+		// 发送通知给服务员
 		LoginsDao lDao = new LoginsDao();
 		List<Device> userDevices = lDao.getAnonymousDeviceByOrder(order);
 		for (Device device : userDevices) {
-			NotificationHelper.sendNotifcationToUser("菜上了", device);
+			NotificationHelper.sendNotifcationToUser("菜上l", device);
 		}
 
 		return Response.status(Response.Status.OK).entity(oi)
@@ -202,4 +210,5 @@ public class OrderResource {
 		return Response.status(Response.Status.OK).entity(order)
 				.type(MediaType.APPLICATION_JSON).build();
 	}
+
 }
