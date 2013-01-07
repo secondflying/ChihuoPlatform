@@ -36,6 +36,7 @@ import com.chihuo.dao.RecipeDao;
 import com.chihuo.util.CodePlatform;
 import com.chihuo.util.CodeUserType;
 import com.chihuo.util.DeviceRegister;
+import com.chihuo.util.HibernateUtil﻿;
 import com.chihuo.util.NotificationHelper;
 import com.chihuo.util.NotificationHelper.NotificationType;
 import com.chihuo.util.PublicHelper;
@@ -120,6 +121,8 @@ public class OrderResource {
 			item.setStatus(0);
 			idao.saveOrUpdate(item);
 		}
+		
+		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction().commit();
 
 		// 发送通知给服务员和其他点餐者
 		LoginsDao lDao = new LoginsDao();
@@ -161,6 +164,7 @@ public class OrderResource {
 		oi.setStatus(1);
 		oDao.saveOrUpdate(oi);
 
+		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction().commit();
 		// 发送通知给服务员
 		LoginsDao lDao = new LoginsDao();
 		List<Device> userDevices = lDao.getAnonymousDeviceByOrder(order);

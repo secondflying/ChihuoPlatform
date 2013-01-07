@@ -16,9 +16,6 @@ public class MyServletContainer extends com.sun.jersey.spi.container.servlet.Ser
 	public void init() throws ServletException {
 		sf = HibernateUtil﻿.getSessionFactory();
 		
-		//初始化XMPP 服务器端
-		//NotificationManager notificationManager = new NotificationManager();
-
 		super.init();
 	}
 
@@ -28,7 +25,9 @@ public class MyServletContainer extends com.sun.jersey.spi.container.servlet.Ser
 		try {
 			sf.getCurrentSession().beginTransaction();
 			super.service(request, response);
-			sf.getCurrentSession().getTransaction().commit();
+			if (sf.getCurrentSession().getTransaction().isActive()) {
+				sf.getCurrentSession().getTransaction().commit();
+			}
 		} catch (Throwable ex) {
 			//TODO 这里应该只捕获hibernate操作的异常
 			try {
