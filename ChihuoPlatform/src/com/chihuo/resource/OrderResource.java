@@ -123,7 +123,7 @@ public class OrderResource {
 		// 发送通知给服务员和其他点餐者
 		LoginsDao lDao = new LoginsDao();
 		Device waiterDevice = lDao.getWaiterDeviceByOrder(order);
-		NotificationHelper.sendNotifcationToUser("加菜了", waiterDevice);
+		NotificationHelper.sendNotifcationToWaiter("加菜了", waiterDevice);
 
 		URI uri = uriInfo.getRequestUri();
 		// UriBuilder ub = uriInfo.getAbsolutePathBuilder();

@@ -21,7 +21,7 @@ public class PublicConfig {
 	static{
 		try {
 			InputStream in = PublicConfig.class.getResourceAsStream("/config.properties"); 
-			Properties prop = new Properties();  
+			prop = new Properties();  
 			prop.load(in);
 		} catch (IOException e) {
 			e.printStackTrace();
