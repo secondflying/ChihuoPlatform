@@ -128,7 +128,7 @@ public class OrderResource {
 		String udid = request.getHeader("X-device");
 		List<Device> userDevices = lDao.getAnonymousDeviceByOrder(order);
 		for (Device device : userDevices) {
-			if (device.getDeviceid().equals(udid)) {
+			if (!device.getDeviceid().equals(udid)) {
 				NotificationHelper.sendNotifcationToUser("菜上l", device);
 			}
 		}
