@@ -37,6 +37,7 @@ import com.chihuo.util.CodePlatform;
 import com.chihuo.util.CodeUserType;
 import com.chihuo.util.DeviceRegister;
 import com.chihuo.util.NotificationHelper;
+import com.chihuo.util.NotificationHelper.NotificationType;
 import com.chihuo.util.PublicHelper;
 
 public class OrderResource {
@@ -123,13 +124,15 @@ public class OrderResource {
 		// 发送通知给服务员和其他点餐者
 		LoginsDao lDao = new LoginsDao();
 		Device waiterDevice = lDao.getWaiterDeviceByOrder(order);
-		NotificationHelper.sendNotifcationToWaiter("加菜了", waiterDevice);
-		
+		NotificationHelper.sendNotifcationToWaiter(item.getOrder().getId()
+				.toString(), NotificationType.AddMenu, waiterDevice);
+
 		String udid = request.getHeader("X-device");
 		List<Device> userDevices = lDao.getAnonymousDeviceByOrder(order);
 		for (Device device : userDevices) {
 			if (!device.getDeviceid().equals(udid)) {
-				NotificationHelper.sendNotifcationToUser("菜上l", device);
+				NotificationHelper.sendNotifcationToUser(item.getOrder()
+						.getId().toString(), NotificationType.AddMenu, device);
 			}
 		}
 
@@ -162,7 +165,8 @@ public class OrderResource {
 		LoginsDao lDao = new LoginsDao();
 		List<Device> userDevices = lDao.getAnonymousDeviceByOrder(order);
 		for (Device device : userDevices) {
-			NotificationHelper.sendNotifcationToUser("菜上l", device);
+			NotificationHelper.sendNotifcationToUser(oi.getOrder().getId()
+					.toString(), NotificationType.AlterMenu, device);
 		}
 
 		return Response.status(Response.Status.OK).entity(oi)

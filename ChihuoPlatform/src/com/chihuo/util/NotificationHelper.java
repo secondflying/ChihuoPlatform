@@ -12,15 +12,14 @@ import com.chihuo.bussiness.Device;
 
 public class NotificationHelper {
 
-	public static void sendNotifcationToWaiter(String message, Device device) {
+	public static void sendNotifcationToWaiter(String message,
+			NotificationType ntype, Device device) {
 		if (device != null) {
 			JPushClient jpush = new JPushClient(PublicConfig.getJWaiterName(),
 					PublicConfig.getJWaiterPassword(),
 					PublicConfig.getJWaiterAppKey());
 			int sendNo = 1;
-			String msgTitle = "111";
-			MessageResult msgResult = jpush.sendNotificationWithImei(sendNo,
-					device.getDeviceid(), msgTitle, message);
+			MessageResult msgResult = jpush.sendCustomMessageWithImei(sendNo, device.getDeviceid(), ntype.toString(), message);
 			if (null != msgResult) {
 				if (msgResult.getErrcode() == ErrorCodeEnum.NOERROR.value()) {
 					System.out.println("发送成功， sendNo=" + msgResult.getSendno());
@@ -34,17 +33,15 @@ public class NotificationHelper {
 			}
 		}
 	}
-	
-	
-	public static void sendNotifcationToUser(String message, Device device) {
+
+	public static void sendNotifcationToUser(String message,
+			NotificationType ntype, Device device) {
 		if (device != null) {
 			JPushClient jpush = new JPushClient(PublicConfig.getJUserName(),
 					PublicConfig.getJUserPassword(),
 					PublicConfig.getJUserAppKey());
 			int sendNo = 1;
-			String msgTitle = "111";
-			MessageResult msgResult = jpush.sendNotificationWithImei(sendNo,
-					device.getDeviceid(), msgTitle, message);
+			MessageResult msgResult = jpush.sendCustomMessageWithImei(sendNo, device.getDeviceid(), ntype.toString(), message);
 			if (null != msgResult) {
 				if (msgResult.getErrcode() == ErrorCodeEnum.NOERROR.value()) {
 					System.out.println("发送成功， sendNo=" + msgResult.getSendno());
@@ -69,26 +66,23 @@ public class NotificationHelper {
 		return jsonObject.toString();
 	}
 
-	// public enum NotificationType{
-	// AddMenu (11, "加减菜"),
-	// RequestCheckOut (12, "请求结账"),
-	// CheckOut (13, "结账"),
-	// CheckIn (14, "撤单"),
-	//
-	// AddWater (21, "加水"),
-	// AddDish (22, "加餐具"),
-	// CallWaiter (23, "叫服务员");
-	//
-	// private final int type;
-	// private final String description;
-	// NotificationType(int type, String des) {
-	// this.type = type;
-	// this.description = des;
-	// }
-	//
-	// public String toString() {
-	// return type + "";
-	// }
-	// }
+	public enum NotificationType {
+		AddMenu(10, "加减菜"), AlterMenu(11, "改菜状态"), RequestCheckOut(12, "请求结账"), CheckOut(
+				13, "结账"), CheckIn(14, "撤单"),
+
+		AddWater(21, "加水"), AddDish(22, "加餐具"), CallWaiter(23, "叫服务员");
+
+		private final int type;
+		private final String description;
+
+		NotificationType(int type, String des) {
+			this.type = type;
+			this.description = des;
+		}
+
+		public String toString() {
+			return type + "";
+		}
+	}
 
 }
