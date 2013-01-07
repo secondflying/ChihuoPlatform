@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -15,18 +16,28 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 
+import com.chihuo.bussiness.Device;
 import com.chihuo.bussiness.Order;
 import com.chihuo.bussiness.OrderItem;
 import com.chihuo.bussiness.Recipe;
 import com.chihuo.bussiness.Restaurant;
+import com.chihuo.bussiness.User;
+import com.chihuo.bussiness.Waiter;
+import com.chihuo.dao.LoginsDao;
 import com.chihuo.dao.OrderDao;
 import com.chihuo.dao.OrderItemDao;
 import com.chihuo.dao.RecipeDao;
+import com.chihuo.util.CodePlatform;
+import com.chihuo.util.CodeUserType;
+import com.chihuo.util.DeviceRegister;
+import com.chihuo.util.NotificationHelper;
+import com.chihuo.util.PublicHelper;
 
 public class OrderResource {
 	Restaurant restaurant;
@@ -38,7 +49,7 @@ public class OrderResource {
 	}
 
 	@GET
-//	@RolesAllowed({ "USER,OWER,WAITER" })
+	// @RolesAllowed({ "USER,OWER,WAITER" })
 	@Produces("application/json; charset=UTF-8")
 	public Order get() {
 
@@ -48,23 +59,25 @@ public class OrderResource {
 		order.setOrderItems(list);
 		return order;
 	}
-	
-//	@Path("list")
-//	@GET
-//	@RolesAllowed({ "USER,OWER,WAITER" })
-//	@Produces("application/json; charset=UTF-8")
-//	public List<OrderItem> getList() {
-//		OrderItemDao oDao = new OrderItemDao();
-//		return oDao.queryByOrder(order.getId());
-//	}
+
+	// @Path("list")
+	// @GET
+	// @RolesAllowed({ "USER,OWER,WAITER" })
+	// @Produces("application/json; charset=UTF-8")
+	// public List<OrderItem> getList() {
+	// OrderItemDao oDao = new OrderItemDao();
+	// return oDao.queryByOrder(order.getId());
+	// }
 
 	// 加减菜
 	@POST
-//	@RolesAllowed({ "USER,OWER,WAITER" })
+	// @RolesAllowed({ "USER,OWER,WAITER" })
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@FormParam("rid") int rid,
-			@FormParam("count") int count, @Context UriInfo uriInfo) {
+			@FormParam("count") int count, @Context UriInfo uriInfo,
+			@Context HttpServletRequest request,
+			@Context SecurityContext securityContext) {
 
 		if (order.getStatus() != null && order.getStatus() != 1) {
 			// TODO 判断该台号是否可以加减菜
@@ -107,9 +120,14 @@ public class OrderResource {
 			idao.saveOrUpdate(item);
 		}
 
-		 URI uri = uriInfo.getRequestUri();
-//		UriBuilder ub = uriInfo.getAbsolutePathBuilder();
-//		URI listUri = ub.path("list").build();
+		// 发送通知给服务员和其他点餐者
+		LoginsDao lDao = new LoginsDao();
+		Device waiterDevice = lDao.getWaiterDeviceByOrder(order);
+		NotificationHelper.sendNotifcationToUser("加菜了", waiterDevice);
+
+		URI uri = uriInfo.getRequestUri();
+		// UriBuilder ub = uriInfo.getAbsolutePathBuilder();
+		// URI listUri = ub.path("list").build();
 		return Response.seeOther(uri).build();
 	}
 
@@ -132,6 +150,13 @@ public class OrderResource {
 		oi.setStatus(1);
 		oDao.saveOrUpdate(oi);
 
+		// 发送通知给服务员和其他点餐者
+		LoginsDao lDao = new LoginsDao();
+		List<Device> userDevices = lDao.getAnonymousDeviceByOrder(order);
+		for (Device device : userDevices) {
+			NotificationHelper.sendNotifcationToUser("菜上了", device);
+		}
+
 		return Response.status(Response.Status.OK).entity(oi)
 				.type(MediaType.APPLICATION_JSON).build();
 	}
@@ -139,7 +164,7 @@ public class OrderResource {
 	// 请求结账
 	@Path("/tocheck")
 	@PUT
-//	@RolesAllowed({ "USER,OWER,WAITER" })
+	// @RolesAllowed({ "USER,OWER,WAITER" })
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response tocheck() throws JSONException {
 		OrderDao dao = new OrderDao();
@@ -177,8 +202,4 @@ public class OrderResource {
 		return Response.status(Response.Status.OK).entity(order)
 				.type(MediaType.APPLICATION_JSON).build();
 	}
-
 }
-
-
-

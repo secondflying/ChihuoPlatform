@@ -40,7 +40,7 @@ import com.chihuo.util.PublicHelper;
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
 		public Response testAuth(@Context SecurityContext securityContext,@Context HttpServletRequest request) {
-			JPushClient jpush = new JPushClient(PublicConfig.getJUserName(), PublicConfig.getJPassword(), PublicConfig.getJAppkey());
+			JPushClient jpush = new JPushClient(PublicConfig.getJUserAppKey(), PublicConfig.getJUserPassword(), PublicConfig.getJUserAppKey());
 			
 			String udid = request.getHeader("X-device");
 

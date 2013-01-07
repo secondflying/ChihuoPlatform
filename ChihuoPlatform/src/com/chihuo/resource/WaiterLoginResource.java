@@ -23,6 +23,7 @@ import com.chihuo.dao.LoginsDao;
 import com.chihuo.dao.RestaurantDao;
 import com.chihuo.dao.WaiterDao;
 import com.chihuo.util.CodePlatform;
+import com.chihuo.util.DeviceRegister;
 import com.chihuo.util.PublicHelper;
 import com.chihuo.util.CodeUserType;
 
@@ -51,33 +52,11 @@ public class WaiterLoginResource {
 					.entity("用户名密码不匹配").type(MediaType.TEXT_PLAIN).build();
 		}
 
-		String udid = request.getHeader("X-device");
-		if (!StringUtils.isBlank(udid)) {
-			DeviceDao ddao = new DeviceDao();
-			Device device = ddao.findByUDID(udid);
-			if (device == null) {
-				device = new Device();
-				device.setDeviceid(udid);
-				device.setPtype(CodePlatform.Android);
-				device.setRegisterTime(new Date());
-				ddao.saveOrUpdate(device);
-			}
-			
-			LoginsDao lDao = new LoginsDao();
-			Logins login = lDao.findByUserID(u.getId(), CodePlatform.Android);
-			if(login != null){
-				login.setDevice(device);
-				login.setLiginTime(new Date());
-			}else {
-				login = new Logins();
-				login.setUid(u.getId());
-				login.setUtype(CodeUserType.WAITER);
-				login.setDevice(device);
-				login.setLiginTime(new Date());
-			}
-			lDao.saveOrUpdate(login);
-		}
-
+//		String udid = request.getHeader("X-device");
+//		if (!StringUtils.isBlank(udid)) {
+//			Device device  = DeviceRegister.register(udid,CodePlatform.Android);
+//		}
+		
 		return Response
 				.ok(restaurant2)
 				.header("Authorization",

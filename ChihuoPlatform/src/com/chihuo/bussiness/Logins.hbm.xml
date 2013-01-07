@@ -8,18 +8,23 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="device" class="com.chihuo.bussiness.Device" fetch="join">
-            <column name="did" />
-        </many-to-one>
-        
         <property name="uid" type="java.lang.Integer">
             <column name="uid" />
         </property>
         <property name="utype" type="java.lang.Integer">
             <column name="utype" />
         </property>
-        <property name="liginTime" type="timestamp">
-            <column name="ligintime" />
+        <many-to-one name="device" class="com.chihuo.bussiness.Device" fetch="join">
+            <column name="did" />
+        </many-to-one>
+        <many-to-one name="order" class="com.chihuo.bussiness.Order" fetch="join">
+            <column name="oid" />
+        </many-to-one>
+        <property name="status" type="java.lang.Integer">
+            <column name="status" />
+        </property>
+        <property name="loginTime" type="timestamp">
+            <column name="logintime" />
         </property>
     </class>
 </hibernate-mapping>

@@ -23,18 +23,17 @@ import org.apache.commons.lang.StringUtils;
 
 import com.chihuo.bussiness.Desk;
 import com.chihuo.bussiness.Device;
-import com.chihuo.bussiness.Logins;
 import com.chihuo.bussiness.Order;
 import com.chihuo.bussiness.OrderItem;
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.bussiness.User;
+import com.chihuo.bussiness.Waiter;
 import com.chihuo.dao.DeskDao;
-import com.chihuo.dao.DeviceDao;
-import com.chihuo.dao.LoginsDao;
 import com.chihuo.dao.OrderDao;
 import com.chihuo.dao.OrderItemDao;
 import com.chihuo.util.CodePlatform;
 import com.chihuo.util.CodeUserType;
+import com.chihuo.util.DeviceRegister;
 import com.chihuo.util.PublicHelper;
 import com.sun.jersey.multipart.FormDataParam;
 
@@ -51,6 +50,7 @@ public class OrdersResource {
 	@Consumes("multipart/form-data")
 	public Response create(@FormDataParam("did") int did,
 			@FormDataParam("number") int number,
+			@Context HttpServletRequest request,
 			@Context SecurityContext securityContext) {
 		OrderDao odao = new OrderDao();
 		DeskDao cdao = new DeskDao();
@@ -80,19 +80,25 @@ public class OrdersResource {
 		order.setCode(Math.round(Math.random() * 9000 + 1000) + "");
 
 		odao.saveOrUpdate(order);
+		
+		String udid = request.getHeader("X-device");
+		if (!StringUtils.isBlank(udid)) {
+			Device device  = DeviceRegister.register(udid,CodePlatform.Android);
+			Waiter u = PublicHelper.getLoginWaiter(securityContext);
+			DeviceRegister.recordLogin(order, device, u.getId(), CodeUserType.WAITER);
+		}
 
 		return Response.created(URI.create(String.valueOf(order.getId())))
 				.entity(order).type(MediaType.APPLICATION_JSON).build();
 	}
 
+
 	@GET
 //	@RolesAllowed({"USER,OWER,WAITER"})
 	@Produces("application/json; charset=UTF-8")
-	public Response getByCode(@QueryParam("code") String code,
+	public Response joinOrder(@QueryParam("code") String code,
 			@Context HttpServletRequest request,
 			@Context SecurityContext securityContext) {
-		//TODO 记住谁加入了点餐
-		
 		// 用户加入点餐
 		OrderDao odao = new OrderDao();
 		Order order = odao.findByCode(restaurant, code);
@@ -103,44 +109,12 @@ public class OrdersResource {
 
 		String udid = request.getHeader("X-device");
 		if (!StringUtils.isBlank(udid)) {
-			DeviceDao ddao = new DeviceDao();
-			Device device = ddao.findByUDID(udid);
-			if (device == null) {
-				device = new Device();
-				device.setDeviceid(udid);
-				device.setPtype(CodePlatform.Android);
-				device.setRegisterTime(new Date());
-				ddao.saveOrUpdate(device);
-			}
-
-			LoginsDao lDao = new LoginsDao();
-			User user = PublicHelper.getLoginUser(securityContext);
-			if (user != null) {
-				Logins login = lDao.findByUserID(user.getId(),
-						CodePlatform.Android);
-				if (login != null) {
-					login.setDevice(device);
-					login.setLiginTime(new Date());
-				} else {
-					login = new Logins();
-					login.setUid(user.getId());
-					login.setUtype(user.getUtype());
-					login.setDevice(device);
-					login.setLiginTime(new Date());
-				}
-				lDao.saveOrUpdate(login);
-			}else {
-				//匿名登录
-				Logins login = lDao.findByUserIDAndDevice( CodeUserType.ANONYMOUS, device);
-				if (login != null) {
-					login.setLiginTime(new Date());
-				} else {
-					login = new Logins();
-					login.setUtype(CodeUserType.ANONYMOUS);
-					login.setDevice(device);
-					login.setLiginTime(new Date());
-				}
-				lDao.saveOrUpdate(login);
+			Device device  = DeviceRegister.register(udid,CodePlatform.Android);
+			User u = PublicHelper.getLoginUser(securityContext);
+			if(u != null){
+				DeviceRegister.recordLogin(order, device, u.getId(), CodeUserType.USER);
+			}else{
+				DeviceRegister.recordLogin(order, device, -1, CodeUserType.ANONYMOUS);
 			}
 		}
 
@@ -151,6 +125,7 @@ public class OrdersResource {
 		return Response.status(Response.Status.OK).entity(order)
 				.type(MediaType.APPLICATION_JSON).build();
 	}
+	
 
 	@Path("{id}")
 	public OrderResource getSingleResource(@PathParam("id") int id) {

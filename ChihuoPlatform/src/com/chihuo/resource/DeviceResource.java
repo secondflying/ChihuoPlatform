@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import com.chihuo.bussiness.Device;
 import com.chihuo.dao.DeviceDao;
 import com.chihuo.util.CodePlatform;
+import com.chihuo.util.DeviceRegister;
 
 @Path("/device")
 public class DeviceResource {
@@ -24,18 +25,7 @@ public class DeviceResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response post(@FormParam("udid") String udid) {
 		if (!StringUtils.isBlank(udid)) {
-			DeviceDao ddao = new DeviceDao();
-			Device device = ddao.findByUDID(udid);
-			if (device == null) {
-				device = new Device();
-				device.setDeviceid(udid);
-				device.setPtype(CodePlatform.Android);
-				device.setRegisterTime(new Date());
-				ddao.saveOrUpdate(device);
-			} else {
-				device.setRegisterTime(new Date());
-				ddao.saveOrUpdate(device);
-			}
+			Device device  = DeviceRegister.register(udid,CodePlatform.Android);
 			return Response.ok(device).header("X-device", udid).build();
 		}
 		return Response.status(Response.Status.BAD_REQUEST).build();

@@ -24,21 +24,32 @@ public class PublicConfig {
 			Properties prop = new Properties();  
 			prop.load(in);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}  
 	}
 	
 	public static String getJUserName() {
-		return prop.getProperty("name");
+		return prop.getProperty("userName");
 	}
 	
-	public static String getJPassword() {
-		return prop.getProperty("password");
+	public static String getJUserPassword() {
+		return prop.getProperty("userPassword");
 	}
 	
-	public static String getJAppkey() {
-		return prop.getProperty("appKey");
+	public static String getJUserAppKey() {
+		return prop.getProperty("userAppKey");
+	}
+	
+	public static String getJWaiterName() {
+		return prop.getProperty("waiterName");
+	}
+	
+	public static String getJWaiterPassword() {
+		return prop.getProperty("waiterPassword");
+	}
+	
+	public static String getJWaiterAppKey() {
+		return prop.getProperty("waiterAppKey");
 	}
 	
 }
