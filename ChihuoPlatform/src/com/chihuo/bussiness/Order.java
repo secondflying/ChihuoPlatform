@@ -51,7 +51,7 @@ public class Order implements java.io.Serializable {
 	@XmlElement
 	private List<OrderItem> orderItems;
 	
-	@XmlTransient
+	@XmlElement
 	private Restaurant restaurant;
 	
 

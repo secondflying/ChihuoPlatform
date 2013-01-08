@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import javax.annotation.security.RolesAllowed;
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -19,14 +20,26 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.chihuo.bussiness.Device;
+import com.chihuo.bussiness.Order;
+import com.chihuo.bussiness.OrderItem;
 import com.chihuo.bussiness.Restaurant;
+import com.chihuo.bussiness.User;
+import com.chihuo.dao.OrderDao;
+import com.chihuo.dao.OrderItemDao;
 import com.chihuo.dao.RestaurantDao;
+import com.chihuo.util.CodePlatform;
+import com.chihuo.util.CodeUserType;
+import com.chihuo.util.DeviceRegister;
 import com.chihuo.util.PublicHelper;
 import com.sun.jersey.multipart.FormDataParam;
 
@@ -112,7 +125,7 @@ public class RestaurantsResource {
 		
 		return new RestaurantResource(r);
 	}
-
+	
 	@GET
 	@RolesAllowed({"ADMIN"})
 	@Path("/all")
