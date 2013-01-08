@@ -187,7 +187,7 @@
 						console.log(value);
 						var html = '<tr><td>' + value.name
 								+ '</td><td>' +value.capacity+ '</td>'
-								+ '<td><img src="rest/restaurants/' + restaurant.id + "/desks/" + value.id + '/QR"</td><td>';
+								+ '<td><img src="rest/restaurants/' + restaurant.id + "/desks/" + value.id + '/QR"/></td><td>'
 								+ (value.orderStatus?"忙":"")
 								+ '</td><td><a href="#" onclick="editDesk('+value.id+')">编辑</a><br /><a href="#" onclick="deleteDesk('+value.id+')">删除</a></td></tr>'
 						$('#deskList tbody').append(html);

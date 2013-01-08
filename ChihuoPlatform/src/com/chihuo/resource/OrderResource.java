@@ -122,16 +122,17 @@ public class OrderResource {
 			idao.saveOrUpdate(item);
 		}
 		
-		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction().commit();
-
 		// 发送通知给服务员和其他点餐者
 		LoginsDao lDao = new LoginsDao();
 		Device waiterDevice = lDao.getWaiterDeviceByOrder(order);
+		List<Device> userDevices = lDao.getAnonymousDeviceByOrder(order);
+		
+		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction().commit();
+		
 		NotificationHelper.sendNotifcationToWaiter(item.getOrder().getId()
 				.toString(), NotificationType.AddMenu, waiterDevice);
 
 		String udid = request.getHeader("X-device");
-		List<Device> userDevices = lDao.getAnonymousDeviceByOrder(order);
 		for (Device device : userDevices) {
 			if (!device.getDeviceid().equals(udid)) {
 				NotificationHelper.sendNotifcationToUser(item.getOrder()
@@ -164,10 +165,12 @@ public class OrderResource {
 		oi.setStatus(1);
 		oDao.saveOrUpdate(oi);
 
-		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction().commit();
 		// 发送通知给服务员
 		LoginsDao lDao = new LoginsDao();
 		List<Device> userDevices = lDao.getAnonymousDeviceByOrder(order);
+		
+		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction().commit();
+		
 		for (Device device : userDevices) {
 			NotificationHelper.sendNotifcationToUser(oi.getOrder().getId()
 					.toString(), NotificationType.AlterMenu, device);
