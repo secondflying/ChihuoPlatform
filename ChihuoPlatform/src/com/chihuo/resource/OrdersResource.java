@@ -20,6 +20,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.chihuo.bussiness.Desk;
 import com.chihuo.bussiness.Device;
@@ -34,7 +36,9 @@ import com.chihuo.dao.OrderItemDao;
 import com.chihuo.util.CodePlatform;
 import com.chihuo.util.CodeUserType;
 import com.chihuo.util.DeviceRegister;
+import com.chihuo.util.NotificationHelper;
 import com.chihuo.util.PublicHelper;
+import com.chihuo.util.NotificationHelper.NotificationType;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class OrdersResource {
@@ -125,6 +129,48 @@ public class OrdersResource {
 		return Response.status(Response.Status.OK).entity(order)
 				.type(MediaType.APPLICATION_JSON).build();
 	}
+	
+	
+//	// 其他服务，呼叫服务员等
+//		@Path("/assistent")
+//		@POST
+//		@Consumes({ MediaType.APPLICATION_JSON })
+//		@Produces(MediaType.APPLICATION_JSON)
+//		public Response AssistentHelp(String jsonString) throws JSONException {
+//			// System.out.print(jsonString);
+//			OrderDao dao = new OrderDao();
+//			Order order = dao.findById(id);
+//			if (order == null) {
+//				throw new WebApplicationException(Response.Status.NOT_FOUND);
+//			}
+//
+//			JSONObject jsonObject = new JSONObject(jsonString);
+//			int type = jsonObject.getInt("type");
+//			if (type == Integer.parseInt(NotificationType.AddWater.toString())) {
+//				NotificationHelper.sendNotifcationToUser(NotificationType.AddWater,
+//						NotificationHelper.getDeskString(order.getId(),order.getDesk()), order.getWaiter()
+//								.getUsername());
+//				return Response.status(Response.Status.OK)
+//						.type(MediaType.APPLICATION_JSON).build();
+//			} else if (type == Integer
+//					.parseInt(NotificationType.AddDish.toString())) {
+//				NotificationHelper.sendNotifcationToUser(NotificationType.AddDish,
+//						NotificationHelper.getDeskString(order.getId(),order.getDesk()), order.getWaiter()
+//								.getUsername());
+//				return Response.status(Response.Status.OK)
+//						.type(MediaType.APPLICATION_JSON).build();
+//			} else if (type == Integer.parseInt(NotificationType.CallWaiter
+//					.toString())) {
+//				NotificationHelper.sendNotifcationToUser(
+//						NotificationType.CallWaiter, NotificationHelper.getDeskString(order.getId(),order.getDesk()),
+//						order.getWaiter().getUsername());
+//				return Response.status(Response.Status.OK)
+//						.type(MediaType.APPLICATION_JSON).build();
+//			} else {
+//				return Response.status(Response.Status.BAD_REQUEST)
+//						.type(MediaType.TEXT_PLAIN).build();
+//			}
+//		}
 	
 
 	@Path("{id}")

@@ -73,6 +73,7 @@
 							<tr>
 								<th>名称</th>
 								<th>容量</th>
+								<th>二维码</th>
 								<th>状态</th>
 								<th>编辑</th>
 							</tr>
@@ -185,7 +186,8 @@
 					if (!isNaN(index)) {
 						console.log(value);
 						var html = '<tr><td>' + value.name
-								+ '</td><td>' +value.capacity+ '</td><td>'
+								+ '</td><td>' +value.capacity+ '</td>'
+								+ '<td><img src="rest/restaurants/' + restaurant.id + "/desks/" + value.id + '/QR"</td><td>';
 								+ (value.orderStatus?"忙":"")
 								+ '</td><td><a href="#" onclick="editDesk('+value.id+')">编辑</a><br /><a href="#" onclick="deleteDesk('+value.id+')">删除</a></td></tr>'
 						$('#deskList tbody').append(html);

@@ -3,140 +3,34 @@
 <head>
 <meta charset="utf-8">
 <title>登录</title>
-<link href="css/poshytip/tip-darkgray/tip-darkgray.css" rel="stylesheet" />
-<style>
-
-.errorLabel{
-	display:none;
-	font-size:12px;
-	color:#ff0000;
+<script>
+function test(url){
+	document.getElementById("myFlash").SetVariable("player:jsStop", "");
+	document.getElementById("myFlash").SetVariable("player:jsUrl", url);
+	document.getElementById("myFlash").SetVariable("player:jsPlay", "");
 }
-.successLabel{
-	display:none;
-	font-size:12px;
-	color:#16C73F;
-}
-
-.errorRow .errorLabel{
-	display:inline;
-}
-.errorRow .successLabel{
-	display:none;
-}
-.successRow .errorLabel{
-	display:none;
-}
-.successRow .successLabel{
-	display:inline;
-}
-</style>
+</script>
 </head>
 <body>
 	<form action="../rest/test" method="post" enctype="multipart/form-data">
-		<input type="text" name="text1" /> <br /> <input type="file"
-			name="file1" /> <br /> <input type="text" name="text2" /> <br />
-		<input type="file" name="file2" /> <br /> <input type="submit"
-			id="test" value="Submit" />
 
-		<div id="tipcontent" style="display: none;">
-			<ul>
-				<li><a href="#">sdfsdfs</a></li>
-			</ul>
-		</div>
-		
-		<br />
-		<input type="button" value="all" id="all" />
-		<input type="button" value="add" id="add" />
+		<input type="button" value="all" id="all" onclick="test('test.flv')" /> <input
+			type="button" value="add" id="add" onclick="test('test.mp4')" />
 
-		<table id="testtable">
-			<thead>
-				<tr>
-					<th>f1</th>
-					<th>f1</th>
-					<th>f1</th>
-					<th>f1</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td><input class="rr" type="text" value="t1" /></td>
-					<td><input class="rr" type="text" value="t2" /></td>
-					<td><input class="rr" type="text" value="" /></td>
-					<td><input class="rr" type="hidden" value="id1" /><input type="button" value="保存" class="edit" /><input type="button" value="删除" class="delete" /><span class="errorLabel">*信息不全</span><span class="successLabel">√保存成功</span></td>
-				</tr>
-				<tr>
-					<td><input class="rr" type="text" value="tt1" /></td>
-					<td><input class="rr" type="text" value="tt2" /></td>
-					<td><input class="rr" type="text" value="tt3" /></td>
-					<td><input class="rr" type="hidden" value="id1" /><input type="button" value="保存" class="edit" /><input type="button" value="删除" class="delete" /><span class="errorLabel">*信息不全</span><span class="successLabel">√保存成功</span></td>
-				</tr>
-			</tbody>
-		</table>
+		<object id="myFlash" type="application/x-shockwave-flash"
+			data="video/player_flv_maxi.swf" width="320" height="240">
+			<param name="movie" value="video/player_flv_maxi.swf" />
+			<param name="FlashVars" value="flv=test.flv;autoload=1;autoplay=1&title=中国人民解放军" />
+		</object>
 		
-		
+		<object class="playerpreview" type="application/x-shockwave-flash" data="video/player_flv_maxi.swf" width="620" height="540">
+                			<param name="movie" value="video/player_flv_maxi.swf" />
+                
+                <param name="allowFullScreen" value="true" />
+                <param name="FlashVars" value="flv=test.flv&amp;width=320&amp;height=240&amp;showstop=1&amp;showvolume=1&amp;showtime=1&amp;startimage=/medias/startimage_en.jpg&amp;showfullscreen=1&amp;bgcolor1=189ca8&amp;bgcolor2=085c68&amp;playercolor=085c68" />
+            </object>
 	</form>
-
-	<script src="js/jquery-1.7.2.min.js"></script>
-	<script src="js/jquery.poshytip.min.js"></script>
-	<script>
-		$(document).ready(function() {
-			
-			  bindtest();
-
-			$('#all').click(function() {
-				  var result=[];
-				  $("#testtable tbody tr").each(function(index,obj){
-					  //console.log($(this));
-					  var list = [];
-					  $(this).children().children(".rr").each(function(index,obj){
-						  list.push(obj.value);
-					  });
-					  if(!(list[0] && list[1] && list[2])){
-					  		$(this).closest("tr").removeClass('successRow').addClass('errorRow');
-					  }else{
-					  		$(this).closest("tr").removeClass('errorRow').addClass('successRow');
-					  }
-					  
-					  /* console.log(list);
-					  result.push(list); */
-				  });
-			});
-			
-			$('#add').click(function() {
-				  var row = '<tr><td><input class="rr" type="text" /></td><td><input class="rr" type="text" /></td><td><input class="rr" type="text" /></td><td><input class="rr" type="hidden" /><input type="button" value="保存" class="edit" /><input type="button" value="删除" class="delete" /><span class="errorLabel">*信息不全</span><span class="successLabel">√保存成功</span></td></tr>'
-			      $('#testtable tbody').append(row);
-				  bindtest();
-				  return false;
-			});
-			
-		});
-		
-		function bindtest(){
-			$('#testtable .edit').unbind('click');
-			$('#testtable .delete').unbind('click');
-
-			$('#testtable .edit').click(function() {
-				  //console.log($(this).parent().parent().children().children(".rr"));
-				  var result=[];
-				  var list = [];
-				  $(this).parent().parent().children().children(".rr").each(function(index,obj){
-					  list.push(obj.value);
-				  });
-				  console.log(list);
-				  if(!(list[0] && list[1] && list[2])){
-				  		$(this).closest("tr").removeClass('successRow').addClass('errorRow');
-				  }else{
-				  		$(this).closest("tr").removeClass('errorRow').addClass('successRow');
-				  }
-				  
-				  return false;
-			});
-			
-			$('#testtable .delete').click(function() {
-				$(this).closest("tr").remove();
-				  return false;
-			});
-		}
-	</script>
+	
+	
 </body>
 </html>
