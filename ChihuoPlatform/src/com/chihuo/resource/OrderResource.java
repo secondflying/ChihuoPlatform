@@ -136,7 +136,7 @@ public class OrderResource {
 		}
 
 		URI uri = uriInfo.getRequestUri();
-		// UriBuilder ub = uriInfo.getAbsolutePathBuilder();
+//		 UriBuilder ub = uriInfo.getAbsolutePathBuilder();
 		// URI listUri = ub.path("list").build();
 		return Response.seeOther(uri).build();
 	}
@@ -189,7 +189,7 @@ public class OrderResource {
 		Device waiterDevice = lDao.getWaiterDeviceByOrder(order);
 
 		NotificationHelper.sendNotificationToWaiter(msg,
-				order.getDesk().getName(), waiterDevice);
+				order.getDesk().getName(),order.getId(), waiterDevice);
 
 		return Response.status(Response.Status.OK)
 				.type(MediaType.APPLICATION_JSON).build();
@@ -212,7 +212,7 @@ public class OrderResource {
 		.commit();
 
 		NotificationHelper.sendNotificationToWaiter("结账",
-				order.getDesk().getName(), waiterDevice);
+				order.getDesk().getName(),order.getId(), waiterDevice);
 		
 
 		return Response.status(Response.Status.OK).entity(order)

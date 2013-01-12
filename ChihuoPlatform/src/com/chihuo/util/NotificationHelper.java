@@ -1,5 +1,8 @@
 package com.chihuo.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,14 +16,16 @@ import com.chihuo.bussiness.Device;
 public class NotificationHelper {
 
 	public static void sendNotificationToWaiter(String message,
-			String title, Device device) {
+			String title,Integer oid, Device device) {
 		if (device != null) {
+			Map<String, Object> extra = new HashMap<String, Object>();
+			extra.put("oid", oid);
+			
 			JPushClient jpush = new JPushClient(PublicConfig.getJWaiterName(),
 					PublicConfig.getJWaiterPassword(),
 					PublicConfig.getJWaiterAppKey());
 			int sendNo = 1;
-			MessageResult msgResult = jpush.sendNotificationWithImei(sendNo,
-					device.getDeviceid(), title, message);
+			MessageResult msgResult = jpush.sendNotificationWithImei(sendNo, device.getDeviceid(), title, message, 1, extra);
 			if (null != msgResult) {
 				if (msgResult.getErrcode() == ErrorCodeEnum.NOERROR.value()) {
 					System.out.println("发送成功， sendNo=" + msgResult.getSendno());
