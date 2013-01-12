@@ -29,16 +29,16 @@ public class MyServletContainer extends com.sun.jersey.spi.container.servlet.Ser
 				sf.getCurrentSession().getTransaction().commit();
 			}
 		} catch (Throwable ex) {
-			//TODO 这里应该只捕获hibernate操作的异常
+			//TODO 这里应该只捕获hibernate操作的异常  http://markmail.org/thread/orcctyu7hczx3d5w#query:+page:1+mid:orcctyu7hczx3d5w+state:results
+			//TODO 使用JTA事务或使用Spring管理事务
 			try {
 				if (sf.getCurrentSession().getTransaction().isActive()) {
 					log.debug("Trying to rollback database transaction after exception");
 					sf.getCurrentSession().getTransaction().rollback();
 				}
 			} catch (Throwable rbEx) {
-				log.error("Could not rollback transaction after exception!",
-						rbEx);
+				log.error("Could not rollback transaction after exception!", rbEx);
 			}
-		} 
+		}
 	}
 }

@@ -12,14 +12,38 @@ import com.chihuo.bussiness.Device;
 
 public class NotificationHelper {
 
-	public static void sendNotifcationToWaiter(String message,
+	public static void sendNotificationToWaiter(String message,
+			String title, Device device) {
+		if (device != null) {
+			JPushClient jpush = new JPushClient(PublicConfig.getJWaiterName(),
+					PublicConfig.getJWaiterPassword(),
+					PublicConfig.getJWaiterAppKey());
+			int sendNo = 1;
+			MessageResult msgResult = jpush.sendNotificationWithImei(sendNo,
+					device.getDeviceid(), title, message);
+			if (null != msgResult) {
+				if (msgResult.getErrcode() == ErrorCodeEnum.NOERROR.value()) {
+					System.out.println("发送成功， sendNo=" + msgResult.getSendno());
+				} else {
+					System.out.println("发送失败， 错误代码=" + msgResult.getErrcode()
+							+ ", 错误消息=" + msgResult.getErrmsg());
+				}
+			} else {
+
+				System.out.println("无法获取数据");
+			}
+		}
+	}
+	
+	public static void sendMessageToWaiter(String message,
 			NotificationType ntype, Device device) {
 		if (device != null) {
 			JPushClient jpush = new JPushClient(PublicConfig.getJWaiterName(),
 					PublicConfig.getJWaiterPassword(),
 					PublicConfig.getJWaiterAppKey());
 			int sendNo = 1;
-			MessageResult msgResult = jpush.sendCustomMessageWithImei(sendNo, device.getDeviceid(), ntype.toString(), message);
+			MessageResult msgResult = jpush.sendCustomMessageWithImei(sendNo,
+					device.getDeviceid(), ntype.toString(), message);
 			if (null != msgResult) {
 				if (msgResult.getErrcode() == ErrorCodeEnum.NOERROR.value()) {
 					System.out.println("发送成功， sendNo=" + msgResult.getSendno());
@@ -41,7 +65,8 @@ public class NotificationHelper {
 					PublicConfig.getJUserPassword(),
 					PublicConfig.getJUserAppKey());
 			int sendNo = 1;
-			MessageResult msgResult = jpush.sendCustomMessageWithImei(sendNo, device.getDeviceid(), ntype.toString(), message);
+			MessageResult msgResult = jpush.sendCustomMessageWithImei(sendNo,
+					device.getDeviceid(), ntype.toString(), message);
 			if (null != msgResult) {
 				if (msgResult.getErrcode() == ErrorCodeEnum.NOERROR.value()) {
 					System.out.println("发送成功， sendNo=" + msgResult.getSendno());
@@ -83,6 +108,29 @@ public class NotificationHelper {
 		public String toString() {
 			return type + "";
 		}
+
+		public static NotificationType fromInteger(int x) {
+			switch (x) {
+			case 10:
+				return AddMenu;
+			case 11:
+				return AlterMenu;
+			case 12:
+				return RequestCheckOut;
+			case 13:
+				return CheckOut;
+			case 14:
+				return CheckIn;
+			case 21:
+				return AddWater;
+			case 22:
+				return AddDish;
+			case 23:
+				return CallWaiter;
+			}
+			return null;
+		}
+
 	}
 
 }

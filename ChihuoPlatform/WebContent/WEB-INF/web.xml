@@ -10,7 +10,6 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   
-  
     <context-param>
 		<param-name>
             org.apache.tiles.definition.DefinitionsFactory.DEFINITIONS_CONFIG
@@ -27,6 +26,7 @@
   <servlet>
     <servlet-name>Chihuo REST Service</servlet-name>
     <servlet-class>com.chihuo.util.MyServletContainer</servlet-class>
+
     <init-param>
       <param-name>com.sun.jersey.config.property.packages</param-name>
       <param-value>com.chihuo.resource</param-value>
@@ -40,8 +40,9 @@
 		<param-value>com.chihuo.util.SecurityFilter</param-value>
 	</init-param>
 	<init-param>
+	    <!-- 在HTTP Response Head中加入trace信息 -->
             <param-name>com.sun.jersey.config.feature.Trace</param-name>
-            <param-value>true</param-value>
+            <param-value>false</param-value>
         </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>

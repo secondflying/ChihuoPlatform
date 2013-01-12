@@ -40,7 +40,7 @@ public class WaiterLoginResource {
 			@FormParam("password") String password) {
 		RestaurantDao rdao = new RestaurantDao();
 		Restaurant restaurant2 = rdao.findById(Integer.parseInt(code));
-		if (restaurant2 == null) {
+		if (restaurant2 == null || restaurant2.getStatus() != 1) {
 			return Response.status(Response.Status.BAD_REQUEST)
 					.entity("餐厅编码错误").type(MediaType.TEXT_PLAIN).build();
 		}

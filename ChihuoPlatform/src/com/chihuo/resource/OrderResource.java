@@ -13,13 +13,13 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 
 import com.chihuo.bussiness.Device;
@@ -27,19 +27,13 @@ import com.chihuo.bussiness.Order;
 import com.chihuo.bussiness.OrderItem;
 import com.chihuo.bussiness.Recipe;
 import com.chihuo.bussiness.Restaurant;
-import com.chihuo.bussiness.User;
-import com.chihuo.bussiness.Waiter;
 import com.chihuo.dao.LoginsDao;
 import com.chihuo.dao.OrderDao;
 import com.chihuo.dao.OrderItemDao;
 import com.chihuo.dao.RecipeDao;
-import com.chihuo.util.CodePlatform;
-import com.chihuo.util.CodeUserType;
-import com.chihuo.util.DeviceRegister;
 import com.chihuo.util.HibernateUtil﻿;
 import com.chihuo.util.NotificationHelper;
 import com.chihuo.util.NotificationHelper.NotificationType;
-import com.chihuo.util.PublicHelper;
 
 public class OrderResource {
 	Restaurant restaurant;
@@ -121,16 +115,17 @@ public class OrderResource {
 			item.setStatus(0);
 			idao.saveOrUpdate(item);
 		}
-		
+
 		// 发送通知给服务员和其他点餐者
 		LoginsDao lDao = new LoginsDao();
 		Device waiterDevice = lDao.getWaiterDeviceByOrder(order);
 		List<Device> userDevices = lDao.getAnonymousDeviceByOrder(order);
-		
-		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction().commit();
-		
-		NotificationHelper.sendNotifcationToWaiter(item.getOrder().getId()
-				.toString(), NotificationType.AddMenu, waiterDevice);
+
+		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction()
+				.commit();
+
+		NotificationHelper.sendMessageToWaiter(order.getId().toString(),
+				NotificationType.AddMenu, waiterDevice);
 
 		String udid = request.getHeader("X-device");
 		for (Device device : userDevices) {
@@ -165,18 +160,38 @@ public class OrderResource {
 		oi.setStatus(1);
 		oDao.saveOrUpdate(oi);
 
-		// 发送通知给服务员
+		// 发送通知给服客户
 		LoginsDao lDao = new LoginsDao();
 		List<Device> userDevices = lDao.getAnonymousDeviceByOrder(order);
-		
-		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction().commit();
-		
+
+		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction()
+				.commit();
+
 		for (Device device : userDevices) {
 			NotificationHelper.sendNotifcationToUser(oi.getOrder().getId()
 					.toString(), NotificationType.AlterMenu, device);
 		}
 
 		return Response.status(Response.Status.OK).entity(oi)
+				.type(MediaType.APPLICATION_JSON).build();
+	}
+
+	// 其他服务，呼叫服务员等
+	@Path("/assistent")
+	@POST
+	@Consumes("application/x-www-form-urlencoded")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response AssistentHelp(@FormParam("type") String msg,
+			@Context UriInfo uriInfo, @Context HttpServletRequest request,
+			@Context SecurityContext securityContext) {
+
+		LoginsDao lDao = new LoginsDao();
+		Device waiterDevice = lDao.getWaiterDeviceByOrder(order);
+
+		NotificationHelper.sendNotificationToWaiter(msg,
+				order.getDesk().getName(), waiterDevice);
+
+		return Response.status(Response.Status.OK)
 				.type(MediaType.APPLICATION_JSON).build();
 	}
 
@@ -189,6 +204,16 @@ public class OrderResource {
 		OrderDao dao = new OrderDao();
 		order.setStatus(3);
 		dao.saveOrUpdate(order);
+		
+		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction()
+		.commit();
+		
+		dao.saveOrUpdate(order);LoginsDao lDao = new LoginsDao();
+		Device waiterDevice = lDao.getWaiterDeviceByOrder(order);
+
+		NotificationHelper.sendNotificationToWaiter("结账",
+				order.getDesk().getName(), waiterDevice);
+		
 
 		return Response.status(Response.Status.OK).entity(order)
 				.type(MediaType.APPLICATION_JSON).build();
