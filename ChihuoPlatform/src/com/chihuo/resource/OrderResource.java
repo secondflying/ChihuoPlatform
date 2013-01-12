@@ -205,11 +205,11 @@ public class OrderResource {
 		order.setStatus(3);
 		dao.saveOrUpdate(order);
 		
-		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction()
-		.commit();
-		
 		dao.saveOrUpdate(order);LoginsDao lDao = new LoginsDao();
 		Device waiterDevice = lDao.getWaiterDeviceByOrder(order);
+		
+		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction()
+		.commit();
 
 		NotificationHelper.sendNotificationToWaiter("结账",
 				order.getDesk().getName(), waiterDevice);
