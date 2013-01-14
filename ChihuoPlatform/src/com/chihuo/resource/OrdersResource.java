@@ -36,7 +36,6 @@ import com.chihuo.util.CodeUserType;
 import com.chihuo.util.DeviceRegister;
 import com.chihuo.util.NotificationHelper;
 import com.chihuo.util.PublicHelper;
-import com.chihuo.util.NotificationHelper.NotificationType;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class OrdersResource {

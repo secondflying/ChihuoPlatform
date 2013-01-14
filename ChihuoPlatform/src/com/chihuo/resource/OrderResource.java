@@ -31,9 +31,9 @@ import com.chihuo.dao.LoginsDao;
 import com.chihuo.dao.OrderDao;
 import com.chihuo.dao.OrderItemDao;
 import com.chihuo.dao.RecipeDao;
+import com.chihuo.util.CodeNotificationType;
 import com.chihuo.util.HibernateUtil﻿;
 import com.chihuo.util.NotificationHelper;
-import com.chihuo.util.NotificationHelper.NotificationType;
 
 public class OrderResource {
 	Restaurant restaurant;
@@ -125,13 +125,13 @@ public class OrderResource {
 				.commit();
 
 		NotificationHelper.sendMessageToWaiter(order.getId().toString(),
-				NotificationType.AddMenu, waiterDevice);
+				CodeNotificationType.AddMenu, waiterDevice);
 
 		String udid = request.getHeader("X-device");
 		for (Device device : userDevices) {
 			if (!device.getDeviceid().equals(udid)) {
 				NotificationHelper.sendNotifcationToUser(item.getOrder()
-						.getId().toString(), NotificationType.AddMenu, device);
+						.getId().toString(), CodeNotificationType.AddMenu, device);
 			}
 		}
 
@@ -169,7 +169,7 @@ public class OrderResource {
 
 		for (Device device : userDevices) {
 			NotificationHelper.sendNotifcationToUser(oi.getOrder().getId()
-					.toString(), NotificationType.AlterMenu, device);
+					.toString(), CodeNotificationType.AlterMenu, device);
 		}
 
 		return Response.status(Response.Status.OK).entity(oi)
