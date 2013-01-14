@@ -34,7 +34,6 @@ public class NotificationHelper {
 							+ ", 错误消息=" + msgResult.getErrmsg());
 				}
 			} else {
-
 				System.out.println("无法获取数据");
 			}
 		}
