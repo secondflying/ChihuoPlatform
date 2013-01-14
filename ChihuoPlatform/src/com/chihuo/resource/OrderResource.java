@@ -208,6 +208,10 @@ public class OrderResource {
 		dao.saveOrUpdate(order);LoginsDao lDao = new LoginsDao();
 		Device waiterDevice = lDao.getWaiterDeviceByOrder(order);
 		
+		OrderItemDao oDao = new OrderItemDao();
+		List<OrderItem> list = oDao.queryByOrder(order.getId());
+		order.setOrderItems(list);
+		
 		HibernateUtil﻿.getSessionFactory().getCurrentSession().getTransaction()
 		.commit();
 
