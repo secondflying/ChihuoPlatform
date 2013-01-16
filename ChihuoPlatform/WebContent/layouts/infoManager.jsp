@@ -75,11 +75,11 @@ body {
 	<script>
 		var gc = new BMap.Geocoder();
 		var map = new BMap.Map("mapContainer");
+		var point = new BMap.Point(116.404, 39.915);    // 创建点坐标
+		map.centerAndZoom(point,12);  
 		map.enableScrollWheelZoom();
 
-		map.centerAndZoom("北京");
-
-		//MyLoad("北京市朝阳区");
+		getRestaurants();
 
 		//创建标注方法
 		function MyLoad(StoreAddress) {
@@ -100,9 +100,10 @@ body {
 		function drawMarker(x, y) {
 			var point = new BMap.Point(x, y);
 			var marker = new BMap.Marker(point);
-			map.centerAndZoom(point, 13);
-			map.addOverlay(marker);
 			marker.enableDragging();
+			map.addOverlay(marker);
+			console.log(2);
+
 
 			//拖拽地图时触发事件
 			marker.addEventListener("dragend", function(e) {
@@ -115,11 +116,10 @@ body {
 				$("#y").val(e.point.lat);
 			});
 
-			map.centerAndZoom(point, 16);
+			map.centerAndZoom(point, 15);
 		}
 
 		$(document).ready(function() {
-			getRestaurants();
 
 			$("#address").blur(function() {
 				map.clearOverlays();
