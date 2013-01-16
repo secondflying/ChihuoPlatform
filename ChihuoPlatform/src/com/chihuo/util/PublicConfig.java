@@ -28,6 +28,10 @@ public class PublicConfig {
 		}  
 	}
 	
+	public static String getImagePath(){
+		return prop.getProperty("imagePath");
+	}
+	
 	public static String getJUserName() {
 		return prop.getProperty("userName");
 	}

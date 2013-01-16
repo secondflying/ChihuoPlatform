@@ -6,8 +6,6 @@
 <script src="jquery/js/jquery.form.js"></script>
 <script type="text/javascript" src="assets/js/bootbox.js"></script>
 <script>
-
-	
 	var options = {
 		url : "",
 		resetForm : true,
@@ -15,14 +13,26 @@
 			loginCallback(responseText);
 		},
 		error : function(xhr, textStatus, errorThrown) {
-					var div=$("#login-modal");  
-				    div.animate({marginLeft:'+=25px'},50 );
-				    div.animate({marginLeft:'-=50px'},50);
-				    div.animate({marginLeft:'+=50px'},50 );
-				    div.animate({marginLeft:'-=50px'},50);
-				    div.animate({marginLeft:'+=50px'},50 );
-				    div.animate({marginLeft:'-=25px'},50);
-			}
+			var div = $("#login-modal");
+			div.animate({
+				marginLeft : '+=25px'
+			}, 50);
+			div.animate({
+				marginLeft : '-=50px'
+			}, 50);
+			div.animate({
+				marginLeft : '+=50px'
+			}, 50);
+			div.animate({
+				marginLeft : '-=50px'
+			}, 50);
+			div.animate({
+				marginLeft : '+=50px'
+			}, 50);
+			div.animate({
+				marginLeft : '-=25px'
+			}, 50);
+		}
 	};
 
 	$(document).ready(function() {
@@ -32,9 +42,11 @@
 		});
 		$("#register-btn").click(function() {
 			registerClick();
+			return false;
 		});
 		$("#logout-a").click(function() {
 			logoutClick();
+			return false;
 		});
 
 		//判断是否已登录
@@ -50,37 +62,83 @@
 			} */
 		});
 	});
-	
-	function loginCallback(responseText){
+
+	function loginCallback(responseText) {
 		$("#login-div").hide();
 		$("#user-div").show();
 		document.getElementById("user-btn").innerText = responseText.name;
 		$('#login-modal').modal('hide');
 		$('#signup-modal').modal('hide');
 	}
-	
-	function logoutCallback(){
+
+	function logoutCallback() {
 		$("#login-div").show();
 		$("#user-div").hide();
 	}
 
 	function loginClick() {
 		options.url = "rest/login";
+		options.error = function(xhr, textStatus, errorThrown) {
+			var div = $("#login-modal");
+			div.animate({
+				marginLeft : '+=25px'
+			}, 50);
+			div.animate({
+				marginLeft : '-=50px'
+			}, 50);
+			div.animate({
+				marginLeft : '+=50px'
+			}, 50);
+			div.animate({
+				marginLeft : '-=50px'
+			}, 50);
+			div.animate({
+				marginLeft : '+=50px'
+			}, 50);
+			div.animate({
+				marginLeft : '-=25px'
+			}, 50);
+			console.log(111);
+		};
 		$('#login-form').unbind('submit');
 		$('#login-form').submit(function() {
 			$(this).ajaxSubmit(options);
 			return false;
 		});
 		$('#login-form').submit();
+		return false;
 	}
 	function registerClick() {
 		options.url = "rest/register";
+		options.error = function(xhr, textStatus, errorThrown) {
+			var div = $("#signup-modal");
+			div.animate({
+				marginLeft : '+=25px'
+			}, 50);
+			div.animate({
+				marginLeft : '-=50px'
+			}, 50);
+			div.animate({
+				marginLeft : '+=50px'
+			}, 50);
+			div.animate({
+				marginLeft : '-=50px'
+			}, 50);
+			div.animate({
+				marginLeft : '+=50px'
+			}, 50);
+			div.animate({
+				marginLeft : '-=25px'
+			}, 50);
+			console.log(111);
+		};
 		$('#register-form').unbind('submit');
 		$('#register-form').submit(function() {
 			$(this).ajaxSubmit(options);
 			return false;
 		});
 		$('#register-form').submit();
+		return false;
 	}
 	function logoutClick() {
 		$.ajax({

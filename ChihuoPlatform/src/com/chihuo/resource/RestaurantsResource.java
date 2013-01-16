@@ -40,7 +40,9 @@ import com.chihuo.dao.RestaurantDao;
 import com.chihuo.util.CodePlatform;
 import com.chihuo.util.CodeUserType;
 import com.chihuo.util.DeviceRegister;
+import com.chihuo.util.PublicConfig;
 import com.chihuo.util.PublicHelper;
+import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
 @Path("/restaurants")
@@ -62,6 +64,7 @@ public class RestaurantsResource {
 			@DefaultValue("-1000") @FormDataParam("x") double x,
 			@DefaultValue("-1000") @FormDataParam("y") double y,
 			@FormDataParam("image") InputStream upImg,
+			@FormDataParam("image") FormDataContentDisposition fileDetail,
 			@Context SecurityContext securityContext) {
 
 		Restaurant r = new Restaurant();
@@ -77,7 +80,7 @@ public class RestaurantsResource {
 		r.setStatus(0);
 		r.setUser(PublicHelper.getLoginUser(securityContext));
 
-		if (upImg != null) {
+		if (upImg != null && !StringUtils.isEmpty(fileDetail.getFileName())) {
 			try {
 				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 				int nRead;
@@ -96,7 +99,7 @@ public class RestaurantsResource {
 					BufferedImage bi = ImageIO
 							.read(new ByteArrayInputStream(bs));
 
-					File file = new File(MyConstants.MenuImagePath + image);
+					File file = new File(PublicConfig.getImagePath() + image);
 					if (file.isDirectory()) {
 						ImageIO.write(bi, "png", file);
 					} else {

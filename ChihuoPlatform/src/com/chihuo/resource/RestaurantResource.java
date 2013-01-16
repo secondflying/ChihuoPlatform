@@ -24,10 +24,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.bussiness.User;
 import com.chihuo.dao.RestaurantDao;
+import com.chihuo.util.PublicConfig;
 import com.chihuo.util.PublicHelper;
+import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class RestaurantResource {
@@ -52,6 +56,7 @@ public class RestaurantResource {
 			@DefaultValue("-1000") @FormDataParam("x") double x,
 			@DefaultValue("-1000") @FormDataParam("y") double y,
 			@FormDataParam("image") InputStream upImg,
+			@FormDataParam("image") FormDataContentDisposition fileDetail,
 			@Context SecurityContext securityContext) {
 
 		RestaurantDao dao = new RestaurantDao();
@@ -73,7 +78,7 @@ public class RestaurantResource {
 		}
 		r.setStatus(0);
 
-		if (upImg != null) {
+		if (upImg != null && !StringUtils.isEmpty(fileDetail.getFileName())) {
 			try {
 				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 				int nRead;
@@ -92,7 +97,7 @@ public class RestaurantResource {
 					BufferedImage bi = ImageIO
 							.read(new ByteArrayInputStream(bs));
 
-					File file = new File(MyConstants.MenuImagePath + image);
+					File file = new File(PublicConfig.getImagePath() + image);
 					if (file.isDirectory()) {
 						ImageIO.write(bi, "png", file);
 					} else {

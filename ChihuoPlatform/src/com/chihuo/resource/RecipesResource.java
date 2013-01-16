@@ -30,6 +30,7 @@ import com.chihuo.bussiness.Recipe;
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.dao.CategoryDao;
 import com.chihuo.dao.RecipeDao;
+import com.chihuo.util.PublicConfig;
 import com.sun.jersey.multipart.FormDataParam;
 
 public class RecipesResource {
@@ -109,7 +110,7 @@ public class RecipesResource {
 					BufferedImage bi = ImageIO
 							.read(new ByteArrayInputStream(bs));
 
-					File file = new File(MyConstants.MenuImagePath + image);
+					File file = new File(PublicConfig.getImagePath() + image);
 					if (file.isDirectory()) {
 						ImageIO.write(bi, "png", file);
 					} else {
