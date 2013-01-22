@@ -54,17 +54,19 @@ public class RestaurantsResource {
 		RestaurantDao dao = new RestaurantDao();
 		return dao.findByStatus(1);
 	}
-	
-	@Path("around")
+
+	@Path("/around")
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public List<Restaurant> getAround() {
+	public List<Restaurant> getAround(@QueryParam("x") double x,
+			@QueryParam("y") double y) {
 		RestaurantDao dao = new RestaurantDao();
-		return dao.findByStatus(1);
+		return dao.findAround(x, y);
 	}
 	
+
 	@POST
-	@RolesAllowed({"OWER"})
+	@RolesAllowed({ "OWER" })
 	@Consumes("multipart/form-data")
 	public Response create(@FormDataParam("name") String name,
 			@FormDataParam("telephone") String telephone,
@@ -127,18 +129,18 @@ public class RestaurantsResource {
 
 		return Response.created(URI.create(String.valueOf(r.getId()))).build();
 	}
-	
+
 	@Path("{id}")
 	public RestaurantResource getRestaurant(@PathParam("id") int id) {
 		RestaurantDao dao = new RestaurantDao();
 		Restaurant r = dao.findById(id);
 		checkNull(r);
-		
+
 		return new RestaurantResource(r);
 	}
-	
+
 	@GET
-	@RolesAllowed({"ADMIN"})
+	@RolesAllowed({ "ADMIN" })
 	@Path("/all")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Restaurant> getAll() {
@@ -147,37 +149,37 @@ public class RestaurantsResource {
 	}
 
 	@GET
-	@RolesAllowed({"ADMIN"})
+	@RolesAllowed({ "ADMIN" })
 	@Path("/toverify")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Restaurant> getToVerify() {
 		RestaurantDao dao = new RestaurantDao();
 		return dao.findByStatus(0);
 	}
-	
+
 	@GET
-	@RolesAllowed({"ADMIN"})
+	@RolesAllowed({ "ADMIN" })
 	@Path("/verified")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Restaurant> getVerified() {
 		RestaurantDao dao = new RestaurantDao();
 		return dao.findByStatus(1);
 	}
-	
+
 	@GET
-	@RolesAllowed({"ADMIN"})
+	@RolesAllowed({ "ADMIN" })
 	@Path("/notverified")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Restaurant> getNotVerified() {
 		RestaurantDao dao = new RestaurantDao();
 		return dao.findByStatus(2);
 	}
-	
-	private void checkNull(Restaurant c){
+
+	private void checkNull(Restaurant c) {
 		if (c == null) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
-		if(c.getStatus() == -1){
+		if (c.getStatus() == -1) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
 	}
