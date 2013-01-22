@@ -55,6 +55,14 @@ public class RestaurantsResource {
 		return dao.findByStatus(1);
 	}
 	
+	@Path("around")
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Restaurant> getAround() {
+		RestaurantDao dao = new RestaurantDao();
+		return dao.findByStatus(1);
+	}
+	
 	@POST
 	@RolesAllowed({"OWER"})
 	@Consumes("multipart/form-data")
