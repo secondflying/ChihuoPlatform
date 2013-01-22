@@ -13,8 +13,8 @@ import com.chihuo.bussiness.Restaurant;
 public class RecipeDao extends GenericHibernateDAO﻿<Recipe, Integer> {
 	@SuppressWarnings("unchecked")
 	public List<Recipe> findByRestaurant(Restaurant r) {
-		Criteria crit = getSession().createCriteria(Recipe.class).add(Restrictions.not(Restrictions.eq("status", -1)));
-		crit = crit.createCriteria("restaurant").add(Restrictions.eq("id", r.getId())).addOrder( Order.asc("category.id"));;
+		Criteria crit = getSession().createCriteria(Recipe.class).add(Restrictions.not(Restrictions.eq("status", -1))).addOrder( Order.asc("category.id"));
+		crit = crit.createCriteria("restaurant").add(Restrictions.eq("id", r.getId()));
 		return (List<Recipe>)crit.list();
 	}
 	
