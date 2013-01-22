@@ -38,9 +38,9 @@ public class RestaurantDao extends GenericHibernateDAO﻿<Restaurant, Integer> {
 	}
 
 	public List<Restaurant> findAround(double x, double y,double distance) {
-		double KmPerDegree = 111.12000071117  ;
+		double KmPerDegree = 111.12000071117;
 		
-		double dis = distance/KmPerDegree;
+		double dis = distance/1000/KmPerDegree;
 		double xmin = x - dis;
 		double xmax = x + dis;
 		double ymin = y - dis;

@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import javax.annotation.security.RolesAllowed;
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -63,7 +62,6 @@ public class RestaurantsResource {
 		RestaurantDao dao = new RestaurantDao();
 		return dao.findAround(x, y,distance);
 	}
-	
 
 	@POST
 	@RolesAllowed({ "OWER" })
