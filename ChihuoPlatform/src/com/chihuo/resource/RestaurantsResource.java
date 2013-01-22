@@ -59,9 +59,9 @@ public class RestaurantsResource {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Restaurant> getAround(@QueryParam("x") double x,
-			@QueryParam("y") double y) {
+			@QueryParam("y") double y,@QueryParam("distance") double distance) {
 		RestaurantDao dao = new RestaurantDao();
-		return dao.findAround(x, y);
+		return dao.findAround(x, y,distance);
 	}
 	
 
