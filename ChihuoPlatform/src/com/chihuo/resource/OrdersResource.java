@@ -102,6 +102,7 @@ public class OrdersResource {
 
 
 	@POST
+	@Path("{code}")
 //	@RolesAllowed({"USER,OWER,WAITER"})
 	@Produces("application/json; charset=UTF-8")
 	public Response joinOrder(@PathParam("code") String code,
