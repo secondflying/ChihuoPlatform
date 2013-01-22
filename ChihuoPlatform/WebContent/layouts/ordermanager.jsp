@@ -128,7 +128,7 @@ body {
 		
 		/* 获取所有订单 */
 		function getOrders(){
-			$.getJSON("rest/user/restaurants/"+restaurant.id+"/orders", function(data) {
+			$.getJSON("rest/restaurants/"+restaurant.id+"/orders", function(data) {
 				$('#orderList tbody').empty();
 				$.each(data, function(index, value) {
 					if (!isNaN(index)) {

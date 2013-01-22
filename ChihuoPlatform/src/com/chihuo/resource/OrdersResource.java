@@ -34,7 +34,6 @@ import com.chihuo.dao.OrderItemDao;
 import com.chihuo.util.CodePlatform;
 import com.chihuo.util.CodeUserType;
 import com.chihuo.util.DeviceRegister;
-import com.chihuo.util.NotificationHelper;
 import com.chihuo.util.PublicHelper;
 import com.sun.jersey.multipart.FormDataParam;
 
@@ -43,6 +42,14 @@ public class OrdersResource {
 
 	public OrdersResource(Restaurant restaurant) {
 		this.restaurant = restaurant;
+	}
+	
+	@GET
+	@RolesAllowed({"USER,OWER,WAITER"})
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Order> getMyOrder(@Context SecurityContext securityContext) {
+		OrderDao dao = new OrderDao();
+		return dao.findByRestaurant(restaurant);
 	}
 
 	// 开台
@@ -94,10 +101,10 @@ public class OrdersResource {
 	}
 
 
-	@GET
+	@POST
 //	@RolesAllowed({"USER,OWER,WAITER"})
 	@Produces("application/json; charset=UTF-8")
-	public Response joinOrder(@QueryParam("code") String code,
+	public Response joinOrder(@PathParam("code") String code,
 			@Context HttpServletRequest request,
 			@Context SecurityContext securityContext) {
 		// 用户加入点餐

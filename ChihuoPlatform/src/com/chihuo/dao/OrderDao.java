@@ -67,4 +67,5 @@ public class OrderDao extends GenericHibernateDAO﻿<Order, Integer> {
 
 		return (List<Order>)crit.list();
 	}
+	
 }
