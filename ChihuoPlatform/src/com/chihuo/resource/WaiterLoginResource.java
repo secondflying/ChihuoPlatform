@@ -10,6 +10,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.bussiness.Waiter;
 import com.chihuo.dao.RestaurantDao;
@@ -47,7 +49,7 @@ public class WaiterLoginResource {
 //		}
 		
 		return Response
-				.ok(restaurant2)
+				.ok(String.format("{\"rid\":\"%s\",\"wid\":\"%s\"}",restaurant2.getId(),u.getId()))
 				.header("Authorization",
 						PublicHelper.encryptUser(u.getId(), u.getPassword(), 3))
 				.build();
