@@ -19,7 +19,7 @@ public class Waiter implements java.io.Serializable {
 	private Integer id;
 	private String name;
 	
-	@XmlTransient
+	@XmlElement
 	private String password;
 	@XmlTransient
 	private Integer status;

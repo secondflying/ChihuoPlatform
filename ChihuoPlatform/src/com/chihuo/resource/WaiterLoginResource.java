@@ -1,7 +1,5 @@
 package com.chihuo.resource;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -12,20 +10,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.chihuo.bussiness.Device;
-import com.chihuo.bussiness.Logins;
 import com.chihuo.bussiness.Restaurant;
 import com.chihuo.bussiness.Waiter;
-import com.chihuo.dao.DeviceDao;
-import com.chihuo.dao.LoginsDao;
 import com.chihuo.dao.RestaurantDao;
 import com.chihuo.dao.WaiterDao;
-import com.chihuo.util.CodePlatform;
-import com.chihuo.util.DeviceRegister;
 import com.chihuo.util.PublicHelper;
-import com.chihuo.util.CodeUserType;
 
 @Path("/wlogin")
 public class WaiterLoginResource {

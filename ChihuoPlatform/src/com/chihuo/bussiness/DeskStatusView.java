@@ -26,6 +26,8 @@ public class DeskStatusView implements java.io.Serializable {
 	@XmlElement
 	private Integer oid;
 	@XmlElement
+	private Integer wid;
+	@XmlElement
 	private Integer orderStatus;
 	@XmlElement
 	private String code;
@@ -121,6 +123,14 @@ public class DeskStatusView implements java.io.Serializable {
 
 	public void setRid(Integer rid) {
 		this.rid = rid;
+	}
+
+	public Integer getWid() {
+		return wid;
+	}
+
+	public void setWid(Integer wid) {
+		this.wid = wid;
 	}
 
 }

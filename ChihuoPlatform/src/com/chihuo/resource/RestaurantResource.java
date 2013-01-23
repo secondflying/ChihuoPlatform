@@ -168,5 +168,10 @@ public class RestaurantResource {
 	public OrdersResource getOrderResource() {
 		return new OrdersResource(r);
 	}
+	
+	@Path("/waiters")
+	public WaitersResource getWaiterResource() {
+		return new WaitersResource(r);
+	}
 
 }

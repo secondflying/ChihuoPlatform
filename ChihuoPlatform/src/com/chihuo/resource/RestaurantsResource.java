@@ -28,17 +28,8 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.chihuo.bussiness.Device;
-import com.chihuo.bussiness.Order;
-import com.chihuo.bussiness.OrderItem;
 import com.chihuo.bussiness.Restaurant;
-import com.chihuo.bussiness.User;
-import com.chihuo.dao.OrderDao;
-import com.chihuo.dao.OrderItemDao;
 import com.chihuo.dao.RestaurantDao;
-import com.chihuo.util.CodePlatform;
-import com.chihuo.util.CodeUserType;
-import com.chihuo.util.DeviceRegister;
 import com.chihuo.util.PublicConfig;
 import com.chihuo.util.PublicHelper;
 import com.sun.jersey.core.header.FormDataContentDisposition;

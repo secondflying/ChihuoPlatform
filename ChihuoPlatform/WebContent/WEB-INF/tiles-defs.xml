@@ -29,4 +29,7 @@
 		<put-attribute name="title" value="淘吃客 - 订单管理" />
     </definition>
     
+    <definition name="waiterManager" extends="commonPage" template="/layouts/waiterManager.jsp">
+		<put-attribute name="title" value="淘吃客 - 服务员管理" />
+    </definition>
 </tiles-definitions>

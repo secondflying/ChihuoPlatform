@@ -3,7 +3,6 @@ package com.chihuo.resource;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -15,7 +14,6 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import com.chihuo.bussiness.User;
-import com.chihuo.dao.UserDao;
 import com.chihuo.util.PublicHelper;
 
 @Path("/userinfo")

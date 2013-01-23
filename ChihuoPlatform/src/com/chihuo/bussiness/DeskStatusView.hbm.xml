@@ -25,6 +25,9 @@
 		<property name="oid" type="java.lang.Integer">
 			<column name="oid" />
 		</property>
+		<property name="wid" type="java.lang.Integer">
+			<column name="wid" />
+		</property>
 		<property name="orderStatus" type="java.lang.Integer">
 			<column name="orderstatus" />
 		</property>

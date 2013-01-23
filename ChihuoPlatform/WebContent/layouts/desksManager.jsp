@@ -40,7 +40,8 @@
 					<li><a href="recipeManager.jsp">菜品维护</a></li>
 					<li class="active"><a href="desksManager.jsp">餐桌维护</a></li>
 					<li><a href="ordermanager.jsp">订单管理</a></li>
-					<li><a href="#">权限设置</a></li>
+					<li><a href="waiterManager.jsp">服务员管理</a></li>
+					
 				</ul>
 			</div>
 			<div class="span10">
