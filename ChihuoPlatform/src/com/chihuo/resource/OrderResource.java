@@ -102,18 +102,26 @@ public class OrderResource {
 
 		if (totalCount == 0) {
 			if (item != null) {
+				order.setPrice(order.getPrice() - item.getCount() * recipe.getPrice());
 				idao.delete(item);
+				
 			}
 		} else {
 			if (item == null) {
 				item = new OrderItem();
 			}
+			order.setPrice(order.getPrice() +(totalCount- item.getCount()) * recipe.getPrice());
+			
 			item.setOrder(order);
 			item.setRecipe(recipe);
 			item.setCount(totalCount);
 			item.setStatus(0);
 			idao.saveOrUpdate(item);
+			
 		}
+		
+		OrderDao oDao = new OrderDao();
+		oDao.saveOrUpdate(order);
 
 		// 发送通知给服务员和其他点餐者
 		LoginsDao lDao = new LoginsDao();

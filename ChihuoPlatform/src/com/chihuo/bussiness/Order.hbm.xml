@@ -32,6 +32,9 @@
         <property name="status" type="java.lang.Integer">
             <column name="status" />
         </property>
+        <property name="price" type="java.lang.Double">
+            <column name="price" precision="22" scale="0" />
+        </property>
         <!-- <set name="orderItems" table="order_item" inverse="true" lazy="true" fetch="select"  order-by="id desc">
             <key>
                 <column name="oid" />
