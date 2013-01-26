@@ -102,7 +102,7 @@ public class OrderResource {
 
 		if (totalCount == 0) {
 			if (item != null) {
-				order.setPrice(order.getPrice() - item.getCount() * recipe.getPrice());
+				order.setPrice(order.getPrice() - (item.getCount()==null?0:item.getCount()) * recipe.getPrice());
 				idao.delete(item);
 				
 			}
@@ -110,7 +110,7 @@ public class OrderResource {
 			if (item == null) {
 				item = new OrderItem();
 			}
-			order.setPrice(order.getPrice() +(totalCount- item.getCount()) * recipe.getPrice());
+			order.setPrice(order.getPrice() +(totalCount- (item.getCount()==null?0:item.getCount())) * recipe.getPrice());
 			
 			item.setOrder(order);
 			item.setRecipe(recipe);
