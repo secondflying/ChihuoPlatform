@@ -137,7 +137,7 @@ public class OrderResource {
 		String udid = request.getHeader("X-device");
 		for (Device device : userDevices) {
 			if (!device.getDeviceid().equals(udid)) {
-				NotificationHelper.sendNotifcationToUser(item.getOrder()
+				NotificationHelper.sendNotifcationToUser(order
 						.getId().toString(), CodeNotificationType.AddMenu, device);
 			}
 		}
