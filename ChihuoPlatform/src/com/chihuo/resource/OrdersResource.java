@@ -82,6 +82,7 @@ public class OrdersResource {
 		order.setNumber(number);
 		order.setStarttime(new Date());
 		order.setStatus(1);
+		order.setPrice(0.0);
 		order.setRestaurant(restaurant);
 		order.setWaiter(PublicHelper.getLoginWaiter(securityContext));
 
