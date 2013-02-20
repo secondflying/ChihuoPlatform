@@ -52,6 +52,9 @@ public class Order implements java.io.Serializable {
 	private Double price;
 	
 	@XmlElement
+	private Double money;
+	
+	@XmlElement
 	private List<OrderItem> orderItems;
 	
 	@XmlElement
@@ -160,5 +163,13 @@ public class Order implements java.io.Serializable {
 
 	public void setPrice(Double price) {
 		this.price = price;
+	}
+
+	public Double getMoney() {
+		return money;
+	}
+
+	public void setMoney(Double money) {
+		this.money = money;
 	}
 }
