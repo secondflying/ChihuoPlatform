@@ -110,7 +110,7 @@ public class OrderResource {
 			if (item == null) {
 				item = new OrderItem();
 			}
-			order.setPrice(order.getPrice() +(totalCount- (item.getCount()==null?0:item.getCount())) * recipe.getPrice());
+			order.setPrice((order.getPrice() == null ? 0 : order.getPrice()) +(totalCount- (item.getCount()==null?0:item.getCount())) * recipe.getPrice());
 			
 			item.setOrder(order);
 			item.setRecipe(recipe);
